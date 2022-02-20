@@ -22,17 +22,17 @@ local warnDeadenMagic		= mod:NewTargetNoFilterAnnounce(19714, 2, nil, false, 2)
 local warnCntrSpell			= mod:NewSpellAnnounce(19715, 3, nil, "SpellCaster", 2)
 
 local specWarnDeadenMagic	= mod:NewSpecialWarningDispel(19714, false, nil, 2, 1, 2)
-local specWarnGate			= mod:NewSpecialWarningTaunt(23138, "Tank", nil, nil, 1, 2)--aggro wipe, needs fresh taunt
+local specWarnGate			= mod:NewSpecialWarningTaunt(23138, "Tank", nil, nil, 1, 2)		--aggro wipe, needs fresh taunt
 
-local timerCurseCD			= mod:NewCDTimer(22, 19713, nil, nil, nil, 3, nil, DBM_CORE_L.CURSE_ICON)--22-25.5 (20-25?)
+local timerCurseCD			= mod:NewCDTimer(23, 19713, nil, nil, nil, 3, nil, DBM_CORE_L.CURSE_ICON)			-- 23 to 26
 local timerDeadenMagic		= mod:NewBuffActiveTimer(30, 19714, nil, false, 3, 5, nil, DBM_CORE_L.MAGIC_ICON)
-local timerGateCD			= mod:NewCDTimer(41.3, 23138, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)--41-50
-local timerCounterSpellCD	= mod:NewCDTimer(15, 19715, nil, "SpellCaster", nil, 3)--15-19
+local timerGateCD			= mod:NewCDTimer(45, 23138, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)			-- 45
+local timerCounterSpellCD	= mod:NewCDTimer(15, 19715, nil, "SpellCaster", nil, 3)								-- 15 to 18
 
 function mod:OnCombatStart(delay)
-	timerCurseCD:Start(6-delay)--6-10
-	timerCounterSpellCD:Start(9.6-delay)
-	timerGateCD:Start(30-delay)--30-31
+	timerCurseCD:Start(9-delay)						-- 7 to 11
+	timerCounterSpellCD:Start(9.5-delay) 			-- 9 to 10
+	timerGateCD:Start(30-delay)						-- 30 seconds always
 end
 
 function mod:SPELL_AURA_APPLIED(args)
