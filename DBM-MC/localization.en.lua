@@ -119,6 +119,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	Submerge	= "COME FORTH, MY SERVANTS! DEFEND YOUR MASTER!",
+	SubmergeTwo = "YOU CANNOT DEFEAT THE LIVING FLAME! COME YOU MINIONS OF FIRE! COME FORTH, YOU CREATURES OF HATE! YOUR MASTER CALLS!",
 	Pull		= "Impudent whelps! You've rushed headlong to your own deaths! See now, the master stirs!\r\n"
 })
 
