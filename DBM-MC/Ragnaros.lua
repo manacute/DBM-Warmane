@@ -28,7 +28,7 @@ local warnEmerge		= mod:NewAnnounce("WarnEmerge", 2, "Interface\\AddOns\\DBM-Cor
 local timerWrathRag		= mod:NewCDTimer(25, 20566, nil, nil, nil, 2, nil, DBM_CORE_L.IMPORTANT_ICON, nil, mod:IsMelee() and 1, 4)--25-31.6
 local timerSubmerge		= mod:NewTimer(180, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6, nil, nil, 1, 5)
 local timerEmerge		= mod:NewTimer(90, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6, nil, nil, 1, 5)
-local timerCombatStart	= mod:NewTimer(78, "timerCombatStart", "Interface\\Icons\\Ability_Warrior_OffensiveStance", nil, nil, nil, nil, nil, 1, 3)
+local timerCombatStart	= mod:NewTimer(72.5, "timerCombatStart", "Interface\\Icons\\Ability_Warrior_OffensiveStance", nil, nil, nil, nil, nil, 1, 3)
 
 mod:AddRangeFrameOption("18", nil, "-Melee")
 
@@ -41,7 +41,7 @@ function mod:OnCombatStart(delay)
 	table.wipe(addsGuidCheck)
 	self.vb.addLeft = 0
 	self.vb.ragnarosEmerged = true
-	timerWrathRag:Start(26.7-delay)
+	timerWrathRag:Start(30-delay)
 	timerSubmerge:Start(180-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(18)
@@ -79,7 +79,7 @@ local function emerged(self)
 	self.vb.ragnarosEmerged = true
 	timerEmerge:Stop()
 	warnEmerge:Show()
-	timerWrathRag:Start(26.7)--need to find out what it is first.
+	timerWrathRag:Start(30)
 	timerSubmerge:Start(180)
 end
 
@@ -117,7 +117,7 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.Submerge then
+	if msg == L.Submerge or msg == L.SubmergeTwo then
 		self:SendSync("Submerge")
 	elseif msg == L.Pull and self:AntiSpam(5, 4) then
 		self:SendSync("SummonRag")
