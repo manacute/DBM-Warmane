@@ -34,16 +34,18 @@ local yellFireball			= mod:NewYell(18392)
 local specWarnBlastNova		= mod:NewSpecialWarningRun(68958, "Melee", nil, nil, 4, 2)
 local specWarnAdds			= mod:NewSpecialWarningAdds(68959, "-Healer", nil, nil, 1, 2)
 
-local timerNextFlameBreath	= mod:NewCDTimer(13.3, 18435, nil, "Tank", 2, 5)--13.3-20 Breath she does on ground in frontal cone.
-local timerNextDeepBreath	= mod:NewCDTimer(35, 18584, nil, nil, nil, 3)--Range from 35-60seconds in between based on where she moves to.
+local timerBellowingRoar 	= mod:NewCDTimer(22, 18431, nil, nil, nil, 3)		-- 1st instant, 2nd 15sec, all others 22sec
+local timerNextFlameBreath	= mod:NewCDTimer(13.3, 18435, nil, "Tank", 2, 5)	-- 10 to 20, Breath she does on ground in frontal cone.
+local timerNextDeepBreath	= mod:NewCDTimer(35, 18584, nil, nil, nil, 3)		-- Range from 35-60s based on where she moves to.
 local timerBreath			= mod:NewCastTimer(8, 18584, nil, nil, nil, 3)
-local timerWhelps			= mod:NewTimer(105, "TimerWhelps", 10697, nil, nil, 1)
+local timerWhelps			= mod:NewTimer(90, "TimerWhelps", 10697, nil, nil, 1)
 local timerBigAddCD			= mod:NewAddsTimer(44.9, 68959, nil, "-Healer")
 local timerAchieve			= mod:NewAchievementTimer(300, 4405)
 local timerAchieveWhelps	= mod:NewAchievementTimer(10, 4406)
 
 mod:AddBoolOption("SoundWTF3", false, "sound")
 
+mod.vb.first_bellowing = true
 mod.vb.warned_preP2 = false
 mod.vb.warned_preP3 = false
 mod.vb.whelpsCount = 0
@@ -65,8 +67,8 @@ function mod:Whelps()
 	if self:IsInCombat() then
 		self.vb.whelpsCount = self.vb.whelpsCount + 1
 		timerWhelps:Start()
-		warnWhelpsSoon:Schedule(95)
-		self:ScheduleMethod(105, "Whelps")
+		warnWhelpsSoon:Schedule(80)
+		self:ScheduleMethod(90, "Whelps")
 	end
 end
 
@@ -106,6 +108,12 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 18431 then
 		specWarnBellowingRoar:Show()
 		specWarnBellowingRoar:Play("fearsoon")
+		if self.vb.first_bellowing then
+			timerBellowingRoar:Start(15)
+			self.vb.first_bellowing = false
+		else
+			timerBellowingRoar:Start()
+		end
 	elseif spellId == 18500 then
 		warnWingBuffet:Show()
 	elseif spellId == 18392 then
