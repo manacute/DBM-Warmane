@@ -1249,7 +1249,7 @@ function enemyCheckFunc(uId, range)
 end
 
 do
-	local bandages = {21991, 34721, 34722, 53049, 53050, 53051}  -- you should have one of these bandages in your cache
+	local bandages = {14529, 14530, 21991, 34721, 34722, 53049, 53050, 53051}  -- you should have one of these bandages in your cache
 
 	checkFuncs[15] = function(uId)
 		if UnitIsEnemy("player", uId) then
