@@ -28,18 +28,19 @@ local yellBombFades		= mod:NewShortFadesYell(20475)
 local specWarnInferno	= mod:NewSpecialWarningRun(19695, "Melee", nil, nil, 4, 2)
 local specWarnIgnite	= mod:NewSpecialWarningDispel(19659, "RemoveMagic", nil, nil, 1, 2)
 
-local timerInfernoCD	= mod:NewCDTimer(21, 19695, nil, nil, nil, 2)--21-27.9
+local timerInfernoCD	= mod:NewCDTimer(21, 19695, nil, nil, nil, 2)			-- 21 to 26
 local timerInferno		= mod:NewBuffActiveTimer(8, 19695, nil, nil, nil, 2)
-local timerIgniteManaCD	= mod:NewCDTimer(27, 19659, nil, nil, nil, 2)--27-33
-local timerBombCD		= mod:NewCDTimer(13.3, 20475, nil, nil, nil, 3)--13.3-18.3
+local timerIgniteManaCD	= mod:NewCDTimer(30, 19659, nil, nil, nil, 2		)	-- 27 to 32
+local timerBombCD		= mod:NewCDTimer(13, 20475, nil, nil, nil, 3)			-- 11 to 16
 local timerBomb			= mod:NewTargetTimer(8, 20475, nil, nil, nil, 3)
 local timerArmageddon	= mod:NewCastTimer(8, 20478, nil, nil, nil, 2)
 
 mod:AddSetIconOption("SetIconOnBombTarget", 20475, false, false, {8})
 
 function mod:OnCombatStart(delay)
-	--timerIgniteManaCD:Start(7-delay)--7-19, too much variation for first
-	timerBombCD:Start(11-delay)
+	--timerIgniteManaCD:Start(7-delay)											-- 7 to 19, too much variation for first
+	timerBombCD:Start(13-delay)  												-- 11 to 16
+	timerInfernoCD:Start(14-delay)												-- 13 to 15
 end
 
 function mod:SPELL_AURA_APPLIED(args)
