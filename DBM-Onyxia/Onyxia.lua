@@ -18,6 +18,15 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH boss1"
 )
 
+local warnBreathNtoS		= mod:NewAnnounce("WarnNtoS", 1, 17086)
+local warnBreathStoN		= mod:NewAnnounce("WarnStoN", 1, 18351)
+local warnBreathEtoW		= mod:NewAnnounce("WarnEtoW", 1, 18576)
+local warnBreathWtoE		= mod:NewAnnounce("WarnWtoE", 1, 18609)
+local warnBreathSEtoNW		= mod:NewAnnounce("WarnSEtoNW", 1, 18564)
+local warnBreathNWtoSE		= mod:NewAnnounce("WarnNWtoSE", 1, 18584)
+local warnBreathSWtoNE		= mod:NewAnnounce("WarnSWtoNE", 1, 18596)
+local warnBreathNEtoSW		= mod:NewAnnounce("WarnNEtoSW", 1, 18617)
+
 local warnWhelpsSoon		= mod:NewAnnounce("WarnWhelpsSoon", 1, 69004)
 local warnWingBuffet		= mod:NewSpellAnnounce(18500, 2, nil, "Tank")
 local warnKnockAway			= mod:NewTargetNoFilterAnnounce(19633, 2, nil, false)
@@ -95,9 +104,26 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 68958 then
         specWarnBlastNova:Show()
 	elseif args:IsSpellID(17086, 18351, 18564, 18576) or args:IsSpellID(18584, 18596, 18609, 18617) then	-- 1 ID for each direction
-		specWarnBreath:Show()
+--		specWarnBreath:Show()
 		timerBreath:Start()
 		timerNextDeepBreath:Start()
+		if spellId == 18351 then
+			warnBreathStoN:Show()
+		elseif spellId == 18576 then
+			warnBreathEtoW:Show()
+		elseif spellId == 18609 then
+			warnBreathWtoE:Show()
+		elseif spellId == 18564 then
+			warnBreathSEtoNW:Show() 
+		elseif spellId == 18584 then
+			warnBreathNWtoSE:Show()
+		elseif spellId == 18596 then
+			warnBreathSWtoNE:Show()
+		elseif spellId == 18617 then
+			warnBreathNEtoSW:Show()
+		elseif spellId == 17086 then
+			warnBreathNtoS:Show()
+		end
 --		preWarnDeepBreath:Schedule(35)              -- Pre-Warn Deep Breath
 	elseif args:IsSpellID(18435, 68970) then        -- Flame Breath (Ground phases)
 		timerNextFlameBreath:Start()

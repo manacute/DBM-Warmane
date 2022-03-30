@@ -10,7 +10,15 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarnWhelpsSoon		= "Onyxian Whelps soon"
+	WarnWhelpsSoon		= "Onyxian Whelps soon",
+	WarnNtoS			= "North to South, stand LEFT or RIGHT",
+	WarnStoN			= "South to North, stand LEFT or RIGHT",
+	WarnEtoW			= "East to West, stand TOP or BOTTOM",
+	WarnWtoE			= "West to East, stand TOP or BOTTOM",
+	WarnNEtoSW			= "NE to SW, stand TOP-LEFT or BOTTOM-RIGHT",
+	WarnSWtoNE			= "SW to NE, stand TOP-LEFT or BOTTOM-RIGHT",
+	WarnNWtoSE			= "NW to SE, stand TOP-RIGHT or BOTTOM-LEFT",
+	WarnSEtoNW			= "SE to NW, stand TOP-RIGHT or BOTTOM-LEFT"
 })
 
 L:SetTimerLocalization({
