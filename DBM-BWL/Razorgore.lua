@@ -12,7 +12,7 @@ mod:SetWipeTime(180)--guesswork
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 22425",
-	"SPELL_CAST_SUCCESS 23040 19873",
+	"SPELL_CAST_SUCCESS 23040 19873 23023",
 	"SPELL_AURA_APPLIED 23023",
 	"CHAT_MSG_MONSTER_EMOTE",
 	"UNIT_DIED"
@@ -26,7 +26,8 @@ local warnEggsLeft			= mod:NewCountAnnounce(19873, 1)
 
 local specWarnFireballVolley= mod:NewSpecialWarningMoveTo(22425, false, nil, nil, 2, 2)
 
-local timerAddsSpawn		= mod:NewTimer(47, "TimerAddsSpawn", 19879, nil, nil, 1)--Only for start of adds, not adds after the adds.
+local timerAddsSpawn		= mod:NewTimer(45, "TimerAddsSpawn", 19879, nil, nil, 1)--Only for start of adds, not adds after the adds.
+local timerConflag			= mod:NewCDTimer(30, 23023, nil, false)
 
 mod:AddSpeedClearOption("BWL", true)
 
@@ -47,7 +48,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 23023 and args:IsDestTypePlayer() then
+	if args.spellId == 22425 then
 		if self.Options.SpecWarn22425moveto then
 			specWarnFireballVolley:Show(DBM_CORE_L.BREAK_LOS)
 			specWarnFireballVolley:Play("findshelter")
@@ -62,9 +63,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnPhase2:Show()
 		self:SetStage(2)
 	--This may not be accurate, it depends on how large expanded combat log range is
-	elseif args.spellId == 19873 then
-		self.vb.eggsLeft = self.vb.eggsLeft - 1
-		warnEggsLeft:Show(string.format("%d/%d",30-self.vb.eggsLeft,30))
+	elseif args.spellId == 23023 then
+		timerConflag:Start(30)
 	end
 end
 
@@ -78,6 +78,13 @@ end
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if (msg == L.Phase2Emote or msg:find(L.Phase2Emote)) and self.vb.phase < 2 then
 		self:SendSync("Phase2")
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.YellEgg1 or msg == L.YellEgg2 or msg == L.YellEgg3) and self.vb.phase < 2 and self.vb.eggsLeft > 1 then
+		self.vb.eggsLeft = self.vb.eggsLeft - 1
+		warnEggsLeft:Show(string.format("%d/%d",30-self.vb.eggsLeft,30))
 	end
 end
 
@@ -96,5 +103,6 @@ function mod:OnSync(msg, name)
 	if msg == "Phase2" and self.vb.phase < 2 then
 		warnPhase2:Show()
 		self:SetStage(2)
+		timerConflag:Start(12)
 	end
 end
