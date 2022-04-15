@@ -21,12 +21,12 @@ local warnFrenzy			= mod:NewSpellAnnounce(23342, 3, nil, "Tank|RemoveEnrage|Heal
 
 local specWarnFrenzy		= mod:NewSpecialWarningDispel(23342, "RemoveEnrage", nil, nil, 1, 6)
 
-local timerWingBuffet		= mod:NewCDTimer(31, 23339, nil, nil, nil, 2)
-local timerShadowFlameCD	= mod:NewCDTimer(14, 22539, nil, false)--14-21
+local timerWingBuffet		= mod:NewCDTimer(30, 23339, nil, nil, nil, 2)
+local timerShadowFlameCD	= mod:NewCDTimer(10, 22539, nil, false)--14-21
 local timerFrenzy	 		= mod:NewBuffActiveTimer(10, 23342, nil, "Tank|RemoveEnrage|Healer", 5, 5, nil, DBM_CORE_L.ENRAGE_ICON)
 
 function mod:OnCombatStart(delay)
-	timerShadowFlameCD:Start(18-delay)
+	timerShadowFlameCD:Start(10-delay)
 	timerWingBuffet:Start(30-delay)
 end
 
@@ -60,5 +60,16 @@ end
 function mod:SPELL_AURA_REMOVED(args)--did not see ebon use any of these abilities
 	if args.spellId == 23342 then
 		timerFrenzy:Stop()
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 11981 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
+		if DBM:NumRealAlivePlayers() > 0 then
+			DBM:EndCombat(self)
+		else
+			DBM:EndCombat(self, true)--Pass wipe arg end combat
+		end
 	end
 end
