@@ -13,10 +13,11 @@ mod:RegisterEvents(
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 22539 22686",
+	"SPELL_CAST_START 22539 22686 22664 22665 22666",
 	"SPELL_AURA_APPLIED 22687 22667",
 	"UNIT_DIED",
-	"UNIT_HEALTH mouseover target"
+	"UNIT_HEALTH mouseover target",
+	"PARTY_KILL"
 )
 
 local WarnAddsLeft			= mod:NewAnnounce("WarnAddsLeft", 2, "136116")
@@ -25,55 +26,54 @@ local warnPhase				= mod:NewPhaseChangeAnnounce()
 local warnPhase3Soon		= mod:NewPrePhaseAnnounce(3)
 local warnShadowFlame		= mod:NewCastAnnounce(22539, 2)
 local warnFear				= mod:NewCastAnnounce(22686, 2)
+local warnSBVolley			= mod:NewCastAnnounce(22665, 2)
 
 local specwarnShadowCommand	= mod:NewSpecialWarningTarget(22667, nil, nil, 2, 1, 2)
 local specwarnVeilShadow	= mod:NewSpecialWarningDispel(22687, "RemoveCurse", nil, nil, 1, 2)
 local specwarnClassCall		= mod:NewSpecialWarning("specwarnClassCall", nil, nil, nil, 1, 2)
 
 local timerPhase			= mod:NewPhaseTimer(15)
+local timerShadowFlameCD	= mod:NewCDTimer(12, 22539, nil, nil)
+local timerVeilShadowCD		= mod:NewCDTimer(25, 22687, nil, nil)
 local timerClassCall		= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
-local timerFearNext			= mod:NewCDTimer(26.7, 22686, nil, nil, 3, 2)--26-42.5
+local timerFearNext			= mod:NewCDTimer(25, 22686, nil, nil, 3, 2)--26-42.5
+local timerAddsSpawn		= mod:NewTimer(10, "TimerAddsSpawn", 19879, nil, nil, 1)
+local timerMindControlCD	= mod:NewCDTimer(24, 22667, nil, nil)
+local timerSBVolleyCD		= mod:NewCDTimer(19, 22665, nil, nil)
+local timerSilenceCD		= mod:NewCDTimer(14, 22666, nil, nil)
+local timerShadowblinkCD	= mod:NewCDTimer(30, 22664, nil, nil)
 
 mod.vb.addLeft = 42
 local addsGuidCheck = {}
-local firstBossMod = DBM:GetModByName("Razorgore")
+
 
 function mod:OnCombatStart(delay, yellTriggered)
 	table.wipe(addsGuidCheck)
 	self.vb.addLeft = 42
 	self:SetStage(1)
+	timerAddsSpawn:Start(15-delay)
+	timerMindControlCD:Start(30-delay)
+	timerSBVolleyCD:Start(13-delay)
+	timerSilenceCD:Start(20-delay)
 end
 
-function mod:OnCombatEnd(wipe)
-	if not wipe then
-		DBM.Bars:CancelBar(DBM_CORE_L.SPEED_CLEAR_TIMER_TEXT)
-		if firstBossMod.vb.firstEngageTime then
-			local thisTime = time() - firstBossMod.vb.firstEngageTime
-			if thisTime and thisTime > 0 then
-				if not firstBossMod.Options.FastestClear then
-					--First clear, just show current clear time
-					DBM:AddMsg(DBM_CORE_L.RAID_DOWN:format("BWL", DBM:strFromTime(thisTime)))
-					firstBossMod.Options.FastestClear = thisTime
-				elseif (firstBossMod.Options.FastestClear > thisTime) then
-					--Update record time if this clear shorter than current saved record time and show users new time, compared to old time
-					DBM:AddMsg(DBM_CORE_L.RAID_DOWN_NR:format("BWL", DBM:strFromTime(thisTime), DBM:strFromTime(firstBossMod.Options.FastestClear)))
-					firstBossMod.Options.FastestClear = thisTime
-				else
-					--Just show this clear time, and current record time (that you did NOT beat)
-					DBM:AddMsg(DBM_CORE_L.RAID_DOWN_L:format("BWL", DBM:strFromTime(thisTime), DBM:strFromTime(firstBossMod.Options.FastestClear)))
-				end
-			end
-			firstBossMod.vb.firstEngageTime = nil
-		end
-	end
-end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 22539 then
 		warnShadowFlame:Show()
+		timerShadowFlameCD:Start()
 	elseif args.spellId == 22686 then
 		warnFear:Show()
 		timerFearNext:Start()
+	elseif args.spellId == 22667 then
+		timerMindControlCD:Start(24)
+	elseif args.spellId == 22665 then
+		warnSBVolley:Show()
+		timerSBVolleyCD:Start(19)
+	elseif args.spellId == 22664 then
+		timerShadowblinkCD:Start(30)
+	elseif args.spellId == 22666 then
+		timerSilenceCD:Start()
 	end
 end
 
@@ -89,7 +89,8 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-function mod:UNIT_DIED(args)
+
+function mod:PARTY_KILL(args)
 	local guid = args.destGUID
 	local cid = self:GetCIDFromGUID(guid)
 	if cid == 14264 or cid == 14263 or cid == 14261 or cid == 14265 or cid == 14262 or cid == 14302 then--Red, Bronze, Blue, Black, Green, Chromatic
@@ -97,7 +98,7 @@ function mod:UNIT_DIED(args)
 			addsGuidCheck[guid] = true
 			self.vb.addLeft = self.vb.addLeft - 1
 			--40, 35, 30, 25, 20, 15, 12, 9, 6, 3
-			if self.vb.addLeft >= 15 and (self.vb.addLeft % 5 == 0) or self.vb.addLeft >= 1 and (self.vb.addLeft % 3 == 0) then
+			if self.vb.addLeft >= 15 and (self.vb.addLeft % 5 == 0) or self.vb.addLeft >= 1 and (self.vb.addLeft % 3 == 0) and self.vb.addLeft < 15 then
 				WarnAddsLeft:Show(self.vb.addLeft)
 			end
 		end
@@ -150,8 +151,14 @@ do
 			local phase = tonumber(arg) or 0
 			if phase == 2 then
 				self:SetStage(2)
+				timerShadowblinkCD:Stop()
+				timerSilenceCD:Stop()
+				timerSBVolleyCD:Stop()
+				timerMindControlCD:Stop()
 				timerPhase:Start(15)--15 til encounter start fires, not til actual land?
-				--timerFearNext:Start(46.6)
+				timerShadowFlameCD:Start(27)
+				timerFearNext:Start(40)
+				timerClassCall:Start(45)
 			elseif phase == 3 then
 				self:SetStage(3)
 			end
