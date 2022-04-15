@@ -17,11 +17,11 @@ local warnWingBuffet		= mod:NewCastAnnounce(23339, 2)
 local warnShadowFlame		= mod:NewCastAnnounce(22539, 2)
 local warnFlameBuffet		= mod:NewCountAnnounce(23341, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(23341))
 
-local timerWingBuffet		= mod:NewCDTimer(31, 23339, nil, nil, nil, 2)--Verified on classic 31-36
-local timerShadowFlameCD	= mod:NewCDTimer(14, 22539, nil, false)--14-21
+local timerWingBuffet		= mod:NewCDTimer(30, 23339, nil, nil, nil, 2)--Verified on classic 31-36
+local timerShadowFlameCD	= mod:NewCDTimer(10, 22539, nil, false)--14-21
 
 function mod:OnCombatStart(delay)
-	timerShadowFlameCD:Start(18-delay)
+	timerShadowFlameCD:Start(10-delay)
 	timerWingBuffet:Start(30-delay)
 end
 
@@ -43,3 +43,13 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 		end
 	end
 end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 11983 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
+		if DBM:NumRealAlivePlayers() > 0 then
+			DBM:EndCombat(self)
+		else
+			DBM:EndCombat(self, true)--Pass wipe arg end combat
+		end
+	end
