@@ -28,7 +28,7 @@ local specWarnAdrenalineOut	= mod:NewSpecialWarningMoveAway(18173, nil, nil, 2, 
 local yellAdrenaline		= mod:NewYell(18173, nil, false)
 local yellAdrenalineFades	= mod:NewShortFadesYell(18173)
 
-local timerAdrenalineCD		= mod:NewCDTimer(15.7, 18173, nil, nil, nil, 3)
+local timerAdrenalineCD		= mod:NewCDTimer(15, 18173, nil, nil, nil, 3)
 local timerAdrenaline		= mod:NewTargetTimer(20, 18173, nil, nil, nil, 5)
 local timerCombatStart		= mod:NewCombatTimer(41.5)
 
@@ -38,7 +38,7 @@ mod.vb.debuffIcon = 8
 
 function mod:OnCombatStart(delay)
 	self.vb.debuffIcon = 8
-	timerAdrenalineCD:Start(15.7-delay)
+	timerAdrenalineCD:Start(15-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -105,5 +105,16 @@ end
 function mod:OnSync(msg, targetName)
 	if msg == "PullRP" then
 		timerCombatStart:Start()
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 13020 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
+		if DBM:NumRealAlivePlayers() > 0 then
+			DBM:EndCombat(self)
+		else
+			DBM:EndCombat(self, true)--Pass wipe arg end combat
+		end
 	end
 end
