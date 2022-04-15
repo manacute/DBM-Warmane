@@ -21,12 +21,12 @@ local warnShadow			= mod:NewTargetNoFilterAnnounce(23340, 4, nil, "Tank|Healer",
 local specWarnShadowYou		= mod:NewSpecialWarningYou(23340, nil, nil, nil, 1, 2)
 local specWarnShadow		= mod:NewSpecialWarningTaunt(23340, nil, nil, nil, 1, 2)
 
-local timerWingBuffet		= mod:NewCDTimer(31, 23339, nil, nil, nil, 2)
-local timerShadowFlameCD	= mod:NewCDTimer(14, 22539, nil, false)--14-21
+local timerWingBuffet		= mod:NewCDTimer(30, 23339, nil, nil, nil, 2)
+local timerShadowFlameCD	= mod:NewCDTimer(10, 22539, nil, false)--14-21
 local timerShadow			= mod:NewTargetTimer(8, 23340, nil, "Tank|Healer", 3, 5, nil, DBM_CORE_L.TANK_ICON)
 
 function mod:OnCombatStart(delay)
-	timerShadowFlameCD:Start(18-delay)
+	timerShadowFlameCD:Start(10-delay)
 	timerWingBuffet:Start(30-delay)
 end
 
@@ -60,5 +60,16 @@ end
 function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 23340 then
 		timerShadow:Stop(args.destName)
+	end
+end
+
+function mod:UNIT_DIED(args)
+	local cid = self:GetCIDFromGUID(args.destGUID)
+	if cid == 14601 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
+		if DBM:NumRealAlivePlayers() > 0 then
+			DBM:EndCombat(self)
+		else
+			DBM:EndCombat(self, true)--Pass wipe arg end combat
+		end
 	end
 end
