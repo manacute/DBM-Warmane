@@ -179,7 +179,7 @@ L:SetMiscLocalization({
 	YellPaladin	= "Paladins... I've heard you have many lives. Show me.",
 	YellDruid	= "Druids and your silly shapeshifting. Lets see it in action!",
 	YellPriest	= "Priests! If you're going to keep healing like that, we might as well make it a little more interesting!",
-	YellWarrior	= "Warriors, I know you can hit harder than that! Lets see it!",
+	YellWarrior	= "Warriors, I know you can hit harder than that! Let's see it!",
 	YellRogue	= "Rogues? Stop hiding and face me!",
 	YellWarlock	= "Warlocks, you shouldn't be playing with magic you don't understand. See what happens?",
 	YellHunter	= "Hunters and your annoying pea-shooters!",
