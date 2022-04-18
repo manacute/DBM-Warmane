@@ -29,7 +29,7 @@ local yellAdrenaline		= mod:NewYell(18173, nil, false)
 local yellAdrenalineFades	= mod:NewShortFadesYell(18173)
 
 local timerAdrenalineCD		= mod:NewCDTimer(15, 18173, nil, nil, nil, 3)
-local timerAdrenaline		= mod:NewTargetTimer(20, 18173, nil, nil, nil, 5)
+local timerAdrenaline		= mod:NewTargetTimer(15, 18173, nil, nil, nil, 5)
 local timerCombatStart		= mod:NewCombatTimer(41.5)
 
 mod:AddSetIconOption("SetIconOnDebuffTarget2", 18173, true, false, {8, 7, 6})
@@ -56,6 +56,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 18173 then
 		timerAdrenaline:Start(args.destName)
+		timerAdrenalineCD:Start()
 		if self.Options.SetIconOnDebuffTarget2 then
 			self:SetIcon(args.destName, self.vb.debuffIcon)
 		end
@@ -107,6 +108,7 @@ function mod:OnSync(msg, targetName)
 		timerCombatStart:Start()
 	end
 end
+
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
