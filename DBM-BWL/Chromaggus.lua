@@ -8,15 +8,15 @@ mod:SetModelID(14367)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 23309 23313 23189 23315 23312",
-	"SPELL_AURA_APPLIED 23155 23169 23153 23154 23170 23128 23537",
+	"SPELL_CAST_START 23308 23313 23189 23315 23312",
+	"SPELL_AURA_APPLIED 23155 23169 23153 23154 23170 23128 23537 28371",
 --	"SPELL_AURA_REFRESH",
 	"SPELL_AURA_REMOVED 23155 23169 23153 23154 23170 23128",
 	"UNIT_HEALTH mouseover target",
 	"CHAT_MSG_MONSTER_EMOTE"
 )
 
---(ability.id = 23309 or ability.id = 23313 or ability.id = 23189 or ability.id = 23315 or ability.id = 23312) and type = "begincast"
+--(ability.id = 23308 or ability.id = 23313 or ability.id = 23189 or ability.id = 23315 or ability.id = 23312) and type = "begincast"
 local warnBreath		= mod:NewAnnounce("WarnBreath", 2, 23316)
 local warnRed			= mod:NewSpellAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewSpellAnnounce(23169, 2, nil, false)
@@ -34,7 +34,7 @@ local specWarnFrenzy	= mod:NewSpecialWarningDispel(23128, "RemoveEnrage", nil, n
 local timerBreath		= mod:NewTimer(2, "TimerBreath", 23316, nil, nil, 3)
 local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316, nil, nil, 3)
 local timerFrenzy		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage|Healer", 4, 5, nil, DBM_CORE_L.TANK_ICON..DBM_CORE_L.ENRAGE_ICON)
-local timerVuln			= mod:NewTimer(17, "TimerVulnCD")-- seen 16.94 - 25.53, avg 21.8
+local timerVuln			= mod:NewTimer(45, "TimerVulnCD")
 
 --mod:AddNamePlateOption("NPAuraOnVulnerable", 22277)
 mod:AddInfoFrameOption(22277, true)
@@ -183,7 +183,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(23309, 23313, 23189, 23315, 23312) then
+	if args:IsSpellID(23308, 23313, 23189, 23315, 23312) then
 		warnBreath:Show(args.spellName)
 		timerBreath:Start(2, args.spellName)
 		timerBreath:UpdateIcon(args.spellId)
@@ -240,7 +240,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if mydebuffs >= 3 then
 			warnMutation:Show(mydebuffs.."/5")
 		end
-	elseif args.spellId == 23128 and args:IsDestTypeHostile() then
+	elseif args.spellId == 28371 and args:IsDestTypeHostile() then
 		if self.Options.SpecWarn23128dispel then
 			specWarnFrenzy:Show(args.destName)
 			specWarnFrenzy:Play("enrage")
@@ -259,17 +259,17 @@ end
 --mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 23128 and args:IsPlayer() then
+	if args.spellId == 23155 and args:IsPlayer() then 	-- red
 		mydebuffs = mydebuffs - 1
-	elseif args.spellId == 23169 and self:AntiSpam(3, 2) and args:IsPlayer() then
+	elseif args.spellId == 23169 and self:AntiSpam(3, 2) and args:IsPlayer() then -- green
 		mydebuffs = mydebuffs - 1
-	elseif args.spellId == 23153 and self:AntiSpam(3, 3) and args:IsPlayer() then
+	elseif args.spellId == 23153 and self:AntiSpam(3, 3) and args:IsPlayer() then -- blue
 		mydebuffs = mydebuffs - 1
-	elseif args.spellId == 23154 and self:AntiSpam(3, 4) and args:IsPlayer() then
+	elseif args.spellId == 23154 and self:AntiSpam(3, 4) and args:IsPlayer() then -- black
 		mydebuffs = mydebuffs - 1
-	elseif args.spellId == 23170 and args:IsPlayer() then
+	elseif args.spellId == 23170 and args:IsPlayer() then -- bronze
 		mydebuffs = mydebuffs - 1
-	elseif args.spellId == 23128 and args:IsDestTypeHostile() then
+	elseif args.spellId == 23128 and args:IsDestTypeHostile() then -- frenzy
 		timerFrenzy:Stop()
 	end
 end
