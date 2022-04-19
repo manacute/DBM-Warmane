@@ -56,7 +56,6 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 18173 then
 		timerAdrenaline:Start(args.destName)
-		timerAdrenalineCD:Start()
 		if self.Options.SetIconOnDebuffTarget2 then
 			self:SetIcon(args.destName, self.vb.debuffIcon)
 		end
