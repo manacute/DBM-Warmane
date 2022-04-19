@@ -29,7 +29,7 @@ local yellAdrenaline		= mod:NewYell(18173, nil, false)
 local yellAdrenalineFades	= mod:NewShortFadesYell(18173)
 
 local timerAdrenalineCD		= mod:NewCDTimer(15, 18173, nil, nil, nil, 3)
-local timerAdrenaline		= mod:NewTargetTimer(15, 18173, nil, nil, nil, 5)
+local timerAdrenaline		= mod:NewTargetTimer(20, 18173, nil, nil, nil, 5)
 local timerCombatStart		= mod:NewCombatTimer(41.5)
 
 mod:AddSetIconOption("SetIconOnDebuffTarget2", 18173, true, false, {8, 7, 6})
@@ -38,7 +38,6 @@ mod.vb.debuffIcon = 8
 
 function mod:OnCombatStart(delay)
 	self.vb.debuffIcon = 8
-	timerAdrenalineCD:Start(15-delay)
 end
 
 function mod:SPELL_CAST_START(args)
