@@ -18,10 +18,10 @@ local warnShadowFlame		= mod:NewCastAnnounce(22539, 2)
 local warnFlameBuffet		= mod:NewCountAnnounce(23341, 3, nil, nil, DBM_CORE_L.AUTO_ANNOUNCE_OPTIONS.stack:format(23341))
 
 local timerWingBuffet		= mod:NewCDTimer(30, 23339, nil, nil, nil, 2)--Verified on classic 31-36
-local timerShadowFlameCD	= mod:NewCDTimer(10, 22539, nil, false)--14-21
+local timerShadowFlameCD	= mod:NewCDTimer(15, 22539, nil, false)--14-21
 
 function mod:OnCombatStart(delay)
-	timerShadowFlameCD:Start(10-delay)
+	timerShadowFlameCD:Start(18-delay)
 	timerWingBuffet:Start(30-delay)
 end
 

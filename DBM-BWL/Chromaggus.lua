@@ -36,7 +36,7 @@ local timerBreath		= mod:NewTimer(2, "TimerBreath", 23316, nil, nil, 3)
 local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316, nil, nil, 3)
 local timerFrenzy		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage|Healer", 4, 5, nil, DBM_CORE_L.ENRAGE_ICON)
 local timerFrenzyCC		= mod:NewBuffActiveTimer(8, 28371, nil, "Tank|RemoveEnrage|Healer", 4, 5, nil, DBM_CORE_L.ENRAGE_ICON) --buggy frenzy spell on CC
-local timerVuln			= mod:NewCDTimer(45, 22277, nil, nil)
+local timerVuln			= mod:NewCDTimer(17, 22277, nil, nil)
 local timerFrenzyCD		= mod:NewCDTimer(10, 23128, nil, nil)
 local timerFrenzyCDCC	= mod:NewCDTimer(10, 28371, nil, nil)
 
