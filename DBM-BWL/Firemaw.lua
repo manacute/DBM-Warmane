@@ -53,3 +53,4 @@ function mod:UNIT_DIED(args)
 			DBM:EndCombat(self, true)--Pass wipe arg end combat
 		end
 	end
+end
