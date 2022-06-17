@@ -28,6 +28,10 @@ ignore = {
 	"111/[A-Z][A-Z0-9_]+",	-- Setting an undefined global variable
 	"113/[A-Z][A-Z0-9_]+",	-- Accessing an undefined global variable (GlobalStrings and Constants 2char+)
 	"131/[A-Z][A-Z0-9_]+",	-- Unused implicitly defined global variable (GlobalStrings and Constants 2char+)
+	"131/tIndexOf",	-- Unused global variable
+	"131/IsInGroup",	-- Unused global variable
+	"131/GetNumSubgroupMembers",	-- Unused global variable
+	"131/GetNumGroupMembers",	-- Unused global variable
 	"314", -- Value of a field in a table literal is unused
 	"42.", -- Shadowing a local variable, an argument, a loop variable.
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
@@ -43,7 +47,6 @@ ignore = {
 	"211/L", -- Unused local variable "L"
 	"211/CL", -- Unused local variable "CL"
 	"212", -- Unused argument
-	"213", -- Unused loop variable
 	"231/_.*", -- unused variables starting with _
 	"311", -- Value assigned to a local variable is unused
 	"312/self", -- Value assigned is overwritten
@@ -89,7 +92,7 @@ globals = {
 	"TexturePoolMixin",
 	"TexturePool_Hide",
 	"TexturePool_HideAndClearAnchors",
-	
+
 	"_G",
 	"bit",
 	"Recount",
@@ -111,6 +114,7 @@ globals = {
 	"DBMKalFrameDrag",
 	"DBM",
 	"DBM_CORE_L",
+	"DBM_COMMON_L",
 	"DBM_BossPreview",
 	"DBM_DISABLE_ZONE_DETECTION",
 	"DBM_GUI_Bosses",
@@ -120,7 +124,7 @@ globals = {
 	"DBM_GUI_OptionsFrameBossMods",
 	"DBM_GUI_OptionsFramePanelContainer",
 	"DBM_GUI_OptionsFramePanelContainerFOV",
-	"DBM_GUI_Translations",
+	"DBM_GUI_L",
 	"DBM_GUI",
 	"DBM_INCOMING",
 	"DBMHudMap",
@@ -132,6 +136,7 @@ globals = {
 	"DBT_AllPersistentOptions",
 	"DBT_PersistentOptions",
 	"DBT",
+	"FlashWindow",
 	"LOCALE_koKR",
 	"LOCALE_ruRU",
 	"LOCALE_zhCN",

@@ -1,7 +1,8 @@
 local mod	= DBM:NewMod("Chromaggus", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 188 $"):sub(12, -3))
+
+mod:SetRevision("20220518110528")
 mod:SetCreatureID(14020)
 mod:SetModelID(14367)
 mod:RegisterCombat("combat")
@@ -15,7 +16,7 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_EMOTE"
 )
 
-local warnBreathSoon	= mod:NewAnnounce("WarnBreathSoon", 1, 23316)
+--(ability.id = 23308 or ability.id = 23313 or ability.id = 23187 or ability.id = 23315 or ability.id = 23310) and type = "begincast"
 local warnBreath		= mod:NewAnnounce("WarnBreath", 2, 23316)
 local warnRed			= mod:NewTargetAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewTargetAnnounce(23169, 2, nil, false)
@@ -34,6 +35,7 @@ local specWarnFrenzyCC	= mod:NewSpecialWarningDispel(28371, "RemoveEnrage", nil,
 
 local timerBreath		= mod:NewTimer(2, "TimerBreath", 23316, nil, nil, 3)
 local timerBreathCD		= mod:NewTimer(60, "TimerBreathCD", 23316, nil, nil, 3)
+
 local timerFrenzy		= mod:NewBuffActiveTimer(8, 23128, nil, "Tank|RemoveEnrage|Healer", 4, 5, nil, DBM_CORE_L.ENRAGE_ICON)
 local timerFrenzyCC		= mod:NewBuffActiveTimer(8, 28371, nil, "Tank|RemoveEnrage|Healer", 4, 5, nil, DBM_CORE_L.ENRAGE_ICON) --buggy frenzy spell on CC
 local timerVuln			= mod:NewCDTimer(17, 22277, nil, nil)
@@ -80,7 +82,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBronze:Show()
 		end
-	elseif args.spellId == 23128 and args:IsDestTypeHostile() then
+	elseif args.spellId == 28371 and args:IsDestTypeHostile() then
 		if self.Options.SpecWarn23128dispel then
 			specWarnFrenzy:Show(args.destName)
 			specWarnFrenzy:Play("enrage")

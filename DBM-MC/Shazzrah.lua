@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shazzrah", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7007 $"):sub(12, -3))
+mod:SetRevision("20220518110528")
 mod:SetCreatureID(12264)
 
 mod:SetModelID(13032)
@@ -28,6 +28,7 @@ local timerCurseCD			= mod:NewCDTimer(23, 19713, nil, nil, nil, 3, nil, DBM_CORE
 local timerDeadenMagic		= mod:NewBuffActiveTimer(30, 19714, nil, false, 3, 5, nil, DBM_CORE_L.MAGIC_ICON)
 local timerGateCD			= mod:NewCDTimer(45, 23138, nil, "Tank", 2, 5, nil, DBM_CORE_L.TANK_ICON)			-- 45
 local timerCounterSpellCD	= mod:NewCDTimer(15, 19715, nil, "SpellCaster", nil, 3)								-- 15 to 18
+
 
 function mod:OnCombatStart(delay)
 	timerCurseCD:Start(9-delay)						-- 7 to 11

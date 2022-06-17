@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Majordomo", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7007 $"):sub(12, -3))
+mod:SetRevision("20220518110528")
 mod:SetCreatureID(12018, 11663, 11664)
 
 mod:SetModelID(12018)
@@ -28,6 +28,7 @@ local timerDamageShield		= mod:NewBuffActiveTimer(10, 21075, nil, nil, nil, 5, n
 local timerTeleportCD		= mod:NewCDTimer(30, 20534, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerTeleportRandomCD = mod:NewCDTimer(30, 20618, nil, nil, nil, 5, nil, DBM_CORE_L.TANK_ICON)
 local timerShieldCD			= mod:NewTimer(30, "timerShieldCD", nil, nil, nil, 6, nil, DBM_CORE_L.DAMAGE_ICON)
+
 
 function mod:OnCombatStart(delay)
 	timerTeleportCD:Start(15-delay)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7007 $"):sub(12, -3))
+mod:SetRevision("20220518110528")
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 
 --mod:DisableEEKillDetection()--So disable only EE
@@ -44,7 +44,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 22425 then
 		if self.Options.SpecWarn22425moveto then
-			specWarnFireballVolley:Show(DBM_CORE_L.BREAK_LOS)
+			specWarnFireballVolley:Show(DBM_COMMON_L.BREAK_LOS)
 			specWarnFireballVolley:Play("findshelter")
 		else
 			warnFireballVolley:Show()
