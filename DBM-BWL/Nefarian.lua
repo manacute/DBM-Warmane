@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7007 $"):sub(12, -3))
+mod:SetRevision("20220518110528")
 mod:SetCreatureID(11583)
 
 mod:SetModelID(11380)
@@ -56,7 +56,6 @@ function mod:OnCombatStart(delay, yellTriggered)
 	timerSBVolleyCD:Start(13-delay)
 	timerSilenceCD:Start(20-delay)
 end
-
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 22539 then
