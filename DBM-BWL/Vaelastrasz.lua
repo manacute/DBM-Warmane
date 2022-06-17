@@ -38,7 +38,6 @@ mod.vb.debuffIcon = 8
 
 function mod:OnCombatStart(delay)
 	self.vb.debuffIcon = 8
-	timerAdrenalineCD:Start(15-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -107,6 +106,7 @@ function mod:OnSync(msg, targetName)
 		timerCombatStart:Start()
 	end
 end
+
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

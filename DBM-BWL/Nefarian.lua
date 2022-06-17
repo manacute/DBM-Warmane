@@ -34,14 +34,11 @@ local specwarnClassCall		= mod:NewSpecialWarning("specwarnClassCall", nil, nil, 
 
 local timerPhase			= mod:NewPhaseTimer(15)
 local timerShadowFlameCD	= mod:NewCDTimer(12, 22539, nil, nil)
-local timerVeilShadowCD		= mod:NewCDTimer(25, 22687, nil, nil)
 local timerClassCall		= mod:NewTimer(30, "TimerClassCall", "136116", nil, nil, 5)
 local timerFearNext			= mod:NewCDTimer(25, 22686, nil, nil, 3, 2)--26-42.5
 local timerAddsSpawn		= mod:NewTimer(10, "TimerAddsSpawn", 19879, nil, nil, 1)
 local timerMindControlCD	= mod:NewCDTimer(24, 22667, nil, nil)
 local timerSBVolleyCD		= mod:NewCDTimer(19, 22665, nil, nil)
-local timerSilenceCD		= mod:NewCDTimer(14, 22666, nil, nil)
-local timerShadowblinkCD	= mod:NewCDTimer(30, 22664, nil, nil)
 
 mod.vb.addLeft = 42
 local addsGuidCheck = {}
@@ -54,7 +51,6 @@ function mod:OnCombatStart(delay, yellTriggered)
 	timerAddsSpawn:Start(15-delay)
 	timerMindControlCD:Start(30-delay)
 	timerSBVolleyCD:Start(13-delay)
-	timerSilenceCD:Start(20-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -64,15 +60,9 @@ function mod:SPELL_CAST_START(args)
 	elseif args.spellId == 22686 then
 		warnFear:Show()
 		timerFearNext:Start()
-	elseif args.spellId == 22667 then
-		timerMindControlCD:Start(24)
 	elseif args.spellId == 22665 then
 		warnSBVolley:Show()
 		timerSBVolleyCD:Start(19)
-	elseif args.spellId == 22664 then
-		timerShadowblinkCD:Start(30)
-	elseif args.spellId == 22666 then
-		timerSilenceCD:Start()
 	end
 end
 
@@ -85,6 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 22667 then
 		specwarnShadowCommand:Show(args.destName)
 		specwarnShadowCommand:Play("findmc")
+		timerMindControlCD:Start(24)
 	end
 end
 
@@ -139,40 +130,36 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
-do
-	local playerClass = UnitClass("player")
+local playerClass = UnitClass("player")
 
-	function mod:OnSync(msg, arg)
-		if self:AntiSpam(5, msg) then
-			--Do nothing, this is just an antispam threshold for syncing
+function mod:OnSync(msg, arg)
+	if self:AntiSpam(5, msg) then
+		--Do nothing, this is just an antispam threshold for syncing
+	end
+	if msg == "Phase" and arg then
+		local phase = tonumber(arg) or 0
+		if phase == 2 then
+			self:SetStage(2)
+			timerSBVolleyCD:Stop()
+			timerMindControlCD:Stop()
+			timerPhase:Start(15)--15 til encounter start fires, not til actual land?
+			timerShadowFlameCD:Start(15+12)
+			timerFearNext:Start(15+25)
+			timerClassCall:Start(15+30)
+		elseif phase == 3 then
+			self:SetStage(3)
 		end
-		if msg == "Phase" and arg then
-			local phase = tonumber(arg) or 0
-			if phase == 2 then
-				self:SetStage(2)
-				timerShadowblinkCD:Stop()
-				timerSilenceCD:Stop()
-				timerSBVolleyCD:Stop()
-				timerMindControlCD:Stop()
-				timerPhase:Start(15)--15 til encounter start fires, not til actual land?
-				timerShadowFlameCD:Start(27)
-				timerFearNext:Start(40)
-				timerClassCall:Start(45)
-			elseif phase == 3 then
-				self:SetStage(3)
-			end
-			warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(arg))
+		warnPhase:Show(DBM_CORE_L.AUTO_ANNOUNCE_TEXTS.stage:format(arg))
+	end
+	if not self:IsInCombat() then return end
+	if msg == "ClassCall" and arg then
+		local className = LOCALIZED_CLASS_NAMES_MALE[arg]
+		if playerClass == className then
+			specwarnClassCall:Show()
+			specwarnClassCall:Play("targetyou")
+		else
+			warnClassCall:Show(className)
 		end
-		if not self:IsInCombat() then return end
-		if msg == "ClassCall" and arg then
-			local className = LOCALIZED_CLASS_NAMES_MALE[arg]
-			if playerClass == className then
-				specwarnClassCall:Show()
-				specwarnClassCall:Play("targetyou")
-			else
-				warnClassCall:Show(className)
-			end
-			timerClassCall:Start(30, className)
-		end
+		timerClassCall:Start(30, className)
 	end
 end
