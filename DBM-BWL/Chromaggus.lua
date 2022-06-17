@@ -8,7 +8,7 @@ mod:SetModelID(14367)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START 23308 23313 23189 23315 23312",
+	"SPELL_CAST_START 23308 23313 23187 23315 23310",
 	"SPELL_AURA_APPLIED 23155 23169 23153 23154 23170 23128 23537 28371",
 --	"SPELL_AURA_REFRESH",
 	"SPELL_AURA_REMOVED 23155 23169 23153 23154 23170 23128",
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_EMOTE"
 )
 
---(ability.id = 23308 or ability.id = 23313 or ability.id = 23189 or ability.id = 23315 or ability.id = 23312) and type = "begincast"
+--(ability.id = 23308 or ability.id = 23313 or ability.id = 23187 or ability.id = 23315 or ability.id = 23310) and type = "begincast"
 local warnBreath		= mod:NewAnnounce("WarnBreath", 2, 23316)
 local warnRed			= mod:NewSpellAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewSpellAnnounce(23169, 2, nil, false)
@@ -184,7 +184,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(23308, 23313, 23189, 23315, 23312) then
+	if args:IsSpellID(23308, 23313, 23187, 23315, 23310) then
 		warnBreath:Show(args.spellName)
 		timerBreath:Start(2, args.spellName)
 		timerBreath:UpdateIcon(args.spellId)
