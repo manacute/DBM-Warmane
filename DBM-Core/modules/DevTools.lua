@@ -18,9 +18,8 @@ do
 		end
 	end
 
-	function module:UNIT_SPELLCAST_SUCCEEDED(uId, _, spellId)
-		local spellName = DBM:GetSpellInfo(spellId)
-		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..spellId..")", 3)
+	function module:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
+		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName, 3)
 	end
 
 	--Spammy events that core doesn't otherwise need are now dynamically registered/unregistered based on whether or not user is actually debugging
@@ -36,7 +35,7 @@ do
 
 	function module:Debug(text, level)
 		--But we still want to generate callbacks for level 1 and 2 events
-		if DBM.Options.DebugLevel == 3 or (level or 1) < 3 then--Cap debug level to 2 for trannscriptor unless user specifically specifies 3
+		if DBM.Options.DebugLevel >= 3 or (level or 1) < 3 then--Cap debug level to 2 for transcriptor unless user specifically specifies 3
 			DBM:FireEvent("DBM_Debug", text, level)
 		end
 		if not DBM.Options or not DBM.Options.DebugMode then return end

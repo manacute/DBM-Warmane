@@ -161,8 +161,8 @@ L.WHISPER_SCENARIO_END_WIPE			= "%s no ha completado %s."
 L.WHISPER_SCENARIO_END_WIPE_STATS	= "%s no ha completado %s. Lo ha intentado sin éxito %d veces en total en esta dificultad."
 
 L.VERSIONCHECK_HEADER		= "Deadly Boss Mods - Versiones"
-L.VERSIONCHECK_ENTRY			= "%s: %s (r%d)"--One Boss mod
-L.VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) y %s (r%d)"--Two Boss mods
+L.VERSIONCHECK_ENTRY			= "%s: %s (%s) %s"--One Boss mod
+L.VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) y %s (%s)"--Two Boss mods
 L.VERSIONCHECK_ENTRY_NO_DBM	= "%s: Sin instalar"
 L.VERSIONCHECK_FOOTER		= "Se ha encontrado %d jugador(es) con DBM y %d jugador(es) con BigWigs."
 L.VERSIONCHECK_OUTDATED		= "Los siguientes %d jugadores tienen una versión desfasada de DBM: %s"
@@ -577,10 +577,6 @@ L.LAG_FOOTER					= "Sin respuesta: %s"
 L.LDB_TOOLTIP_HELP1	= "Clic izquierdo para abrir DBM"
 L.LDB_TOOLTIP_HELP2	= "Clic derecho para el menú de configuración"
 L.SILENTMODE_IS		= "El modo silencioso es "
-
-L.LDB_LOAD_MODS		= "Cargar módulo"
-
-L.LDB_ENABLE_BOSS_MOD	= "Habilitar módulo"
 
 L.WORLD_BUFFS.hordeOny			= "Miembros de la Horda, ciudadanos de Orgrimmar, vengan y reúnanse para homenajear un hecho heroico"
 L.WORLD_BUFFS.allianceOny		= "Ciudadanos y aliados de Ventormenta, en el día de hoy, hemos hecho historia."

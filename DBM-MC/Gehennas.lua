@@ -23,8 +23,9 @@ local specWarnGTFO	= mod:NewSpecialWarningGTFO(19717, nil, nil, nil, 1, 8)
 
 local timerRoF		= mod:NewCDTimer(6, 19717, nil, false, nil, 3)
 
+
 local timerCurse	= mod:NewCDTimer(26, 19716, nil, nil, nil, 3, nil, DBM_CORE_L.HEALER_ICON..DBM_CORE_L.CURSE_ICON)--26-30
-local timerFist		= mod:NewBuffActiveTimer(4, 20277, nil, false, 2, 3)
+--local timerFist		= mod:NewBuffActiveTimer(4, 20277, nil, false, 2, 3)
 
 function mod:OnCombatStart(delay)
 	timerCurse:Start(8-delay)

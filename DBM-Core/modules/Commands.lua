@@ -197,7 +197,7 @@ SlashCmdList["DEADLYBOSSMODSRPULL"] = function()
 	Pull(30)
 end
 
-local trackedHudMarkers = {}
+--local trackedHudMarkers = {}
 SLASH_DEADLYBOSSMODS1 = "/dbm"
 SlashCmdList["DEADLYBOSSMODS"] = function(msg)
 	local cmd = msg:lower()
@@ -439,8 +439,8 @@ SlashCmdList["DEADLYBOSSMODS"] = function(msg)
 		DBM:RequestInstanceInfo()
 	elseif cmd:sub(1, 10) == "debuglevel" then
 		local level = tonumber(cmd:sub(11)) or 1
-		if level < 1 or level > 5 then
-			DBM:AddMsg("Invalid Value. Debug Level must be between 1 and 5.")
+		if level < 1 or level > 3 then
+			DBM:AddMsg("Invalid Value. Debug Level must be between 1 and 3.")
 			return
 		end
 		DBM.Options.DebugLevel = level

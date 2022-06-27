@@ -122,9 +122,24 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	end
 end
 
+
 function mod:UNIT_HEALTH(uId)
 	if UnitHealth(uId) / UnitHealthMax(uId) <= 0.25 and self:GetUnitCreatureId(uId) == 14020 and not prewarn_P2 then
 		warnPhase2Soon:Show()
 		prewarn_P2 = true
+	end
+end
+
+function mod:OnSync(msg)
+	if not self:IsInCombat() then return end
+	if msg == "Vulnerable" then
+		timerVuln:Start()
+		table.wipe(vulnerabilities)
+		if self.Options.WarnVulnerable then
+			self:RegisterShortTermEvents(
+				"SPELL_DAMAGE"
+			)
+			check_target_vulns(self)
+		end
 	end
 end
