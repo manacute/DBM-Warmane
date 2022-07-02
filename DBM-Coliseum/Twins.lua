@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ValkTwins", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220518110528")
+mod:SetRevision("20220701215737")
 mod:SetCreatureID(34497, 34496)
 mod:SetMinCombatTime(30)
 mod:SetUsedIcons(1, 2, 3, 4)
@@ -25,11 +25,11 @@ mod:SetBossHealthInfo(
 
 local warnSpecial					= mod:NewAnnounce("WarnSpecialSpellSoon", 3)
 local warnTouchDebuff				= mod:NewAnnounce("WarningTouchDebuff", 2, 66823)
-local warnPoweroftheTwins			= mod:NewAnnounce("WarningPoweroftheTwins2", 4, nil, "Healer")
+local warnPoweroftheTwins			= mod:NewAnnounce("WarningPoweroftheTwins2", 4, 65916, "Healer", nil, nil, 65916)
 
 local specWarnSpecial				= mod:NewSpecialWarning("SpecWarnSpecial")--Change Color, No voice ideas for this
-local specWarnSwitch				= mod:NewSpecialWarning("SpecWarnSwitchTarget", nil, nil, nil, 1, 2)
-local specWarnKickNow 				= mod:NewSpecialWarning("SpecWarnKickNow", "HasInterrupt", nil, nil, 1, 2)
+local specWarnSwitch				= mod:NewSpecialWarning("SpecWarnSwitchTarget", nil, nil, nil, 1, 2, nil, nil, 65875)
+local specWarnKickNow 				= mod:NewSpecialWarning("SpecWarnKickNow", "HasInterrupt", nil, nil, 1, 2, nil, nil, 65875)
 local specWarnPoweroftheTwins		= mod:NewSpecialWarningDefensive(65916, "Tank", nil, 2, 1, 2)
 local specWarnEmpoweredDarkness		= mod:NewSpecialWarningYou(65724)--No voice ideas for this
 local specWarnEmpoweredLight		= mod:NewSpecialWarningYou(65748)--No voice ideas for this
@@ -44,7 +44,8 @@ local timerAchieve					= mod:NewAchievementTimer(180, 3815)
 local timerAnubRoleplay				= mod:NewTimer(52, "TimerAnubRoleplay", 43827, nil, nil, 6)
 
 mod:AddBoolOption("SpecialWarnOnDebuff", false, "announce")
-mod:AddBoolOption("SetIconOnDebuffTarget", false)
+--mod:AddBoolOption("SetIconOnDebuffTarget", false) -- only commented since retail groups to only 1 debuff ID, which is not a very good GUI approach.
+mod:AddSetIconOption("SetIconOnDebuffTarget", 66001, false, 0, {1, 2, 3, 4})
 mod:AddInfoFrameOption(67258, true)
 mod:AddBoolOption("HealthFrame", false)
 
