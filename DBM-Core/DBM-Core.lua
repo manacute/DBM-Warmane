@@ -79,9 +79,9 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20220624161607"),
-	DisplayVersion = "9.2.20 alpha", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2022, 5, 31) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20220704235809"),
+	DisplayVersion = "9.2.21 alpha", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2022, 7, 4) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 
 local fakeBWVersion = 7558
@@ -188,7 +188,7 @@ DBM.DefaultOptions = {
 	WhisperStats = false,
 	DisableStatusWhisper = false,
 	DisableGuildStatus = false,
-	HideBossEmoteFrame2 = true,
+	HideBossEmoteFrame2 = false,
 	SWarningAlphabetical = true,
 	SWarnNameInNote = true,
 	CustomSounds = 0,
@@ -2707,10 +2707,10 @@ do
 	local gsub = string.gsub
 
 	local function FixElv(optionName)
-		if DBM.Options[optionName]:lower():find("interface\\addons\\elvui\\media\\") then
-			DBM.Options[optionName] = gsub(DBM.Options[optionName], gsub("Interface\\AddOns\\ElvUI\\Media\\", "(%a)", function(v)
+		if DBM.Options[optionName]:lower():find("interface\\addons\\elvui\\core\\media\\") then -- Retail ElvUI structure
+			DBM.Options[optionName] = gsub(DBM.Options[optionName], gsub("Interface\\AddOns\\ElvUI\\Core\\Media\\", "(%a)", function(v)
 				return "[" .. v:upper() .. v:lower() .. "]"
-			end), "Interface\\AddOns\\ElvUI\\Core\\Media\\")
+			end), "Interface\\AddOns\\ElvUI\\Media\\") -- 3.3.5a ElvUI structure
 		end
 	end
 
@@ -5748,12 +5748,15 @@ function DBM:GetStage(modId)
 end
 
 function DBM:HasMapRestrictions()
-	SetMapToCurrentZone()
+	local playerX, playerY = GetPlayerMapPosition("player")
+	if playerX == 0 or playerY == 0 then -- attempt to fix zone once
+		SetMapToCurrentZone() -- DO NOT RUN THIS FUNCTION IN A LOOP! It's a waste of cpu power and will tank FPS due to radar loop scan.
+		playerX, playerY = GetPlayerMapPosition("player")
+	end
 	local mapName = GetMapInfo()
 	local level = GetCurrentMapDungeonLevel()
 	local usesTerrainMap = DungeonUsesTerrainMap()
 	level = usesTerrainMap and level - 1 or level
-	local playerX, playerY = GetPlayerMapPosition("player")
 	if (playerX == 0 or playerY == 0) or (self.MapSizes[mapName] and not self.MapSizes[mapName][level]) then
 		return true
 	end
@@ -6535,7 +6538,6 @@ function DBM:RegisterMapSize(zone, ...)
 end
 
 function DBM:GetMapSize()
-	SetMapToCurrentZone()
 	local mapName = GetMapInfo()
 	local level = GetCurrentMapDungeonLevel()
 	local usesTerrainMap = DungeonUsesTerrainMap()
