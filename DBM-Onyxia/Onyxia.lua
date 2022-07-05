@@ -36,7 +36,7 @@ local warnPhase3			= mod:NewPhaseAnnounce(3)
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2)
 local warnPhase3Soon		= mod:NewPrePhaseAnnounce(3)
 
---local preWarnDeepBreath     = mod:NewSoonAnnounce(17086, 2)--Experimental, if it is off please let me know.
+--local preWarnDeepBreath	 = mod:NewSoonAnnounce(17086, 2)--Experimental, if it is off please let me know.
 local specWarnBreath		= mod:NewSpecialWarningSpell(18584, nil, nil, nil, 2, 2)
 local specWarnBellowingRoar	= mod:NewSpecialWarningSpell(18431, nil, nil, nil, 2, 2)
 local yellFireball			= mod:NewYell(18392)
@@ -62,7 +62,7 @@ mod.vb.whelpsCount = 0
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.whelpsCount = 0
-    self.vb.warned_preP2 = false
+	self.vb.warned_preP2 = false
 	self.vb.warned_preP3 = false
 	timerAchieve:Start(-delay)
 	if self.Options.SoundWTF3 then
@@ -102,7 +102,7 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 68958 then
-        specWarnBlastNova:Show()
+		specWarnBlastNova:Show()
 	elseif args:IsSpellID(17086, 18351, 18564, 18576) or args:IsSpellID(18584, 18596, 18609, 18617) then	-- 1 ID for each direction
 --		specWarnBreath:Show()
 		timerBreath:Start()
