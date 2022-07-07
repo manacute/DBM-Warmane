@@ -44,7 +44,7 @@ mod.vb.addLeft = 42
 local addsGuidCheck = {}
 
 
-function mod:OnCombatStart()
+function mod:OnCombatStart(delay)
 	table.wipe(addsGuidCheck)
 	self.vb.addLeft = 42
 	self:SetStage(1)

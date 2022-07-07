@@ -17,6 +17,7 @@ mod:RegisterEvents(
 )
 
 --(ability.id = 23308 or ability.id = 23313 or ability.id = 23187 or ability.id = 23315 or ability.id = 23310) and type = "begincast"
+local warnBreathSoon	= mod:NewAnnounce("WarnBreathSoon", 1, 23316)
 local warnBreath		= mod:NewAnnounce("WarnBreath", 2, 23316)
 local warnRed			= mod:NewTargetAnnounce(23155, 2, nil, false)
 local warnGreen			= mod:NewTargetAnnounce(23169, 2, nil, false)
