@@ -39,6 +39,10 @@ L:SetGeneralLocalization({
 	name = "Ignis el Maestro de la Caldera"
 })
 
+L:SetOptionLocalization({
+	soundConcAuraMastery	= "Reproducir el sonido de $spell:31821 para anular los efectos de $spelll:63472 (sólo para el |cFFF48CBAPaladín|r que es el propietario de $spell:19746)"
+})
+
 ------------------
 --  Razorscale  --
 ------------------
@@ -136,7 +140,7 @@ L:SetMiscLocalization({
 	YellKill				= "He visto mundos hundirse en las llamas de los Creadores, como se desvanecían sus habitantes sin apenas un gemido. He visto sistemas planetarios enteros crearse y ser arrasados en lo que vuestros mortales corazones laten una sola vez. Y mi corazón permaneció desprovisto de emoción... de empatía. Yo... no... sentí... nada. Millones de vidas malgastadas ¿Acaso compartían vuestra tenacidad? ¿Amaban la vida como vosotros?", -- esES
 --	YellKill				= "He visto mundos enteros bañados en las llamas del Creador, a sus habitantes esfumarse dejando menos que un quejido. Sistemas planetarios nacen y son arrasados en lo que les lleva a sus corazones mortales dar un latido. Y aún después de todo, mi propio corazón carece de emoción... de compasión. Nunca. He. Sentido. Nada. Un millón de millones de vidas desperdiciadas. ¿Acaso todas ellas llevaban dentro tu tenacidad? ¿Todas amaban la vida como tú?", -- esMX
 	Emote_CollapsingStar	= "¡%s comienza a invocar estrellas en colapso!",
---	Phase2					= "¡Observad las herramientas de la creación!", -- esES
+	Phase2					= "¡Observad las herramientas de la creación!", -- esES
 --	Phase2					= "¡Contempla las herramientas de la creación!", -- esMX
 	CollapsingStar			= "Estrella en colapso"
 })
@@ -185,14 +189,14 @@ L:SetWarningLocalization({
 	WarnCatDiedOne	= "Defensor feral muerto (1 vida restante)"
 })
 
-L:SetTimerLocalization({
-	timerDefender	= "Defensor feral activo"
-})
+-- L:SetTimerLocalization({
+-- 	timerDefender	= "Defensor feral activo"
+-- })
 
 L:SetOptionLocalization({
 	WarnCatDied		= "Mostrar aviso cuando muera el Defensor feral",
-	WarnCatDiedOne	= "Mostrar aviso cuando el Defensor feral solo tenga una vida restante",
-	timerDefender	= "Mostrar temporizador para cuando aparezca o reviva el Defensor feral"
+	WarnCatDiedOne	= "Mostrar aviso cuando el Defensor feral solo tenga una vida restante"
+--	timerDefender	= "Mostrar temporizador para cuando aparezca o reviva el Defensor feral"
 })
 
 L:SetMiscLocalization({
@@ -274,7 +278,11 @@ L:SetMiscLocalization({
 	YellAdds2			= "¡El azote de los elementos podrá con vosotros!", -- esES
 --	YellAdds2			= "¡La horda de elementos te atrapará!", -- esMX
 	EmoteLGift			= "comienza a crecer!", -- ¡Un |cFF00FFFFDon de la Protectora|r comienza a crecer!
-	TrashRespawnTimer	= "Reaparicion de Adds de Freya"
+	TrashRespawnTimer	= "Reaparicion de Adds de Freya",
+	YellPullNormal		= "¡Debemos proteger el Invernadero!", -- esES
+--	YellPullNormal		= ¡Hay que proteger el Conservatorio! -- esMX
+	YellPullHard		= "¡Ancestros, otorgadme vuestro poder!" -- esES
+--	YellPullHard		= "¡Ancestros, concédanme su fuerza!" -- esMX
 })
 
 ----------------------

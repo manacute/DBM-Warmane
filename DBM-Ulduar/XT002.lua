@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("XT002", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220701220005")
+mod:SetRevision("20220718000855")
 mod:SetCreatureID(33293)
 mod:SetUsedIcons(1, 2)
 
@@ -16,7 +16,7 @@ mod:RegisterEventsInCombat(
 )
 
 -- General
-local enrageTimer					= mod:NewBerserkTimer(360)
+local enrageTimer					= mod:NewBerserkTimer(600)
 local timerAchieve					= mod:NewAchievementTimer(205, 2937)
 
 mod:AddRangeFrameOption(12, nil, true)
@@ -26,6 +26,7 @@ mod:AddTimerLine(DBM_CORE_L.SCENARIO_STAGE:format(1))
 local warnLightBomb					= mod:NewTargetNoFilterAnnounce(65121, 3)
 local warnGravityBomb				= mod:NewTargetNoFilterAnnounce(64234, 3)
 
+local specWarnTympanicTantrum		= mod:NewSpecialWarningSpell(62776, nil, nil, nil, 1, 2)
 local specWarnLightBomb				= mod:NewSpecialWarningMoveAway(65121, nil, nil, nil, 1, 2)
 local yellLightBomb					= mod:NewYell(65121)
 local specWarnGravityBomb			= mod:NewSpecialWarningMoveAway(64234, nil, nil, nil, 1, 2)
@@ -33,7 +34,8 @@ local yellGravityBomb				= mod:NewYell(64234)
 
 local timerTympanicTantrumCast		= mod:NewCastTimer(62776)
 local timerTympanicTantrum			= mod:NewBuffActiveTimer(8, 62776, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)
-local timerTympanicTantrumCD		= mod:NewCDTimer(60, 62776, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 3)
+local timerTympanicTantrumCD		= mod:NewCDTimer(60, 62776, nil, nil, nil, 2, nil, DBM_COMMON_L.HEALER_ICON, nil, 3) -- S3 FM Log review 2022/07/17 - " Tympanic Tantrum-62776-npc:33293 = pull:60.0/Stage 1/60.0, Stage 2/6.6, Stage 1/29.0, 35.9/64.9/71.5, 60.0, 60.0, 60.0, 60.1, 60.0", -- [1]
+
 local timerLightBomb				= mod:NewTargetTimer(9, 65121, nil, nil, nil, 3)
 local timerGravityBomb				= mod:NewTargetTimer(9, 64234, nil, nil, nil, 3)
 
@@ -52,7 +54,7 @@ function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	enrageTimer:Start(-delay)
 	timerAchieve:Start()
-	if self:IsDifficulty("normal10") then
+	if self:IsDifficulty("normal10") then -- REVIEW. No log yet to validate this.
 		timerTympanicTantrumCD:Start(35-delay)
 	else
 		timerTympanicTantrumCD:Start(60-delay)
@@ -70,6 +72,8 @@ end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 62776 then					-- Tympanic Tantrum (aoe damage + daze)
+		specWarnTympanicTantrum:Show()
+		specWarnTympanicTantrum:Play("aesoon")
 		timerTympanicTantrumCast:Start()
 		timerTympanicTantrumCD:Start()
 	end
@@ -101,10 +105,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		warnGravityBomb:Show(args.destName)
 		timerGravityBomb:Start(args.destName)
-	elseif spellId == 63849 then
+	elseif spellId == 63849 then	-- Exposed Heart
 		self:SetStage(2)
+		timerTympanicTantrumCD:Stop()
+		timerTympanicTantrum:Stop()
 		timerHeart:Start()
-		timerTympanicTantrumCD:Start(65) -- maybe?
 	end
 end
 
@@ -117,9 +122,10 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.SetIconOnGravityBombTarget then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args.spellId == 63849 then
-		self:setStage(1)
+	elseif args.spellId == 63849 then	-- Exposed Heart
+		self:SetStage(1)
 		timerHeart:Stop()
+		timerTympanicTantrumCD:Start(35.9) -- REVIEW! Variance? Only one log so far (S3 FM Log review 2022/07/17)
 	end
 end
 

@@ -37,6 +37,10 @@ L:SetGeneralLocalization({
 	name = "掌炉者伊格尼斯"
 })
 
+L:SetOptionLocalization({
+	soundConcAuraMastery	= "播放$spell:31821的声音来否定$spell:63472的效果（只针对$spell:19746的主人|cFFF48CBA圣骑士|r"
+})
+
 ------------------
 --  Razorscale  --
 ------------------
@@ -134,7 +138,7 @@ L:SetMiscLocalization({
 --	YellPull			= "你们的行动不合逻辑。这场战斗所有可能产生的结果都已被计算在内。无论结果如何，万神殿都会收到观察者发出的信息。",
 	YellKill			= "我曾见证过无数个世界被造物者的烈焰吞噬，那些世界中的人们甚至来不及发出一声悲鸣就永远消逝了。整个星球从诞生到毁灭，不过是弹指一挥间。但是从始至终，我都没有为之动容……我，毫无，感觉。千亿的生命被毁灭。他们是否都像你们一样坚强？他们是否都像你们一样热爱生命？",
 	Emote_CollapsingStar= "%s开始召唤坍缩之星！",
---	Phase2				= "看吧，这创世的神器！!",
+	Phase2				= "看吧，这创世的神器！!",
 	CollapsingStar		= "坍缩之星"
 })
 
@@ -182,14 +186,14 @@ L:SetWarningLocalization({
 	WarnCatDiedOne			= "野性防御者倒下(剩下最后一只)"
 })
 
-L:SetTimerLocalization({
-	timerDefender		= "野性防御者复活"
-})
+-- L:SetTimerLocalization({
+-- 	timerDefender		= "野性防御者复活"
+-- })
 
 L:SetOptionLocalization({
 	WarnCatDied				= "当野性防御者死亡时显示警报",
-	WarnCatDiedOne			= "当野性防御者剩下最后一只时显示警报",
-	timerDefender			= "当野性防御者准备复活时显示计时条"
+	WarnCatDiedOne			= "当野性防御者剩下最后一只时显示警报"
+--	timerDefender			= "当野性防御者准备复活时显示计时条"
 })
 
 L:SetMiscLocalization({
@@ -268,7 +272,9 @@ L:SetMiscLocalization({
 	YellAdds1			= "艾欧娜尔，您的仆人需要帮助！",
 	YellAdds2			= "元素之潮会击垮你们！",
 	EmoteLGift			= "开始生长！", -- |cFF00FFFF生命缚誓者的礼物|r开始生长！
-	TrashRespawnTimer	= "弗蕾亚的小怪重生"
+	TrashRespawnTimer	= "弗蕾亚的小怪重生",
+	YellPullNormal		= "必须保卫温室！",
+	YellPullHard		= "长老们，将你们的力量赐予我！"
 })
 
 ----------------------

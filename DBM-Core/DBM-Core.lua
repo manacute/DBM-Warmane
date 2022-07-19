@@ -79,9 +79,9 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20220704235809"),
-	DisplayVersion = "9.2.21 alpha", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2022, 7, 4) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("20220718223506"),
+	DisplayVersion = "9.2.22 alpha", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2022, 7, 15) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 
 local fakeBWVersion = 7558
@@ -157,7 +157,7 @@ DBM.DefaultOptions = {
 	VPReplacesCustom = false,
 	AlwaysPlayVoice = false,
 	VPDontMuteSounds = false,
-	EventSoundVictory2 = "Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg",
+	EventSoundVictory2 = "None", --"Interface\\AddOns\\DBM-Core\\sounds\\Victory\\SmoothMcGroove_Fanfare.ogg",
 	EventSoundWipe = "None",
 	EventSoundPullTimer = "None",
 	EventSoundEngage2 = "None",
@@ -223,7 +223,7 @@ DBM.DefaultOptions = {
 	RLReadyCheckSound = true,
 	AFKHealthWarning = false,
 	AutoReplySound = true,
-	HideObjectivesFrame = true,
+	HideObjectivesFrame = false, --true,
 	HideGarrisonToasts = true,
 	HideGuildChallengeUpdates = true,
 	HideTooltips = false,
@@ -1830,6 +1830,10 @@ do
 				self:Schedule(2, DBM.RequestTimers, DBM)
 				fireEvent("raidJoin", playerName) -- backwards compatibility
 				fireEvent("DBM_raidJoin", playerName)
+				local bigWigs = _G["BigWigs"]
+				if bigWigs and bigWigs.db.profile.raidicon and not self.Options.DontSetIcons and self:GetRaidRank() > 0 then--Both DBM and bigwigs have raid icon marking turned on.
+					self:AddMsg(L.BIGWIGS_ICON_CONFLICT)--Warn that one of them should be turned off to prevent conflict (which they turn off is obviously up to raid leaders preference, dbm accepts either or turned off to stop this alert)
+				end
 			end
 			for i = 1, GetNumRaidMembers() do
 				local name, rank, subgroup, _, _, className = GetRaidRosterInfo(i)
@@ -1872,8 +1876,17 @@ do
 			if #iconSeter > 0 then
 				tsort(iconSeter, function(a, b) return a > b end)
 				local elected = iconSeter[1]
-				if playerName == elected:sub(elected:find(" ") + 1) then
+				if playerName == elected:sub(elected:find(" ") + 1) then--Highest revision in raid, auto allow, period, even if out of date, you're revision in raid that has assist
 					private.enableIcons = true
+					DBM:Debug("You have been elected as primary icon setter for raid for having newest revision in raid that has assist/lead", 2)
+				end
+				--Initiate backups that at least have latest version, in case the main elect doesn't have icons enabled
+				for i = 2, 3 do--Allow top 3 revisions in raid to set icons, instead of just top one
+					local electedBackup = iconSeter[i]
+					if updateNotificationDisplayed == 0 and electedBackup and playerName == electedBackup:sub(elected:find(" ") + 1) then
+						private.enableIcons = true
+						DBM:Debug("You have been elected as one of 2 backup icon setters in raid that have assist/lead", 2)
+					end
 				end
 			end
 		elseif IsInGroup() then
@@ -2203,7 +2216,7 @@ end
 
 function DBM:GetBossUnitId(name, bossOnly)--Deprecated, only old mods use this
 	local returnUnitID
-	for i = 1, 4 do
+	for i = 1, 5 do
 		if UnitName("boss" .. i) == name then
 			returnUnitID = "boss"..i
 		end
@@ -2220,7 +2233,7 @@ end
 
 function DBM:GetUnitIdFromGUID(cidOrGuid, bossOnly)
 	local returnUnitID
-	for i = 1, 4 do
+	for i = 1, 5 do
 		local unitId = "boss"..i
 		local bossGUID = UnitGUID(unitId)
 		if type(cidOrGuid) == "number" then--CID passed
@@ -2255,6 +2268,7 @@ function DBM:CheckNearby(range, targetname)
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId and not UnitIsUnit("player", uId) then
 			local inRange = DBM.RangeCheck:GetDistance(uId)
+			DBM:Debug("CheckNearby fired for targetname: " .. targetname .. " (" .. uId .. ") and range: ".. range .. "yd. Actual distance found: " .. inRange, 3) -- self can be mod too
 			if inRange and inRange < range + 0.5 then
 				return true
 			end
@@ -2734,11 +2748,13 @@ do
 		DBM_AllSavedOptions[usedProfile] = self.Options
 
 		-- force enable dual profile (change default)
+		--[[ Custom edit: disabled override, since having this as true requires user to know how mod profiles work and wonder why the mod profile they had previously configured is not "working"
 		if DBM_CharSavedRevision < 12976 then
 			if playerClass ~= "MAGE" and playerClass ~= "WARLOCK" and playerClass ~= "ROGUE" then
 				DBM_UseDualProfile = true
 			end
 		end
+		--]]
 		DBM_CharSavedRevision = self.Revision
 		-- load special warning options
 		self:UpdateWarningOptions()
@@ -3311,9 +3327,6 @@ do
 	syncHandlers["DBMv4-IS"] = function(_, guid, ver, optionName)
 		DBM:Debug(("DBMv4-IS received %s %s %s"):format(guid, ver, optionName), 3)
 		ver = tonumber(ver) or 0
-		if ver >= 9999 then
-			ver = 4442
-		end
 		if ver > (iconSetRevision[optionName] or 0) then--Save first synced version and person, ignore same version. refresh occurs only above version (fastest person)
 			iconSetRevision[optionName] = ver
 			iconSetPerson[optionName] = guid
@@ -5749,15 +5762,15 @@ end
 
 function DBM:HasMapRestrictions()
 	local playerX, playerY = GetPlayerMapPosition("player")
-	if playerX == 0 or playerY == 0 then -- attempt to fix zone once
-		SetMapToCurrentZone() -- DO NOT RUN THIS FUNCTION IN A LOOP! It's a waste of cpu power and will tank FPS due to radar loop scan.
-		playerX, playerY = GetPlayerMapPosition("player")
-	end
+	-- if playerX == 0 or playerY == 0 then -- attempt to fix zone once. Disabled for now to confirm LK 2.5 FPS issues.
+	-- 	SetMapToCurrentZone() -- DO NOT RUN THIS FUNCTION IN A LOOP! It's a waste of cpu power and will tank FPS due to radar loop scan.
+	-- 	playerX, playerY = GetPlayerMapPosition("player")
+	-- end
 	local mapName = GetMapInfo()
 	local level = GetCurrentMapDungeonLevel()
 	local usesTerrainMap = DungeonUsesTerrainMap()
 	level = usesTerrainMap and level - 1 or level
-	if (playerX == 0 or playerY == 0) or (self.MapSizes[mapName] and not self.MapSizes[mapName][level]) then
+	if (playerX == 0 and playerY == 0) or (self.MapSizes[mapName] and not self.MapSizes[mapName][level]) then
 		return true
 	end
 	return false
@@ -8873,7 +8886,7 @@ do
 			--Now, check if all special warning filters are enabled to save cpu and abort immediately if true.
 			if DBM.Options.DontPlaySpecialWarningSound and DBM.Options.DontShowSpecialWarningFlash and DBM.Options.DontShowSpecialWarningText then return end
 			--Next, we check if trash mod warning and if so check the filter trash warning filter for trivial difficulties
-			if self.mod:IsEasyDungeon() and self.mod.isTrashMod and DBM.Options.FilterTrashWarnings2 then return end
+			if self.mod.isTrashMod and DBM.Options.FilterTrashWarnings2 and (self.mod:IsEasyDungeon() or DBM:IsTrivial()) then return end
 			--We also check if person has the role filter turned on (typical for highest end raiders who don't want as much handholding from DBM)
 			if specTypeFilterTable[self.announceType] then
 				if DBM.Options["SpamSpecRole"..specTypeFilterTable[self.announceType]] then return end
@@ -9899,9 +9912,18 @@ do
 		end
 	end
 
+	--In past boss mods have always had to manually call Stop just to restart a timer, to avoid triggering false debug messages
+	--This function should simplify boss mod creation by allowing you to "Restart" a timer with one call in mod instead of 2
+	function timerPrototype:Restart(timer, ...)
+		self:Stop(...)
+		self:Unschedule(...)--Also unschedules not yet started timers that used timer:Schedule()
+		self:Start(timer, ...)
+	end
+	timerPrototype.Reboot = timerPrototype.Restart
+
 	function timerPrototype:Cancel(...)
 		self:Stop(...)
-		self:Unschedule(...)
+		self:Unschedule(...)--Also unschedules not yet started timers that used timer:Schedule()
 	end
 
 	function timerPrototype:GetTime(...)

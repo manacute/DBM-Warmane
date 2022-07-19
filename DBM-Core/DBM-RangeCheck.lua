@@ -442,7 +442,7 @@ local RAID_CLASS_COLORS = _G["CUSTOM_CLASS_COLORS"] or RAID_CLASS_COLORS -- For 
 local GetPlayerMapPosition = GetPlayerMapPosition
 local UnitInRaid, UnitInParty, UnitIsPlayer = UnitInRaid, UnitInParty, UnitIsPlayer
 -- Nil variables
-local unitX, unitY, rangeX, rangeY
+local rangeX, rangeY
 -- Lib
 local LibRangeCheck = LibStub("LibRangeCheck-2.0")
 
@@ -498,7 +498,7 @@ local function getUnitRange(unit)
 		local mapX, mapY = DBM:GetMapSize()
 
 		local playerX, playerY = GetPlayerMapPosition("player")
-		unitX, unitY = GetPlayerMapPosition(unit)
+		local unitX, unitY = GetPlayerMapPosition(unit)
 		rangeX, rangeY = (unitX - playerX) * mapX, (unitY - playerY) * mapY
 		local range = (rangeX * rangeX + rangeY * rangeY) ^ 0.5
 
@@ -800,6 +800,8 @@ local function createTextFrame()
 		end
 		textFrame.lines[i] = line
 	end
+
+	textFrame:Hide()
 end
 
 local function createRadarFrame()
@@ -1057,7 +1059,8 @@ do
 						textFrame:SetHeight((closePlayer * 12) + 12)
 					end
 					if rEnabled then
-						if not unitX and not unitY then
+						local playerX, playerY = GetPlayerMapPosition("player")
+						if playerX == 0 and playerY == 0 then
 							rangeCheck:Hide(true)
 							return
 						end
@@ -1223,6 +1226,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 	if not restrictionsActive and (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and not radarFrame:IsShown() then
 		radarFrame:Show()
 	end
+	mainFrame.previousRange = mainFrame.range or range
 	mainFrame.range = range
 	mainFrame.filter = filter
 	mainFrame.redCircleNumPlayers = redCircleNumPlayers
@@ -1230,7 +1234,6 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 	mainFrame.hideTime = hideTime and (GetTime() + hideTime) or 0
 	mainFrame.restrictions = restrictionsActive
 	mainFrame.onlySummary = onlySummary
-	mainFrame.previousRange = mainFrame.range or range
 	mainFrame.previouslyShown = true
 	mainFrame.bossUnit = bossUnit
 	mainFrame.bossMode = bossUnit ~= nil
@@ -1260,7 +1263,8 @@ function rangeCheck:DisableBossMode()
 	if mainFrame and mainFrame.bossMode then
 		mainFrame.bossMode = false
 		mainFrame.bossUnit = nil
-		mainFrame.range = restoreRange
+		mainFrame.range = mainFrame.previousRange
+		restoreRange = mainFrame.range
 		if not mainFrame.previouslyShown then
 			self:Hide()
 		end
@@ -1268,7 +1272,7 @@ function rangeCheck:DisableBossMode()
 end
 
 function rangeCheck:Hide(force)
-	if restoreRange and not force then -- Restore range frame to way it was when boss mod is done with it
+	if not DBM.Options.DontRestoreRange and restoreRange and not force then -- Restore range frame to way it was when boss mod is done with it
 		rangeCheck:Show(restoreRange, restoreFilter, true, restoreThreshold, restoreReverse)
 	else
 		restoreRange, restoreFilter, restoreThreshold, restoreReverse = nil, nil, nil, nil

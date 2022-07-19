@@ -39,6 +39,10 @@ L:SetGeneralLocalization({
 	name = "Ignis, Meister des Eisenwerks"
 })
 
+L:SetOptionLocalization({
+	soundConcAuraMastery	= "Spielt den Sound von $spell:31821, um die Effekte von $spell:63472 zu negieren (nur für den |cFFF48CBAPaladin|r, der der Besitzer von $spell:19746 ist)"
+})
+
 ------------------
 --  Razorscale  --
 ------------------
@@ -134,7 +138,7 @@ L:SetMiscLocalization({
 --	YellPull2				= "Euer Handeln ist unlogisch. Alle Möglichkeiten dieser Begegnung wurden berechnet. Das Pantheon wird die Nachricht des Beobachters erhalten, ungeachtet des Ausgangs.",
 	YellKill				= "Ich sah Welten umhüllt von den Flammen der Schöpfer, sah ohne einen Hauch von Trauer ihre Bewohner vergehen. Ganze Planetensysteme geboren und vernichtet, während Eure sterblichen Herzen nur einmal schlagen. Doch immer war mein Herz kalt... ohne Mitgefühl. Ich - habe - nichts - gefühlt. Millionen, Milliarden Leben verschwendet. Trugen sie alle dieselbe Beharrlichkeit in sich, wie Ihr? Liebten sie alle das Leben so sehr, wie Ihr es tut?",
 	Emote_CollapsingStar	= "%s beginnt damit, kollabierende Sterne zu beschwören!",
---	Phase2					= "Erblicket die Instrumente der Schöpfung!",
+	Phase2					= "Erblicket die Instrumente der Schöpfung!",
 	CollapsingStar			= "Kollabierender Stern"
 })
 
@@ -182,14 +186,14 @@ L:SetWarningLocalization({
 	WarnCatDiedOne	= "Wilder Verteidiger tot (1 Leben übrig)"
 })
 
-L:SetTimerLocalization({
-	timerDefender	= "Wilder Verteidiger wird aktiviert"
-})
+-- L:SetTimerLocalization({
+-- 	timerDefender	= "Wilder Verteidiger wird aktiviert"
+-- })
 
 L:SetOptionLocalization({
 	WarnCatDied		= "Zeige Warnung, wenn der Wilde Verteidiger stirbt",
-	WarnCatDiedOne	= "Zeige Warnung, wenn der Wilde Verteidiger nur noch 1 Leben übrig hat",
-	timerDefender	= "Zeige Zeit bis zur Aktivierung des Wilden Verteidigers"
+	WarnCatDiedOne	= "Zeige Warnung, wenn der Wilde Verteidiger nur noch 1 Leben übrig hat"
+--	timerDefender	= "Zeige Zeit bis zur Aktivierung des Wilden Verteidigers"
 })
 
 L:SetMiscLocalization({
@@ -268,7 +272,9 @@ L:SetMiscLocalization({
 	YellAdds1			= "Eonar, Eure Dienerin braucht Hilfe!",
 	YellAdds2			= "Der Schwarm der Elemente soll über Euch kommen!",
 	EmoteLGift			= "fängt an zu wachsen!", -- Ein |cFF00FFFFGeschenk der Lebensbinderin|r fängt an zu wachsen!
-	TrashRespawnTimer	= "Freya-Trash-Respawn"
+	TrashRespawnTimer	= "Freya-Trash-Respawn",
+	YellPullNormal		= "Das Konservatorium muss verteidigt werden!",
+	YellPullHard		= "Ihr Ältesten, gewährt mir Eure Macht!"
 })
 
 ----------------------

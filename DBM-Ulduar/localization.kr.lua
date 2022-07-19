@@ -39,6 +39,10 @@ L:SetGeneralLocalization({
 	name = "용광로 군주 이그니스"
 })
 
+L:SetOptionLocalization({
+	soundConcAuraMastery	= "$spell:31821 사운드를 재생하여 $spell:63472의 효과를 무효화합니다($spell:19746의 소유자인 |cFFF48CBA성기사|r만 해당)"
+})
+
 ------------------
 --  Razorscale  --
 ------------------
@@ -133,7 +137,7 @@ L:SetMiscLocalization({
 --	YellPull				= "너희 행동은 비논리적이다. 이 전투에서 가능한 결말은 모두 계산되었다. 결과와 상관없이 판테온은 관찰자의 전갈을 받을 것이다.",
 	YellKill				= "나는 창조주의 불길이 씻어내린 세상을 보았다. 모두 변변히 저항도 못하고 사그라졌지. 너희 필멸자의 심장이 단 한 번 뛸 시간에 전 행성계가 탄생하고 무너졌다. 그러나 그 모든 시간 동안, 나는 공감이란 감정을... 몰랐다. 나는, 아무것도, 느끼지, 못했다. 무수한, 무수한 생명이 꺼졌다. 그들이 모두 너희처럼 강인했더냐? 그들이 모두 너희처럼 삶을 사랑했단 말이냐?",
 	Emote_CollapsingStar	= "%s|1이;가; 붕괴하는 별을 소환하기 시작합니다!",
---	Phase2					= "창조의 도구를 바라보아라!",
+	Phase2					= "창조의 도구를 바라보아라!",
 	CollapsingStar			= "붕괴하는 별"
 })
 
@@ -181,14 +185,14 @@ L:SetWarningLocalization({
 	WarnCatDiedOne		= "수호 야수 죽음 (1 번 남음)"
 })
 
-L:SetTimerLocalization({
-	timerDefender		= "수호 야수 활성"
-})
+-- L:SetTimerLocalization({
+-- 	timerDefender		= "수호 야수 활성"
+-- })
 
 L:SetOptionLocalization({
 	WarnCatDied			= "수호 야수의 남은부활 횟수 알림 보기",
-	WarnCatDiedOne		= "수호 야수 부활 횟수가 1번 남았을 때 알림 보기",
-	timerDefender		= "다음 수호 야수 활성 바 보기"
+	WarnCatDiedOne		= "수호 야수 부활 횟수가 1번 남았을 때 알림 보기"
+--	timerDefender		= "다음 수호 야수 활성 바 보기"
 })
 
 L:SetMiscLocalization({
@@ -267,7 +271,9 @@ L:SetMiscLocalization({
 	YellAdds1			= "이오나여, 당신의 종이 도움을 청합니다!",
 	YellAdds2			= "정령의 무리가 너희를 덮치리라!",
 	EmoteLGift			= "이 자라기 시작합니다!", -- |cFF00FFFF생명의 어머니의 선물|r이 자라기 시작합니다!
-	TrashRespawnTimer	= "프레이야 지역 리젠타임"
+	TrashRespawnTimer	= "프레이야 지역 리젠타임",
+	YellPullNormal		= "어떻게 해서든 정원을 수호해야 한다!",
+	YellPullHard		= "장로여, 내게 힘을 나눠다오!"
 })
 
 ----------------------
