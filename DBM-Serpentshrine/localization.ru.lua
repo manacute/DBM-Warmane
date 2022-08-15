@@ -28,8 +28,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Frost	= "Гидросса",
-	Nature	= "порчи"
+	Frost		= "Гидросса",
+	Nature		= "порчи",
+	YellPull	= "Я не позволю вам вмешиваться!"
 })
 
 -----------------------
@@ -93,8 +94,9 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	Human		= "Human",--Translate
 	Demon		= "Demon",--Translate
-	YellDemon	= "Be gone, trifling elf%.%s*I am in control now!",--Translate
-	YellPhase2	= "No... no! What have you done? I am the master! Do you hear me? I am... aaggh! Can't... contain him."--Translate
+	YellDemon	= "Прочь, жалкий эльф. Настало мое время!",
+	YellPhase2	= "Нет... нет! Что вы наделали? Я – главный! Слышишь меня? Я... Ааааах! Мне его... не удержать.",
+	YellPull	= "Наконец-то мое заточение окончено!"
 })
 
 -----------------------------
@@ -106,16 +108,11 @@ L:SetGeneralLocalization({
 	name = "Повелитель глубин Каратресс"
 })
 
-
-
-
-
-
-
 L:SetMiscLocalization({
 	Caribdis	= "Fathom-Guard Caribdis",--Translate
 	Tidalvess	= "Fathom-Guard Tidalvess",--Translate
-	Sharkkis	= "Fathom-Guard Sharkkis"--Translate
+	Sharkkis	= "Fathom-Guard Sharkkis",--Translate
+	YellPull	= "Стража, к бою! У нас гости..."
 })
 
 --------------------------
@@ -140,6 +137,11 @@ L:SetOptionLocalization({
 	WarnMurlocs		= "Объявить Мурлоки",
 	SpecWarnMurlocs	= "Show special warning when Murlocs spawning",--Translate
 	TimerMurlocs	= "Show timer for Murlocs spawning"--Translate
+})
+
+L:SetMiscLocalization({
+	Grave			= "%s отправляет своих врагов в водяные могилы!",
+	Murlocs			= "Сильный толчок землетрясения насторожил мурлоков поблизости!"
 })
 
 -----------------

@@ -28,8 +28,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Frost	= "冰霜阶段",
-	Nature	= "自然阶段"
+	Frost		= "冰霜阶段",
+	Nature		= "自然阶段",
+	YellPull	= "我不能允许你们介入！"
 })
 
 -----------------------
@@ -94,7 +95,8 @@ L:SetMiscLocalization({
 	Human		= "人形态",--Translate
 	Demon		= "恶魔形态",--Translate
 	YellDemon	= "滚开吧，脆弱的精灵。现在我说了算！",
-	YellPhase2	= "不……不！你在干什么？我才是主宰！你听到没有？我……啊啊啊啊！控制……不住了。"
+	YellPhase2	= "不……不！你在干什么？我才是主宰！你听到没有？我……啊啊啊啊！控制……不住了。",
+	YellPull	= "我的放逐终于结束了！"
 })
 
 -----------------------------
@@ -109,7 +111,8 @@ L:SetGeneralLocalization({
 L:SetMiscLocalization({
 	Caribdis	= "深水卫士卡莉蒂丝",--Translate
 	Tidalvess	= "深水卫士泰达维斯 ",--Translate
-	Sharkkis	= "深水卫士沙克基斯"--Translate
+	Sharkkis	= "深水卫士沙克基斯",--Translate
+	YellPull	= "卫兵！提高警惕！我们有客人来了……"
 })
 
 --------------------------
@@ -134,6 +137,11 @@ L:SetOptionLocalization({
 	WarnMurlocs		= "警报鱼人群",
 	SpecWarnMurlocs	= "鱼人群出现时显示特殊警报",--Translate
 	TimerMurlocs	= "显示鱼人群出现计时"--Translate
+})
+
+L:SetMiscLocalization({
+	Grave			= "%s把他的敌人送入了水下的坟墓！",
+	Murlocs			= "猛烈的地震警告了附近的鱼人们！"
 })
 
 -----------------
