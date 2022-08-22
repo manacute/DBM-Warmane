@@ -1,4 +1,6 @@
 ## Interface: 30300
+## X-Min-Interface: 30300
+
 ## Title:|cffffd200Deadly Boss Mods|r |cff69ccf0Core|r
 ## Title-zhCN:|cffffd200Deadly Boss Mods|r |cff69ccf0核心|r
 ## Title-ruRU:|cffffd200Deadly Boss Mods|r |cff69ccf0Ядро|r
@@ -15,7 +17,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: Barsoom, Bunny67, Zidras, DBM-Frostmourne contributors, original DBM team
-## Version: 9.2.22_alpha
+## Version: 9.2.23_alpha
 ## X-Website: https://github.com/Zidras/DBM-Warmane/
 
 compat.lua
