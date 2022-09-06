@@ -82,7 +82,7 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20220824183558"),
+	Revision = parseCurseDate("20220904101202"),
 	DisplayVersion = "9.2.23 alpha", -- the string that is shown as version
 	ReleaseRevision = releaseDate(2022, 8, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
@@ -2202,12 +2202,9 @@ function DBM:GetCIDFromGUID(guid)
 end
 
 function DBM:IsNonPlayableGUID(guid)
-	if type(guid) == "number" then return false end
-	local guidsub = guid:sub(1, 5)
-	if type(guidsub) == "number" then
-		local guidType = bband(guidsub, 0x00F)
-		return guidType and (guidType == 3 or guidType == 5) -- Creature and NPC. To determine, add pet or not?
-	end
+	if not guid or type(guid) ~= "string" then return false end
+	local guidType = tonumber(guid:sub(5,5), 16)
+	return guidType and (guidType == 3 or guidType == 5) -- Creature and NPC. To determine, add pet or not?
 end
 
 function DBM:IsCreatureGUID(guid)
@@ -3017,7 +3014,7 @@ do
 		end
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			DBM:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU")
 		end
 		--These can still change even if mapID doesn't
 		difficultyIndex = difficulty
@@ -3075,7 +3072,7 @@ do
 		self:Schedule(5, SecondaryLoadCheck, self)
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			DBM:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU")
 		end
 	end
 
@@ -4599,9 +4596,9 @@ do
 			WatchFrame:Show()
 			watchFrameRestore = false
 		end
-		if DBM.Options.FixCLEUOnCombatStart then
+		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			DBM:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU")
 		end
 	end
 
@@ -5149,8 +5146,9 @@ do
 				SendWorldSync(self, "WBE", modId.."\t"..playerRealm.."\t"..startHp.."\t8\t"..name)
 			end
 		end
-		if DBM.Options.FixCLEUOnCombatStart then
+		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries) -- schedule prevents client crash with DBM:StartCombat function (tested on Leotheras)
+			self:Debug("Scheduled FixCLEU")
 		end
 	end
 
@@ -9629,7 +9627,7 @@ do
 		if not self.option or self.mod.Options[self.option] then
 			if self.type and (self.type == "cdcount" or self.type == "nextcount") and not self.allowdouble then--remove previous timer.
 				for i = #self.startedTimers, 1, -1 do
-					if DBM.Options.BadTimerAlert or DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
+--					if DBM.Options.BadTimerAlert or DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
 						local bar = DBT:GetBar(self.startedTimers[i])
 						if bar then
 							local remaining = ("%.1f"):format(bar.timer)
@@ -9645,9 +9643,8 @@ do
 								end
 							end
 						end
-					end
+--					end
 					DBT:CancelBar(self.startedTimers[i])
-					fireEvent("DBM_Announce", message, self.icon, self.type, self.spellId, self.mod.id, false)
 					fireEvent("DBM_TimerStop", self.startedTimers[i])
 					tremove(self.startedTimers, i)
 				end
@@ -9704,7 +9701,7 @@ do
 					end
 				end
 			end
-			if DBM.Options.BadTimerAlert or DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
+--			if DBM.Options.BadTimerAlert or DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
 				if not self.type or (self.type ~= "target" and self.type ~= "active" and self.type ~= "fades" and self.type ~= "ai") and not self.allowdouble then
 					local bar = DBT:GetBar(id)
 					if bar then
@@ -9722,7 +9719,7 @@ do
 						end
 					end
 				end
-			end
+--			end
 			local colorId
 			if self.option then
 				colorId = self.mod.Options[self.option .. "TColor"]
@@ -9886,7 +9883,6 @@ do
 
 	--TODO, figure out why this function doesn't properly stop count timers when calling stop without count on count timers
 	function timerPrototype:Stop(...)
-		fireEvent("DBM_Announce", message, self.icon, self.type, self.spellId, self.mod.id, false)
 		if select("#", ...) == 0 then
 			for i = #self.startedTimers, 1, -1 do
 				fireEvent("DBM_TimerStop", self.startedTimers[i])
