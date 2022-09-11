@@ -82,7 +82,7 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20220904101202"),
+	Revision = parseCurseDate("20220909160016"),
 	DisplayVersion = "9.2.23 alpha", -- the string that is shown as version
 	ReleaseRevision = releaseDate(2022, 8, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
@@ -475,9 +475,9 @@ local type, select = type, select
 local GetTime = GetTime
 local bband = bit.band
 local floor, mhuge, mmin, mmax, mrandom = math.floor, math.huge, math.min, math.max, math.random
-local GetNumGroupMembers, GetNumPartyMembers, GetNumRaidMembers, GetRaidRosterInfo = GetNumGroupMembers, GetNumPartyMembers, GetNumRaidMembers, GetRaidRosterInfo -- with compat.lua
+local GetNumGroupMembers, GetNumSubgroupMembers, GetNumPartyMembers, GetNumRaidMembers, GetRaidRosterInfo = private.GetNumGroupMembers, private.GetNumSubgroupMembers, GetNumPartyMembers, GetNumRaidMembers, GetRaidRosterInfo -- with compat.lua
 local UnitName, GetUnitName = UnitName, GetUnitName
-local IsInRaid, IsInGroup, IsInInstance = IsInRaid, IsInGroup, IsInInstance -- with compat.lua
+local IsInRaid, IsInGroup, IsInInstance = private.IsInRaid, private.IsInGroup, IsInInstance -- with compat.lua
 local UnitAffectingCombat, InCombatLockdown, IsFalling, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty = UnitAffectingCombat, InCombatLockdown, IsFalling, UnitPlayerOrPetInRaid, UnitPlayerOrPetInParty
 local UnitGUID, UnitHealth, UnitHealthMax, UnitBuff, UnitDebuff, UnitAura = UnitGUID, UnitHealth, UnitHealthMax, UnitBuff, UnitDebuff, UnitAura
 local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit = UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit
@@ -493,6 +493,30 @@ local SendAddonMessage = SendAddonMessage
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
+
+---------------------------
+--  Retail API backport  --
+---------------------------
+-- prevent other addons from messing with the global function from compat.lua
+function DBM:tIndexOf(tbl, item)
+	return private.tIndexOf(tbl, item)
+end
+
+function DBM:IsInGroup()
+	return private.IsInGroup()
+end
+
+function DBM:IsInRaid()
+	return private.IsInRaid()
+end
+
+function DBM:GetNumSubgroupMembers()
+	return private.GetNumSubgroupMembers()
+end
+
+function DBM:GetNumGroupMembers()
+	return private.GetNumGroupMembers()
+end
 
 ---------------------------------
 --  General (local) functions  --
@@ -680,7 +704,7 @@ do
 	local args = setmetatable({}, argsMT)
 
 	function argsMT.__index:IsSpellID(...)
-		return tIndexOf({...}, args.spellId) ~= nil
+		return DBM:tIndexOf({...}, args.spellId) ~= nil
 	end
 
 	function argsMT.__index:IsPlayer()
@@ -785,11 +809,16 @@ do
 							break
 						end
 					end
-					-- Remove empty tables
+					-- Remove empty event uId table
 					if #mod.registeredUnitEvents[event] <= 0 then
 						mod.registeredUnitEvents[event] = nil
 					end
-					if #mod.registeredUnitEvents <= 0 then
+					-- Remove empty registered unit events table
+					local count = 0
+					for _ in pairs(mod.registeredUnitEvents) do
+						count = count + 1
+					end
+					if count <= 0 then
 						mod.registeredUnitEvents = nil
 					end
 				end
@@ -1993,10 +2022,6 @@ do
 		end
 	end
 
-	function DBM:IsInRaid()
-		return inRaid
-	end
-
 	function DBM:GetNumGuildPlayersInZone() -- Classic/BCC only
 		if not IsInGroup() then return 1 end
 		local total = 0
@@ -3014,7 +3039,7 @@ do
 		end
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			self:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU from SecondaryLoadCheck")
 		end
 		--These can still change even if mapID doesn't
 		difficultyIndex = difficulty
@@ -3072,7 +3097,7 @@ do
 		self:Schedule(5, SecondaryLoadCheck, self)
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			self:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU from ZONE_CHANGED_NEW_AREA")
 		end
 	end
 
@@ -4598,7 +4623,7 @@ do
 		end
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries)
-			self:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU from PLAYER_REGEN_DISABLED")
 		end
 	end
 
@@ -5148,7 +5173,7 @@ do
 		end
 		if self.Options.FixCLEUOnCombatStart then
 			self:Schedule(0.5, CombatLogClearEntries) -- schedule prevents client crash with DBM:StartCombat function (tested on Leotheras)
-			self:Debug("Scheduled FixCLEU")
+			self:Debug("Scheduled FixCLEU from CombatStart")
 		end
 	end
 
@@ -7578,15 +7603,15 @@ do
 	local font2u = CreateFrame("Frame", "DBMWarning2Updater", UIParent)
 	local font3u = CreateFrame("Frame", "DBMWarning3Updater", UIParent)
 	local font1 = frame:CreateFontString("DBMWarning1", "OVERLAY", "GameFontNormal")
-	font1:SetWidth(1024)
+	font1:SetWidth(0) -- Don't hardcode, it WILL cause client crashes if a string with icons and certain fonts reach a certain FontHeight on the OnUpdate grow
 	font1:SetHeight(0)
 	font1:SetPoint("TOP", 0, 0)
 	local font2 = frame:CreateFontString("DBMWarning2", "OVERLAY", "GameFontNormal")
-	font2:SetWidth(1024)
+	font2:SetWidth(0) -- Don't hardcode, it WILL cause client crashes if a string with icons and certain fonts reach a certain FontHeight on the OnUpdate grow
 	font2:SetHeight(0)
 	font2:SetPoint("TOP", font1, "BOTTOM", 0, 0)
 	local font3 = frame:CreateFontString("DBMWarning3", "OVERLAY", "GameFontNormal")
-	font3:SetWidth(1024)
+	font3:SetWidth(0) -- Don't hardcode, it WILL cause client crashes if a string with icons and certain fonts reach a certain FontHeight on the OnUpdate grow
 	font3:SetHeight(0)
 	font3:SetPoint("TOP", font2, "BOTTOM", 0, 0)
 	frame:SetMovable(1)
