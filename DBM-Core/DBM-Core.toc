@@ -17,7 +17,7 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## Author: Barsoom, Bunny67, Zidras, DBM-Frostmourne contributors, original DBM team
-## Version: 9.2.23_alpha
+## Version: 9.2.25_alpha
 ## X-Website: https://github.com/Zidras/DBM-Warmane/
 
 compat.lua
@@ -68,6 +68,7 @@ commonlocal.ru.lua
 # Pre-core modules
 modules\Modules.lua
 
+modules\SpecRole.lua
 modules\Scheduler.lua
 modules\DevTools.lua
 modules\Icons.lua
@@ -90,7 +91,6 @@ modules\Hyperlinks.lua
 modules\MinimapButton.lua
 modules\Notes.lua
 modules\Sounds.lua
-modules\SpecRole.lua
 modules\UpdateReminder.lua
 
 modules\objects\Localization.lua

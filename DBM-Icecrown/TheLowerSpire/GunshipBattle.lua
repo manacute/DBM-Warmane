@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220702001333")
+mod:SetRevision("20221003165303")
 local addsIcon
 local bossID
 mod:RegisterCombat("combat")
-mod:SetMinSyncRevision(4400)
 if UnitFactionGroup("player") == "Alliance" then
 	--mod:RegisterCombat("yell", L.CombatAlliance)
 	mod:RegisterKill("yell", L.KillAlliance)
@@ -19,6 +18,8 @@ else
 	addsIcon = 23336
 	bossID = 36948
 end
+mod:SetHotfixNoticeRev(20220921000000)
+mod:SetMinSyncRevision(20220921000000) -- prevent old DBM from syncing combatStart on yell Pull
 
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
@@ -103,7 +104,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 69705 then
+	if args.spellId == 69705 and self:AntiSpam(2, 2) then -- Fires for all Gunship Cannons
 		timerBelowZeroCD:Start()
 	end
 end
