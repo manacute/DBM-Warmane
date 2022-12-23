@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("Halazzi", "DBM-ZulAman")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220518110528")
+mod:SetRevision("20221101172823")
 mod:SetCreatureID(23577)
 
 mod:SetZone()
 
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.YellPull) -- on Trinity Core there is no yell
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 43303 43139 43290",
@@ -33,29 +33,30 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(43303) then
+	local spellId = args.spellId
+	if spellId == 43303 then -- Flame Shock
 		warnShock:Show(args.destName)
 		timerShock:Show(args.destName)
-	elseif args:IsSpellID(43139) then
+	elseif spellId == 43139 then -- Enrage
 		if self.Options.SpecWarn43139dispel then
 			specWarnEnrage:Show(args.destName)
 			specWarnEnrage:Play("enrage")
 		else
 			warnEnrage:Show()
 		end
-	elseif args:IsSpellID(43290) then
+	elseif spellId == 43290 then -- Lynx Flurry
 		warnFrenzy:Show()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(43303) then
+	if args.spellId == 43303 then -- Flame Shock
 		timerShock:Stop(args.destName)
 	end
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(43302) then
+	if args.spellId == 43302 then -- Lightning Totem
 		specWarnTotem:Show()
 		specWarnTotem:Play("attacktotem")
 	end

@@ -38,7 +38,7 @@ L.MOD_AVAILABLE							= "%s is available for this zone. You can find download on
 
 L.COMBAT_STARTED						= "%s engaged. Good luck and have fun! :)"
 L.COMBAT_STARTED_IN_PROGRESS			= "Engaged an in progress fight against %s. Good luck and have fun! :)"
-L.GUILD_COMBAT_STARTED					= "%s has been engaged by guild"
+L.GUILD_COMBAT_STARTED					= "%s has been engaged by %s's guild group"
 L.BOSS_DOWN								= "%s down after %s!"
 L.BOSS_DOWN_I							= "%s down! You have %d total victories."
 L.BOSS_DOWN_L							= "%s down after %s! Your last kill took %s and your fastest kill took %s. You have %d total victories."
@@ -46,10 +46,10 @@ L.BOSS_DOWN_NR							= "%s down after %s! This is a new record! (Old record was 
 L.RAID_DOWN								= "%s cleared after %s!"
 L.RAID_DOWN_L							= "%s cleared after %s! Your fastest clear took %s."
 L.RAID_DOWN_NR							= "%s cleared after %s! This is a new record! (Old record was %s)."
-L.GUILD_BOSS_DOWN						= "%s has been defeated by guild after %s!"
+L.GUILD_BOSS_DOWN						= "%s has been defeated by %s's guild group after %s!"
 L.COMBAT_ENDED_AT						= "Combat against %s (%s) ended after %s."
 L.COMBAT_ENDED_AT_LONG					= "Combat against %s (%s) ended after %s. You have %d total wipe(s) on this difficulty."
-L.GUILD_COMBAT_ENDED_AT					= "Guild has wiped on %s (%s) after %s."
+L.GUILD_COMBAT_ENDED_AT					= "%s's Guild group has wiped on %s (%s) after %s."
 L.COMBAT_STATE_RECOVERED				= "%s was engaged %s ago, recovering timers... "
 L.TRANSCRIPTOR_LOG_START				= "Transcriptor logging started."
 L.TRANSCRIPTOR_LOG_END					= "Transcriptor logging ended."
@@ -372,6 +372,7 @@ L.AUTO_SPEC_WARN_TEXTS = {
 	switchcount							= "%s - switch targets (%%s)",
 	gtfo								= "%%s damage - move away",
 	adds								= "Incoming Adds - switch targets",--Basically a generic of switch
+	addscount							= "Incoming Adds - switch targets (%%s)",--Basically a generic of switch
 	addscustom							= "Incoming Adds - %%s",--Same as above, but more info, pretty much made for like 3 boss mods, such as akama
 	targetchange						= "Target Change - switch to %%s"
 }
@@ -420,6 +421,7 @@ L.AUTO_SPEC_WARN_OPTIONS = {
 	switchcount							= "Show special announce (with count) to switch targets for $spell:%s",
 	gtfo								= "Show special announce to move out of bad stuff on ground",
 	adds								= "Show special announce to switch targets for incoming adds",
+	addscount							= "Show special announce (with count) to switch targets for incoming adds",
 	addscustom							= "Show special announce for incoming adds",
 	targetchange						= "Show special announce for priority target changes"
 }
@@ -488,6 +490,8 @@ L.AUTO_TIMER_OPTIONS = {
 }
 
 L.AUTO_ICONS_OPTION_TARGETS				= "Set icons on $spell:%s targets"--Usually used for player targets with no specific sorting
+L.AUTO_ICONS_OPTION_TARGETS_TANK_A		= "Set icons on $spell:%s targets with tank over melee over ranged priority and alphabetical fallback"
+L.AUTO_ICONS_OPTION_TARGETS_TANK_R		= "Set icons on $spell:%s targets with tank over melee over ranged priority and raid roster fallback"
 L.AUTO_ICONS_OPTION_TARGETS_MELEE_A		= "Set icons on $spell:%s targets with melee and alphabetical priority"
 L.AUTO_ICONS_OPTION_TARGETS_MELEE_R		= "Set icons on $spell:%s targets with melee and raid roster priority"
 L.AUTO_ICONS_OPTION_TARGETS_RANGED_A	= "Set icons on $spell:%s targets with ranged and alphabetical priority"

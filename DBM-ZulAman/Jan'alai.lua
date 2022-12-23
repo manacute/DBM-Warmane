@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("Janalai", "DBM-ZulAman")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20220518110528")
+mod:SetRevision("20221101173423")
 mod:SetCreatureID(23578)
 
 mod:SetZone()
 mod:SetUsedIcons(1)
 
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.YellPull)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 43140",
@@ -23,7 +23,7 @@ local specWarnBreath	= mod:NewSpecialWarningYou(43140, nil, nil, nil, 1, 2)
 local yellFlamebreath	= mod:NewYell(43140)
 
 local timerBomb			= mod:NewCastTimer(12, 42630, nil, nil, nil, 3)--Cast bar?
-local timerAdds			= mod:NewNextTimer(92, 43962, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
+local timerAdds			= mod:NewNextTimer(89.9, 43962, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON) -- ~0.3s variance. (10m Frostmourne 2022/10/28) - 90.3, 90.0
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -44,12 +44,12 @@ function mod:FlameTarget(targetname)
 end
 
 function mod:OnCombatStart(delay)
-	timerAdds:Start(10)
+	timerAdds:Start(10-delay) -- (10m Frostmourne 2022/10/28 +0.5s delay) - 9.8
 	berserkTimer:Start(-delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(43140) then
+	if args.spellId == 43140 then -- Flame Breath
 		self:BossTargetScanner(args.sourceGUID, "FlameTarget", 0.1, 8)
 	end
 end
