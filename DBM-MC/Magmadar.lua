@@ -10,6 +10,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 19451 19428",
+	"SPELL_AURA_REFRESH 19428",
 	"SPELL_AURA_REMOVED 19451",
 	"SPELL_CAST_SUCCESS 19408"
 )
@@ -23,9 +24,12 @@ local warnEnrage		= mod:NewTargetNoFilterAnnounce(19451, 3, nil , "Healer|Tank|R
 local warnConflagration	= mod:NewTargetNoFilterAnnounce(19428, 2, nil , false)
 
 local specWarnEnrage	= mod:NewSpecialWarningDispel(19451, "RemoveEnrage", nil, nil, 1, 6)
+local specWarnConflag	= mod:NewSpecialWarningYou(19428, false, nil, nil, 3, 2)
 
 local timerPanicCD		= mod:NewCDTimer(30, 19408, nil, nil, nil, 2)--30-40
 local timerEnrage		= mod:NewBuffActiveTimer(8, 19451, nil, nil, nil, 5, nil, DBM_COMMON_L.ENRAGE_ICON)
+
+local playerGUID 		= UnitGUID("player")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 19451 and args:IsDestTypeHostile() then
@@ -36,8 +40,14 @@ function mod:SPELL_AURA_APPLIED(args)
 			warnEnrage:Show(args.destName)
 		end
 		timerEnrage:Start()
-	elseif args.spellId == 19428 and args:IsDestTypePlayer() then
-		warnConflagration:CombinedShow(0.5, args.destName)
+	elseif args.spellId == 19428 then
+		if args:IsDestTypePlayer() then
+			warnConflagration:CombinedShow(0.5, args.destName)
+		end
+		
+		if args.destGUID == playerGUID then
+			specWarnConflag:Show()
+		end
 	end
 end
 

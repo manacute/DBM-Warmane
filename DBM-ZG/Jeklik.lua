@@ -8,7 +8,7 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 23954",
-	"SPELL_CAST_SUCCESS 23918 22884",
+	"SPELL_CAST_SUCCESS 23918 22884 23970",
 	"SPELL_AURA_APPLIED 23952",
 	"SPELL_AURA_REMOVED 23952"
 )
@@ -20,11 +20,14 @@ local warnScreech		= mod:NewSpellAnnounce(22884, 3)
 local warnPain			= mod:NewTargetNoFilterAnnounce(23952, 2, nil, "RemoveMagic|Healer")
 
 local specWarnHeal		= mod:NewSpecialWarningInterrupt(23954, "HasInterrupt", nil, nil, 1, 2)
+local specWarnFire		= mod:NewSpecialWarningYou(23970, nil, nil, nil, 3, 2)
 
 local timerSonicBurst	= mod:NewBuffActiveTimer(10, 23918, nil, nil, nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerScreech		= mod:NewBuffActiveTimer(4, 22884, nil, nil, nil, 3)
 local timerPain			= mod:NewTargetTimer(18, 23952, nil, "RemoveMagic|Healer", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerHealCD		= mod:NewNextTimer(20, 23954, nil, nil, nil, 4, nil, DBM_COMMON_L.INTERRUPT_ICON)
+
+local playerGUID 		= UnitGUID("player")
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 23954 and args:IsSrcTypeHostile() then
@@ -43,6 +46,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 22884 and args:IsSrcTypeHostile() then
 		timerScreech:Start()
 		warnScreech:Show()
+	elseif args.spellId == 23970 and args.destGUID == playerGUID then
+		specWarnFire:Show()
 	end
 end
 
