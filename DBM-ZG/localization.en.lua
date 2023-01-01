@@ -9,6 +9,10 @@ L:SetGeneralLocalization({
 	name = "High Priest Venoxis"
 })
 
+L:SetMiscLocalization({
+	Transform = "Let the coils of hate unfurl!"
+})
+
 -------------------
 --  Jeklik  --
 -------------------

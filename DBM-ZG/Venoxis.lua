@@ -11,17 +11,20 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 23860",
-	"SPELL_CAST_SUCCESS 23861",
+	"SPELL_CAST_SUCCESS 23861 23849",
 	"SPELL_AURA_APPLIED 23895 23860 23865",
 	"SPELL_AURA_REMOVED 23895 23860",
-	"UNIT_HEALTH mouseover target"
+	"UNIT_HEALTH mouseover target",
+	"CHAT_MSG_MONSTER_YELL"
 )
 
+local warnTransform     = mod:NewSpellAnnounce(23849)
 local warnSerpent		= mod:NewTargetNoFilterAnnounce(23865, 2)
 local warnCloud			= mod:NewSpellAnnounce(23861)
 local warnRenew			= mod:NewTargetNoFilterAnnounce(23895, 3)
 local warnFire			= mod:NewTargetNoFilterAnnounce(23860, 2, nil, "RemoveMagic|Healer")
 local prewarnPhase2		= mod:NewPrePhaseAnnounce(2, 2)
+local warnPhase2		= mod:NewPhaseAnnounce(2, 2)
 
 local specWarnHolyFire	= mod:NewSpecialWarningInterrupt(23860, "HasInterrupt", nil, nil, 1, 2)
 local specWarnRenew		= mod:NewSpecialWarningDispel(23895, "MagicDispeller", nil, nil, 1, 2)
@@ -29,6 +32,7 @@ local specWarnRenew		= mod:NewSpecialWarningDispel(23895, "MagicDispeller", nil,
 local timerCloud		= mod:NewBuffActiveTimer(10, 23861, nil, nil, nil, 3)
 local timerRenew		= mod:NewTargetTimer(15, 23895, nil, "MagicDispeller", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
 local timerFire			= mod:NewTargetTimer(8, 23860, nil, "RemoveMagic|Healer", nil, 5, nil, DBM_COMMON_L.MAGIC_ICON)
+local timerCloudCD		= mod:NewCDTimer(15, 23861, nil, nil, nil, 2) -- 15 to 20 seconds, random
 
 mod:AddRangeFrameOption("10")
 
@@ -50,7 +54,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 23861 then
 		warnCloud:Show()
-		timerCloud:Start()
+--		timerCloud:Start()
+		timerCloudCD:Start()
 	end
 end
 
@@ -85,6 +90,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerRenew:Stop(args.destName)
 	elseif args.spellId == 23860 and args:IsDestTypePlayer() then
 		timerFire:Stop(args.destName)
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if msg == L.Transform then
+		warnPhase2:Show()
+		timerCloudCD:Start(10)
 	end
 end
 
