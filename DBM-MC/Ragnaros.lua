@@ -28,7 +28,7 @@ local warnEmerge		= mod:NewAnnounce("WarnEmerge", 2, "Interface\\AddOns\\DBM-Cor
 local timerWrathRag		= mod:NewCDTimer(25, 20566, nil, nil, nil, 2, nil, DBM_COMMON_L.IMPORTANT_ICON, nil, mod:IsMelee() and 1, 4)--25-31.6
 local timerSubmerge		= mod:NewTimer(180, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6, nil, nil, 1, 5)
 local timerEmerge		= mod:NewTimer(90, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6, nil, nil, 1, 5)
-local timerCombatStart	= mod:NewTimer(72.5, "timerCombatStart", "Interface\\Icons\\Ability_Warrior_OffensiveStance", nil, nil, nil, nil, nil, 1, 3)
+local timerCombatStart	= mod:NewTimer(72.75, "timerCombatStart", "Interface\\Icons\\Ability_Warrior_OffensiveStance", nil, nil, nil, nil, nil, 1, 3)
 
 mod:AddRangeFrameOption("18", nil, "-Melee")
 
