@@ -23,7 +23,7 @@ L:SetWarningLocalization({
 
 L:SetTimerLocalization({
 	TimerWhelps	= "Onyxian Whelps"
-})]]
+})
 
 L:SetOptionLocalization({
 --	TimerWhelps				= "Show timer for Onyxian Whelps",
