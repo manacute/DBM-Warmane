@@ -72,7 +72,7 @@ mod.vb.warned_preP2 = false
 mod.vb.warned_preP3 = false
 mod.vb.whelpsCount = 0
 
-local function Whelps(self)
+function mod:Whelps()
 	if self:IsInCombat() then
 		self.vb.whelpsCount = self.vb.whelpsCount + 1
 		timerWhelps:Start()
@@ -109,7 +109,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnBlastNova:Show()
 	elseif args:IsSpellID(17086, 18351, 18564, 18576) or args:IsSpellID(18584, 18596, 18609, 18617) then	-- 1 ID for each direction
 --		specWarnBreath:Show()
-		timerBreath:Start()
+		timerBreathCast:Start()
 --		timerNextDeepBreath:Start() 	-- deep breaths are random
 		if spellId == 18351 then
 			warnBreathStoN:Show()
@@ -201,7 +201,7 @@ function mod:OnSync(msg)
 		timerNextDeepBreath:Start(75.5) -- Breath-17086. REVIEW! variance? (25N Lordaeron 2022/10/13) - 75.5
 		timerAchieveWhelps:Start()
 		timerNextFlameBreath:Cancel()
-		self:Schedule(5, Whelps, self)
+		self:ScheduleMethod(5, "Whelps")
 		if self.Options.SoundWTF3 then
 			self:Unschedule(DBM.PlaySoundFile, DBM)
 			DBM:PlaySoundFile("Interface\\AddOns\\DBM-Onyxia\\sounds\\i-dont-see-enough-dots.ogg")
@@ -214,7 +214,7 @@ function mod:OnSync(msg)
 	elseif msg == "Phase3" then
 		self:SetStage(3)
 		warnPhase3:Show()
-		self:Unschedule(Whelps)
+		self:UnscheduleMethod("Whelps")
 		timerWhelps:Stop()
 		timerNextDeepBreath:Stop()
 		timerBigAddCD:Stop()
