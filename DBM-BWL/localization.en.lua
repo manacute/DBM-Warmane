@@ -114,6 +114,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	BreathSoon		= "Breath Soon",
 	WarnBreath		= "%s",
 	WarnVulnerable	= "%s Vulnerability"
 })
@@ -121,15 +122,18 @@ L:SetWarningLocalization({
 L:SetTimerLocalization({
 	TimerBreathCD	= "%s CD",
 	TimerBreath		= "%s cast",
-	TimerVulnCD		= "Vulnerability CD"
+	TimerVulnCD		= "Vulnerability CD",
+	WarnPhase2Soon	= "Soft enrage soon"
 })
 
 L:SetOptionLocalization({
+	BreathSoon		= "Show warning when Breath is about to happen",
 	WarnBreath		= "Show warning when Chromaggus casts one of his Breaths",
 	WarnVulnerable	= "Show warning for spell vulnerabilities",
 	TimerBreathCD	= "Show Breath CD",
 	TimerBreath		= "Show Breath cast",
-	TimerVulnCD		= "Show Vulnerability CD"
+	TimerVulnCD		= "Show Vulnerability CD",
+	WarnPhase2Soon	= "Show warning when Chromaggus is about to enter phase 2"
 })
 
 L:SetMiscLocalization({
