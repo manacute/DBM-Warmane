@@ -25,6 +25,7 @@ local warnSummon		= mod:NewSpellAnnounce(747, 3)
 local warnSummonSoon	= mod:NewSoonAnnounce(747, 2)
 
 local timerMindControl	= mod:NewBuffActiveTimer(20, 785, nil, nil, nil, 3)
+local mindControlCD 	= mod:NewCDTimer(20, 785, nil, nil)
 
 mod:AddSetIconOption("SetIconOnMC", 785, true, false, {4, 5, 6, 7, 8})
 
@@ -36,6 +37,7 @@ function mod:OnCombatStart()
 	self.vb.splitCount = 0
 	table.wipe(MCTargets)
 	self.vb.MCIcon = 8
+	mindControlCD:Start(15)
 end
 
 local function warnMCTargets(self)
