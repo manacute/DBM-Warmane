@@ -7,9 +7,9 @@ mod:SetModelID(15264) -- Anubisath Sentinel
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	--"ENCOUNTER_END",
-	"SPELL_AURA_APPLIED 22997 25698 26079",
-	"SPELL_AURA_REMOVED 22997",
+	"ENCOUNTER_END",
+	"SPELL_AURA_APPLIED 22997 25698 26079 26556",
+	"SPELL_AURA_REMOVED 22997 26556",
 	"SPELL_DAMAGE",
 	"SPELL_MISSED"
 )
@@ -37,16 +37,16 @@ mod:RegisterShortTermEvents(
 mod:SendSync("IsAQ40Started")
 
 do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash.lua
-	local warnPlague					= mod:NewTargetNoFilterAnnounce(22997, 2)
+	local warnPlague					= mod:NewTargetNoFilterAnnounce(26556, 2)
 	local warnCauseInsanity				= mod:NewTargetNoFilterAnnounce(26079, 2)
 
-	local specWarnPlague				= mod:NewSpecialWarningMoveAway(22997, nil, nil, nil, 1, 2)
-	local yellPlague					= mod:NewYell(22997)
-	local specWarnExplode				= mod:NewSpecialWarningRun(25698, "Melee", nil, 3, 4, 2)
+	local specWarnPlague				= mod:NewSpecialWarningMoveAway(26556, nil, nil, nil, 1, 2)
+	local yellPlague					= mod:NewYell(26556)
+	local specWarnExplode				= mod:NewSpecialWarningRun(25698, nil, nil, 3, 4, 2)
 
 	-- aura applied didn't seem to catch the reflects and other buffs
 	function mod:SPELL_AURA_APPLIED(args)
-		if args.spellId == 22997 then
+		if args.spellId == 26556 then
 			if args:IsPlayer() then
 				specWarnPlague:Show()
 				specWarnPlague:Play("runout")
@@ -66,7 +66,7 @@ do-- Anubisath Plague/Explode - keep in sync - AQ40/AQ40Trash.lua AQ20/AQ20Trash
 	end
 
 	function mod:SPELL_AURA_REMOVED(args)
-		if args.spellId == 22997 then
+		if args.spellId == 26556 then
 			if args:IsPlayer() and self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
