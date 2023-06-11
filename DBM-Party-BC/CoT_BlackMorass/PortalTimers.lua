@@ -24,8 +24,8 @@ local lastPortal = 0
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 17879 or cid == 17880 then
-		timerNextPortal:Start(122, lastPortal + 1)
-		warnWavePortalSoon:Schedule(112)
+		timerNextPortal:Start(150, lastPortal + 1)
+		warnWavePortalSoon:Schedule(140)
 	end
 end
 
@@ -45,8 +45,8 @@ function mod:UPDATE_WORLD_STATES()
 		else
 			warnWavePortal:Show(currentPortal)
 			if self.Options.ShowAllPortalTimers then
-				timerNextPortal:Start(122, currentPortal + 1)
-				warnWavePortalSoon:Schedule(112)
+				timerNextPortal:Start(120, currentPortal + 1)
+				warnWavePortalSoon:Schedule(110)
 			end
 		end
 		lastPortal = currentPortal
