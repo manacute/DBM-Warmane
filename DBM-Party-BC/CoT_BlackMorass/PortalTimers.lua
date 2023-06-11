@@ -45,8 +45,13 @@ function mod:UPDATE_WORLD_STATES()
 		else
 			warnWavePortal:Show(currentPortal)
 			if self.Options.ShowAllPortalTimers then
-				timerNextPortal:Start(120, currentPortal + 1)
-				warnWavePortalSoon:Schedule(110)
+				if currentPortal >= 13 then
+					nextPortalTime = 120
+				else
+					nextPortalTime = 90
+				end
+				timerNextPortal:Start(nextPortalTime, currentPortal + 1)
+				warnWavePortalSoon:Schedule(nextPortalTime - 10)
 			end
 		end
 		lastPortal = currentPortal
