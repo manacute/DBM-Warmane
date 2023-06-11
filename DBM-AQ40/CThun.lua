@@ -11,7 +11,7 @@ mod:SetWipeTime(25)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 26134",
-	"SPELL_CAST_SUCCESS 26586",
+	"SPELL_CAST_SUCCESS 26139 26478",
 	"SPELL_AURA_APPLIED 26476",
 	"SPELL_AURA_REMOVED 26476",
 	"CHAT_MSG_MONSTER_EMOTE",
@@ -29,7 +29,7 @@ local specWarnWeakened			= mod:NewSpecialWarning("SpecWarnWeakened", nil, nil, n
 local specWarnEyeBeam			= mod:NewSpecialWarningYou(26134, nil, nil, nil, 1, 2)
 local yellEyeBeam				= mod:NewYell(26134)
 
-local timerDarkGlareCD			= mod:NewNextTimer(86, 26029)
+local timerDarkGlareCD			= mod:NewNextTimer(85, 26029)
 local timerDarkGlare			= mod:NewBuffActiveTimer(39, 26029)
 local timerEyeTentacle			= mod:NewTimer(45, "TimerEyeTentacle", 126, nil, nil, 1)
 local timerGiantEyeTentacle		= mod:NewTimer(60, "TimerGiantEyeTentacle", 126, nil, nil, 1)
@@ -37,7 +37,7 @@ local timerClawTentacle			= mod:NewTimer(8, "TimerClawTentacle", 26391, nil, nil
 local timerGiantClawTentacle	= mod:NewTimer(60, "TimerGiantClawTentacle", 26391, nil, nil, 1)
 local timerWeakened				= mod:NewTimer(45, "TimerWeakened", 28598)
 
-mod:AddRangeFrameOption("10")
+mod:AddRangeFrameOption("13")
 mod:AddSetIconOption("SetIconOnEyeBeam", 26134, true, false, {1})
 mod:AddInfoFrameOption(nil, true)
 
@@ -91,12 +91,12 @@ function mod:OnCombatStart(delay)
 	table.wipe(fleshTentacles)
 	table.wipe(diedTentacles)
 	self:SetStage(1)
-	timerClawTentacle:Start(9-delay) -- Combatlog told me, the first Claw Tentacle spawn in 00:00:09, but need more test.
+	--timerClawTentacle:Start(8-delay)
 	timerEyeTentacle:Start(45-delay)
 	timerDarkGlareCD:Start(46-delay)
 	self:ScheduleMethod(46-delay, "DarkGlare")
 	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(10)
+		DBM.RangeCheck:Show(13)
 	end
 end
 
@@ -125,7 +125,7 @@ function mod:DarkGlare()
 	end
 	timerDarkGlare:Start()
 	timerDarkGlareCD:Start()
-	self:ScheduleMethod(86, "DarkGlare")
+	self:ScheduleMethod(85, "DarkGlare")
 end
 
 function mod:EyeBeamTarget(targetname)
@@ -148,7 +148,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 26586 then
+	if args.spellId == 26139 or args.spellId == 26478 then
 		 local cid = self:GetCIDFromGUID(args.sourceGUID)
 		 if self:AntiSpam(5, cid) then--Throttle multiple spawn within 5 seconds
 			if cid == 15726 then--Eye Tentacle
@@ -158,7 +158,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			elseif cid == 15725 then -- Claw Tentacle
 				timerClawTentacle:Stop()
 				warnClawTentacle:Show()
-				timerClawTentacle:Start()
+				timerClawTentacle:Start() 
 			elseif cid == 15334 then -- Giant Eye Tentacle
 				timerGiantEyeTentacle:Stop()
 				warnGiantEyeTentacle:Show()
