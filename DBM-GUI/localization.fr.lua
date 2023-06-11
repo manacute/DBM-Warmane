@@ -3,7 +3,7 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
-L.MainFrame = "Deadly Boss Mods"
+--L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Retail rétroportage par "
 L.TranslationBy			= "Barsoom, Bunny67, Zidras"
@@ -501,4 +501,3 @@ L.LARGE = "Grand"
 L.SMALL = "Petit"
 L.PLAYER_DIFFICULTY6 = "Mythique" -- ID: 24525
 L.PLAYER_DIFFICULTY_TIMEWALKER = "Marcheurs du temps" -- ID: 25846
-L.SPECIALIZATION = "Spécialisation" -- ID: 22433

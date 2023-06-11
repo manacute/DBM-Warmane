@@ -3,7 +3,7 @@ if not DBM_GUI_L then DBM_GUI_L = {} end
 
 local L = DBM_GUI_L
 
-L.MainFrame	= "Deadly Boss Mods"
+--L.MainFrame	= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "向后移植 "
 L.TranslationBy			= "Barsoom, Bunny67, Zidras"
@@ -519,4 +519,3 @@ L.LARGE = "大"
 L.SMALL = "小"
 L.PLAYER_DIFFICULTY6 = "傳奇模式" -- ID: 24525
 L.PLAYER_DIFFICULTY_TIMEWALKER = "時光漫遊" -- ID: 25846
-L.SPECIALIZATION = "專精" -- ID: 22433

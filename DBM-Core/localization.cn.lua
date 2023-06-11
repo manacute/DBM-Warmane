@@ -1,14 +1,14 @@
 -- L.Core
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
--- Mini Dragon(projecteurs@gmail.com) <流浪者酒馆-Brilla@金色平原> 20210108
+-- Mini Dragon(projecteurs@gmail.com) <流浪者酒馆-Brilla@金色平原> 20230111
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_CORE_L then DBM_CORE_L = {} end
 
 local L = DBM_CORE_L
 
-L.HOW_TO_USE_MOD					= "欢迎使用" .. L.DBM .. "。在聊天框输入 /dbm help 以获取可用命令的帮助。输入 /dbm 可打开设置窗口，并对各个Boss模块进行设置，也可以浏览首领击杀记录。DBM 会自动按你的专精做出相应配置，但是你可以进行微调。"
+L.HOW_TO_USE_MOD					= "欢迎使用" .. L.DBM .. "。在聊天框输入 /dbm help 以获取可用命令的帮助。输入 /dbm 可打开设置窗口，并对各个Boss模块进行设置，也可以浏览首领击杀记录。"..L.DBM.." 会自动按你的专精做出相应配置，但是你可以进行微调。"
 L.SILENT_REMINDER					= "提示：" .. L.DBM .. " 正处于静音模式。"
 L.COPY_URL_DIALOG_NEWS				= "阅读最新新闻，请点击下方连接"
 
@@ -39,11 +39,11 @@ L.LOOT_SPEC_REMINDER			= "你当前的人物专精为 %s。你当前的拾取选
 
 L.BIGWIGS_ICON_CONFLICT		= L.DBM .. "检测到你同时开启了Bigwigs,请关闭自动标记以避免冲突。"
 
-L.MOD_AVAILABLE				= L.DBM .. "已经为%s制作了相关模块。你可以在 deadlybossmods.com 或Curse上找到新版本。"
+L.MOD_AVAILABLE				= L.DBM .. "已经为%s制作了相关模块。你可以在 " .. L.UPDATEREMINDER_URL .. "上找到新版本。"
 
 L.COMBAT_STARTED				= "%s作战开始，祝你走运 :)"
 L.COMBAT_STARTED_IN_PROGRESS	= "已进行的战斗-%s正在作战。祝你走运 :)"
-L.GUILD_COMBAT_STARTED		= "%s已經開戰，在%s的公會團隊於%s之後！"
+L.GUILD_COMBAT_STARTED		= "%2$s开组的公会版%1$s作战开始"
 L.SCENARIO_STARTED			= "场景战役-%s作战开始。祝你走运 :)"
 L.SCENARIO_STARTED_IN_PROGRESS	= "已进行的场景战役-%s正在作战。祝你走运 :)"
 L.BOSS_DOWN					= "%s战斗胜利！用时%s！"
@@ -53,14 +53,14 @@ L.BOSS_DOWN_NR				= "%s战斗胜利！用时%s！新的纪录诞生了！原纪�
 L.RAID_DOWN					= "%s目标达成，用时%s！"
 L.RAID_DOWN_L				= "%s目标达成，用时%s！最快用时%s！"
 L.RAID_DOWN_NR				= "%s目标达成，用时%s！最快用时%s！新的纪录诞生了！原纪录为%s！"
-L.GUILD_BOSS_DOWN			= "已擊敗%s，在%s的公會團隊用了%s！"
+L.GUILD_BOSS_DOWN			= "%2$s开组的公会版%1$s战斗胜利！用时%3$s！"
 L.SCENARIO_COMPLETE			= "场景战役-%s战斗胜利！用时%s!"
 L.SCENARIO_COMPLETE_I		= "场景战役-%s战斗胜利！总计%d次胜利。"
 L.SCENARIO_COMPLETE_L		= "场景战役-%s战斗胜利！用时%s！上次用时%s，最快用时%s。总计%d次胜利。"
 L.SCENARIO_COMPLETE_NR		= "场景战役-%s战斗胜利！用时%s！新的纪录诞生了！原纪录为%s。总计%d次胜利。"
 L.COMBAT_ENDED_AT			= "%s （%s）作战结束，用时%s。"
 L.COMBAT_ENDED_AT_LONG		= "%s （%s）作战结束，用时%s。该难度下总计失败%d次。"
-L.GUILD_COMBAT_ENDED_AT		= "%s的公會團隊在%s (%s)的戰鬥滅團，經過%s。"
+L.GUILD_COMBAT_ENDED_AT		= "%s开组的公会版%s （%s）作战结束，用时%s。"
 L.SCENARIO_ENDED_AT			= "场景战役-%s作战结束，用时%s。"
 L.SCENARIO_ENDED_AT_LONG		= "场景战役-%s作战结束，用时%s。该难度下总计失败%d次。"
 L.COMBAT_STATE_RECOVERED		= "%s作战%s前开始，正在恢复计时条……"
@@ -68,7 +68,7 @@ L.TRANSCRIPTOR_LOG_START		= "Transcriptor 记录开启。"
 L.TRANSCRIPTOR_LOG_END		= "Transcriptor 记录关闭。"
 
 L.MOVIE_SKIPPED				= "该场景已被跳过。"
-L.BONUS_SKIPPED				= "DBM已经自动关闭奖励拾取窗口。如果需要的话，3分钟内输入 /dbmbonusroll "
+L.BONUS_SKIPPED				= L.DBM.."已经自动关闭奖励拾取窗口。如果需要的话，3分钟内输入 /dbmbonusroll "
 
 L.AFK_WARNING				= "你在战斗中暂离(百分之%d生命值)。如果你真的没有暂离，动一下或者在'其他功能'中关闭本设置。"
 
@@ -164,7 +164,7 @@ L.WHISPER_SCENARIO_END_KILL_STATS	= "%s已在场景战役-%s的战斗中取得�
 L.WHISPER_SCENARIO_END_WIPE			= "%s在场景战役-%s的战斗中灭团了。"
 L.WHISPER_SCENARIO_END_WIPE_STATS	= "%s在场景战役-%s的战斗中灭团了。该难度下总共失败%d次。"
 
-L.VERSIONCHECK_HEADER		= "DBM - 版本检测"
+L.VERSIONCHECK_HEADER		= L.DBM.." - 版本检测"
 L.VERSIONCHECK_ENTRY			= "%s: %s (%s) %s"--One Boss mod
 L.VERSIONCHECK_ENTRY_TWO		= "%s: %s (%s) & %s (%s)"--Two Boss mods
 L.VERSIONCHECK_ENTRY_NO_DBM	= "%s：未安装" .. L.DBM
@@ -182,7 +182,7 @@ L.UPDATEREMINDER_FOOTER_GENERIC	= "按下 " .. (IsMacClient() and "Cmd-C" or "Ct
 L.UPDATEREMINDER_DISABLE			= "警告：你的 " .. L.DEADLY_BOSS_MODS .. " 已经过期太久，它已被强制禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。"
 L.UPDATEREMINDER_HOTFIX			= "你的 " .. L.DEADLY_BOSS_MODS .. " 版本会在这首领战斗中有问题。最新版的" .. L.DBM .. "已经修复了这个问题。"
 L.UPDATEREMINDER_HOTFIX_ALPHA	= "你的 " .. L.DEADLY_BOSS_MODS .. " 版本会在这首领战斗中有问题。最新版的" .. L.DBM .. "（或Alpha版本）已经修复了这个问题。"
-L.UPDATEREMINDER_MAJORPATCH		= "你的 " .. L.DEADLY_BOSS_MODS .. " 已经过期,它已被禁用,直到你更新.这是为了确保它不会导致你或其他团队成员出错.这次更新是一个非常重要的补丁,请确保你得到的是最新版."
+L.UPDATEREMINDER_MAJORPATCH		= "你的 " .. L.DEADLY_BOSS_MODS .. " 已经过期，它已被禁用，直到你更新。这是为了确保它不会导致你或其他团队成员出错。这次更新是一个非常重要的补丁，请确保你得到的是最新版。"
 L.VEM							= "你好像在使用VEM。" .. L.DEADLY_BOSS_MODS .. "在这种情况下无法被载入。"
 L.OUTDATEDPROFILES					= "警告: DBM-Profiles已经无法和本版本" .. L.DBM .. "兼容。" .. L.DBM .. "核心已经自带配置文件管理系统，请移除DBM-Profiles避免冲突。"
 L.OUTDATEDSPELLTIMERS				= "警告: DBM-SpellTimers 干扰到 " .. L.DBM .. " 运行，必须禁用它， " .. L.DBM .. " 才能正常运行。"
@@ -192,7 +192,6 @@ L.DPMCORE						= "警告: DBM-PVP已经已经很久没人维护了,并无法兼�
 L.DBMLDB							= "警告: DBM-LDB 已经集成入" .. L.DBM .. "核心。建议在插件目录删掉'DBM-LDB'。"
 L.UPDATE_REQUIRES_RELAUNCH		= "警告: 如果你不完全重启游戏，" .. L.DBM .. "可能会工作不正常。此次更新包含了新的文件，或者toc文件的改变，这是重载界面无法加载的。不重启游戏可能导致作战模块功能错误。"
 L.OUT_OF_DATE_NAG				= "你的" .. L.DBM .. "版本已经过期，新版本针对特定的首领战斗增加新的功能和错误的修复。建议您进行更新来改善您的游戏体验。"
-L.RETAIL_ONLY					= "警告: 你所用的是怀旧服版本的" .. L.DBM .. "。请删掉这个" .. L.DBM .. "并下载正式服的" .. L.DBM .. "。"
 
 L.MOVABLE_BAR				= "拖动我！"
 
@@ -200,7 +199,6 @@ L.PIZZA_SYNC_INFO				= "|Hplayer:%1$s|h[%1$s]|h向你发送了一个" .. L.DBM .
 L.PIZZA_CONFIRM_IGNORE			= "是否要在该次游戏连接中屏蔽来自%s的计时条？"
 L.PIZZA_ERROR_USAGE				= "命令：/dbm [broadcast] timer <时间（秒）> <文本>"
 
---L.MINIMAP_TOOLTIP_HEADER		= "Deadly Boss Mods"
 L.MINIMAP_TOOLTIP_FOOTER		= "Shift+拖动 / 右键拖动：拖动\nAlt+Shift+拖动：自由拖动"
 
 L.RANGECHECK_HEADER			= "距离监视（%d码）"
@@ -262,7 +260,7 @@ L.SLASHCMD_HELP2				= {
 	"/dbm durability: 检测全团装备耐久度"
 }
 L.TIMER_USAGE	= {
-	"DBM计时器可用命令:",
+	L.DBM.."计时器可用命令:",
 	"-----------------",
 	"/dbm timer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的计时器。",
 	"/dbm ltimer <秒> <文本>: 启动一个<文本>为名称，长度为<秒>的循环计时器。",
@@ -294,11 +292,11 @@ L.ACHIEVEMENT_TIMER_SPEED_KILL = "成就：限时击杀"
 
 -- Auto-generated Warning Localizations
 L.AUTO_ANNOUNCE_TEXTS.you				= "你中了%s"
-L.AUTO_ANNOUNCE_TEXTS.target			= "%s -> >%%s<"
-L.AUTO_ANNOUNCE_TEXTS.targetdistance	= "%s -> >%%s< (%%d码)"
-L.AUTO_ANNOUNCE_TEXTS.targetsource		= ">%%s< 施放 %s -> >%%s<"
-L.AUTO_ANNOUNCE_TEXTS.targetcount		= "%s (%%s) -> >%%s<"
-L.AUTO_ANNOUNCE_TEXTS.targetcountdistance	= "%s (%%s) -> >%%s< (%%d码)"
+L.AUTO_ANNOUNCE_TEXTS.target			= "%s: >%%s<"
+L.AUTO_ANNOUNCE_TEXTS.targetdistance	= "%s：>%%s< (%%d码)"
+L.AUTO_ANNOUNCE_TEXTS.targetsource		= ">%%s< 施放 %s 于 >%%s<"
+L.AUTO_ANNOUNCE_TEXTS.targetcount		= "%s (%%s)：>%%s<"
+L.AUTO_ANNOUNCE_TEXTS.targetcountdistance	= "%s (%%s)：>%%s< (%%d码)"
 L.AUTO_ANNOUNCE_TEXTS.spell				= "%s"
 L.AUTO_ANNOUNCE_TEXTS.ends				= "%s 结束"
 L.AUTO_ANNOUNCE_TEXTS.endtarget			= "%s 结束: >%%s<"
@@ -313,7 +311,7 @@ L.AUTO_ANNOUNCE_TEXTS.bait				= "%s 即将到来 - 快引诱"
 L.AUTO_ANNOUNCE_TEXTS.stage				= "第%s阶段"
 L.AUTO_ANNOUNCE_TEXTS.prestage			= "第%s阶段 即将到来"
 L.AUTO_ANNOUNCE_TEXTS.count				= "%s (%%s)"
-L.AUTO_ANNOUNCE_TEXTS.stack				= "%s -> >%%s< (%%d)"
+L.AUTO_ANNOUNCE_TEXTS.stack				= ">%%s< 中了 %s (%%d)"
 L.AUTO_ANNOUNCE_TEXTS.moveto				= "%s - 移动到 >%%s<"
 
 L.AUTO_ANNOUNCE_OPTIONS.you				= "警报：中了%s时"
@@ -382,6 +380,7 @@ L.AUTO_SPEC_WARN_TEXTS.switch			= "%s - 转换目标"
 L.AUTO_SPEC_WARN_TEXTS.switchcount		= "%s - 转换目标 (%%s)"
 L.AUTO_SPEC_WARN_TEXTS.gtfo				= "注意%%s - 快躲开"
 L.AUTO_SPEC_WARN_TEXTS.adds				= "小怪出现 - 转换目标"
+L.AUTO_SPEC_WARN_TEXTS.addscount		= "小怪出现 - 转换目标 (%%s)"
 L.AUTO_SPEC_WARN_TEXTS.addscustom		= "小怪出现 - %%s"
 L.AUTO_SPEC_WARN_TEXTS.targetchange		= "更换目标 - 请选择 %%s"
 
@@ -428,6 +427,7 @@ L.AUTO_SPEC_WARN_OPTIONS.switch			= "特殊警报：针对$spell:%s需要转换�
 L.AUTO_SPEC_WARN_OPTIONS.switchcount		= "特殊警报：针对$spell:%s需要转换目标(带计数)"
 L.AUTO_SPEC_WARN_OPTIONS.gtfo			= "特殊警报：需要躲开地上的有害技能"
 L.AUTO_SPEC_WARN_OPTIONS.adds			= "特殊警报：需要攻击小怪"
+L.AUTO_SPEC_WARN_OPTIONS.addscount		= "特殊警报：需要攻击小怪(带计数)"
 L.AUTO_SPEC_WARN_OPTIONS.addscustom		= "特殊警报：小怪(自定义)"
 L.AUTO_SPEC_WARN_OPTIONS.targetchange	= "特殊警报：需要立刻切换目标时"
 
@@ -477,6 +477,8 @@ L.AUTO_TIMER_OPTIONS.addscustom			= "计时条：下一波小怪 (%ds)"
 L.AUTO_TIMER_OPTIONS.roleplay			= "计时条：剧情 (%ds)"
 
 L.AUTO_ICONS_OPTION_TARGETS				= "为$spell:%s的目标添加团队标记"
+L.AUTO_ICONS_OPTION_TARGETS_TANK_A		= "为$spell:%s的目标添加团队标记，以坦克高于近战再高于远程排序，并以字母顺序优先"
+L.AUTO_ICONS_OPTION_TARGETS_TANK_R		= "为$spell:%s的目标添加团队标记，以坦克高于近战再高于远程排序，并以团队阵容优先"
 L.AUTO_ICONS_OPTION_TARGETS_MELEE_A		= "为$spell:%s的目标添加团队标记，以近战和字母顺序优先"
 L.AUTO_ICONS_OPTION_TARGETS_MELEE_R		= "为$spell:%s的目标添加团队标记，以近战和团队阵容优先"
 L.AUTO_ICONS_OPTION_TARGETS_RANGED_A	= "为$spell:%s的目标添加团队标记，以远程和字母顺序优先"
@@ -513,7 +515,8 @@ L.AUTO_YELL_ANNOUNCE_TEXT.combo		= "%s, %%s"
 L.AUTO_YELL_CUSTOM_FADE				= "%s 消失"
 L.AUTO_HUD_OPTION_TEXT				= "为$spell:%s显示HudMap(退休了)"
 L.AUTO_HUD_OPTION_TEXT_MULTI			= "为多个机制显示HudMap(退休了)"
-L.AUTO_NAMEPLATE_OPTION_TEXT			= "为$spell:%s显示姓名面板光环"
+L.AUTO_NAMEPLATE_OPTION_TEXT			= "为$spell:%s显示姓名面板光环，包括兼容插件和"..L.DBM
+L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED		= "为$spell:%s显示姓名面板光环，只包括"..L.DBM
 L.AUTO_RANGE_OPTION_TEXT				= "距离监视(%s码)：$spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 L.AUTO_RANGE_OPTION_TEXT_SHORT		= "距离监视(%s码)"--For when a range frame is just used for more than one thing
 L.AUTO_RRANGE_OPTION_TEXT			= "反转距离监视(%s码)：$spell:%s"--Reverse range frame (green when players in range, red when not)
@@ -543,7 +546,7 @@ L.HUD_INVALID_SELF				= "不能把自己设定成HUD目标"
 L.HUD_INVALID_ICON				= "当使用团队标记作为HUD目标定义时，不能定义一个没有团队标记的目标"
 L.HUD_SUCCESS					= "HUD成功地使用了你的参数启动了。HUD会在%s关闭, 或者输入 '/dbm hud hide'来关闭"
 L.HUD_USAGE	= {
-	"DBM-HudMap 可用命令：",
+	L.DBM.."-HudMap 可用命令：",
 	"-----------------",
 	"/dbm hud <类型> <目标> <持续时间> 新建一个指向玩家的HUD指示器",
 	"变量-类型: arrow, dot, red, blue, green, yellow, icon (请输入英语。需要相应的带团队标记的目标。)",
@@ -556,7 +559,7 @@ L.ARROW_MOVABLE				= "可移动箭头"
 L.ARROW_WAY_USAGE				= "/dway <x> <y>: 新建一个箭头到指定位置 (使用区域地图坐标系)"
 L.ARROW_WAY_SUCCESS			= "输入 '/dbm arrow hide' 隐藏箭头, 或到达位置"
 L.ARROW_ERROR_USAGE	= {
-	"DBM-Arrow 可用命令：",
+	L.DBM.."-Arrow 可用命令：",
 	"-----------------",
 	"/dbm arrow <x> <y> 新建一个箭头到指定位置(使用世界坐标系)",
 	"/dbm arrow map <x> <y> 新建一个箭头到指定位置 (使用区域地图坐标系)",
@@ -580,6 +583,8 @@ L.DUR_HEADER					= L.DEADLY_BOSS_MODS .. "- 装备耐久度检测结果"
 L.DUR_ENTRY					= "%s: %d 耐久度 / %s件装备损坏"
 L.DUR_FOOTER					= "未反馈此次检测的团员:%s"
 
+L.OVERRIDE_ACTIVATED			= "本次战斗的配置已经被队长的配置覆盖"
+
 --LDB
 L.LDB_TOOLTIP_HELP1	= "左键 打开" .. L.DBM
 L.LDB_TOOLTIP_HELP2	= "Alt+右键 启用安静模式"
@@ -597,5 +602,6 @@ L.WORLD_BUFFS.rendHead		 = "那个假的酋长，雷德·黑手，已经倒下�
 --Retail Globals
 L.RAID_INFO_WORLD_BOSS		= "世界首领"
 L.SCENARIO_STAGE			= "阶段%d"
+L.SPECIALIZATION			= "专精" -- ID: 22433
 -- EJ
 L.HARD_MODE					= "困难模式" -- 17220

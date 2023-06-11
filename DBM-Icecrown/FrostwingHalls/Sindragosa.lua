@@ -1,11 +1,11 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20221016092739")
+mod:SetRevision("20230528202740")
 mod:SetCreatureID(36853)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6)
-mod:SetHotfixNoticeRev(20221008210000)
-mod:SetMinSyncRevision(20221008210000)
+mod:SetHotfixNoticeRev(20230528000000)
+mod:SetMinSyncRevision(20230528000000)
 
 mod:RegisterCombat("combat")
 
@@ -25,7 +25,7 @@ local myRealm = select(3, DBM:GetMyPlayerInfo())
 -- General
 local berserkTimer				= mod:NewBerserkTimer((myRealm == "Lordaeron" or myRealm == "Frostmourne") and 420 or 600)
 
-mod:AddBoolOption("RangeFrame", true) -- keep as BoolOption since the localization offers important information regarding boss ability and player debuff behaviour
+mod:AddBoolOption("RangeFrame", true) -- keep as BoolOption since the localization offers important information regarding boss ability and player debuff behaviour (Unchained Magic is Heroic only)
 mod:AddBoolOption("ClearIconsOnAirphase", true) -- don't group with any spellId, it applies to all raid icons
 
 -- Stage One
@@ -51,6 +51,7 @@ local timerNextGroundphase		= mod:NewTimer(44.2, "TimerNextGroundphase", 43810, 
 local timerNextFrostBreath		= mod:NewNextTimer(22, 69649, nil, "Tank|Healer", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
 local timerNextBlisteringCold	= mod:NewCDTimer(66, 70123, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, true, 2) -- Added "keep" arg
 local timerNextBeacon			= mod:NewNextCountTimer(16, 70126, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerBeaconIncoming		= mod:NewTargetTimer("d7", 70126, nil, nil, nil, 3) -- One incoming timer for each target
 local timerBlisteringCold		= mod:NewCastTimer(6, 70123, nil, nil, nil, 2)
 local timerUnchainedMagic		= mod:NewCDTimer(32, 69762, nil, nil, nil, 3) -- (25H Lordaeron 2022/07/09 || 10N Icecrown 2022/08/22 || 10N Icecrown 2022/08/25) - 32.0, 63.2, 32.1, 77.8, 32.1, 32.5, 31.9, 34.8 || 35.7, 58.4, 32.1, 77.9, 32.1, 78.6, 32.0, 32.0, 32.1 || 32.0, 62.1, 32.0, Stage 2/68.4, 9.9/78.3, 32.0
 local timerInstability			= mod:NewBuffFadesTimer(5, 69766, nil, nil, nil, 5)
@@ -140,7 +141,7 @@ local function warnBeaconTargets(self)
 end
 
 local function warnUnchainedTargets(self)
-	if self.Options.RangeFrame then
+	if self.Options.RangeFrame and self:IsHeroic() then
 		if not playerUnchained then
 			DBM.RangeCheck:Show(21, unchainedDebuffFilter) -- 21.5 yd with new radar calculations. 21 here since radar code adds 0.5 to activeRange
 		else
@@ -178,7 +179,7 @@ local function ResetRange(self)
 	end
 end
 
--- Warmane workaround, since there is no dedicated event for Sindragosa Landing Phase, and there have been instances where UNIT_TARGET never fires
+-- Warmane workaround, since there is no dedicated event for Sindragosa Landing Phase, and UNIT_TARGET boss1 only fires if Sindragosa is targeted or focused (sync'ed below)
 local function landingPhaseWorkaround(self, timeOffset)
 	DBM:Debug("UNIT_TARGET boss1 didn't fire. Landing Phase scheduled")
 	self:SetStage(1)
@@ -247,6 +248,7 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 70126 then
+		timerBeaconIncoming:Start(args.destName)
 		beaconTargets[#beaconTargets + 1] = args.destName
 		if args:IsPlayer() then
 			playerBeaconed = true
@@ -276,7 +278,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else--Phase 1 air phase, multiple beacons
 			local maxBeacon = self:IsDifficulty("heroic25") and 6 or self:IsDifficulty("normal25") and 5 or 2--Heroic 10 and normal 2 are both 2
 			if self.Options.SetIconOnFrostBeacon then
-				self:SetSortedIcon("roster", 0.3, args.destName, 1, maxBeacon, false, "AnnounceBeaconIcons")
+				self:SetUnsortedIcon(0.3, args.destName, 1, maxBeacon, false, "AnnounceBeaconIcons") -- Unsorted, to match CLEU order, which is the one used for announce object. Roster sorting makes icons not reproducible
 			end
 			self:Unschedule(warnBeaconTargets)
 			if #beaconTargets >= maxBeacon then
@@ -387,13 +389,7 @@ end
 function mod:UNIT_TARGET(uId)
 	-- Attempt to catch when she lands by checking for Sindragosa's target being a raid member
 	if UnitExists(uId.."target") then
-		self:Unschedule(landingPhaseWorkaround)
-		self:SetStage(1)
-		timerNextAirphase:Start()
-		timerUnchainedMagic:Start(10) -- (10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 10.0; 10.0 || 10.0; 10.0, 10.0; 10.0
-		timerTailSmash:Start(19) -- ~5s variance [19-23.8]? (10N Icecrown 2022/08/25 || 10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 19.0 || 21.4; 21.9 || 21.4; 23.8, 22.6; 22.2
-		timerNextBlisteringCold:Start(34) -- 6s variance [34-40]? (10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 34.0; 34.0 || 34.0; 34.0; 34.0
-		self:UnregisterShortTermEvents()
+		self:SendSync("SindragosaLanded") -- Sync landing with raid since UNIT_TARGET:boss1 event requires Sindragosa to be target/focus, which not all members do
 	end
 end
 
@@ -425,5 +421,18 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerNextBlisteringCold:Restart(35) -- REVIEW! Stage 1 to Stage 2 needs logic! (10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - Stage 1/44.2, Stage 2/24.6, 50.9 || 42.7; Stage 1/44.6, 22.6/67.2/79.9, Stage 2/3.2, 24.2 ; 39.5
 		self:Unschedule(landingPhaseWorkaround)
 		self:UnregisterShortTermEvents() -- REVIEW! not sure it's needed, but doesn't hurt. Would need validation on event order when boss is intermissioned with health right above phase 2 threshold, to check which of the events come first (TARGET or YELL)
+	end
+end
+
+function mod:OnSync(msg)
+	if not self:IsInCombat() then return end
+	if msg == "SindragosaLanded" then
+		self:Unschedule(landingPhaseWorkaround)
+		self:SetStage(1)
+		timerNextAirphase:Start()
+		timerUnchainedMagic:Start(10) -- (10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 10.0; 10.0 || 10.0; 10.0, 10.0; 10.0
+		timerTailSmash:Start(19) -- ~5s variance [19-23.8]? (10N Icecrown 2022/08/25 || 10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 19.0 || 21.4; 21.9 || 21.4; 23.8, 22.6; 22.2
+		timerNextBlisteringCold:Start(34) -- 6s variance [34-40]? (10H Lordaeron 2022/10/02 || 25H Lordaeron 2022/10/02) - 34.0; 34.0 || 34.0; 34.0; 34.0
+		self:UnregisterShortTermEvents()
 	end
 end

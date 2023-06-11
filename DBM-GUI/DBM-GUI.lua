@@ -42,13 +42,14 @@
 --
 --
 local L = DBM_GUI_L
+local CL = DBM_CORE_L
 
 DBM_GUI = {
 	tabs	= {},
 	panels	= {}
 }
 
-local next, type, pairs, strsplit, tonumber, tostring, ipairs, tinsert, tsort, mfloor = next, type, pairs, strsplit, tonumber, tostring, ipairs, table.insert, table.sort, math.floor
+local next, type, pairs, strsplit, tonumber, tostring, ipairs, tinsert, tsort, mfloor, slower = next, type, pairs, strsplit, tonumber, tostring, ipairs, table.insert, table.sort, math.floor, string.lower
 local GetExpansionLevel, IsAddOnLoaded, GameFontNormal, GameFontNormalSmall, GameFontHighlight, GameFontHighlightSmall = GetExpansionLevel, IsAddOnLoaded, GameFontNormal, GameFontNormalSmall, GameFontHighlight, GameFontHighlightSmall
 local RAID_DIFFICULTY1, RAID_DIFFICULTY2, RAID_DIFFICULTY3, RAID_DIFFICULTY4, PLAYER_DIFFICULTY1, PLAYER_DIFFICULTY2, ALL = RAID_DIFFICULTY1, RAID_DIFFICULTY2, RAID_DIFFICULTY3, RAID_DIFFICULTY4, PLAYER_DIFFICULTY1, PLAYER_DIFFICULTY2, ALL
 local LibStub, DBM, DBM_GUI, DBM_OPTION_SPACER = _G["LibStub"], DBM, DBM_GUI, DBM_OPTION_SPACER
@@ -149,7 +150,7 @@ do
 				-- Filter duplicates
 				local insertme = true
 				for _, v2 in next, result do
-					if v2.value == v then
+					if slower(v2.value) == slower(v) then
 						insertme = false
 						break
 					end
@@ -505,7 +506,7 @@ do
 						for i = 0, 3 do
 							if optionTable[i] then
 								tinsert(modProfileDropdown, {
-									text	= (i == 0 and charname .. " (" .. ALL .. ")") or charname .. " (" .. L.SPECIALIZATION .. i .. "-" .. (charTable["talent" .. i] or "") .. ")",
+									text	= (i == 0 and charname .. " (" .. ALL .. ")") or charname .. " (" .. CL.SPECIALIZATION .. i .. "-" .. (charTable["talent" .. i] or "") .. ")",
 									value	= charname .. "|" .. tostring(i)
 								})
 							end
@@ -770,16 +771,14 @@ do
 						lastArea = lastArea + 1
 						local section = sections[lastArea]
 						section.header:SetText(statTypes[statType])
-						area.frame:HookScript("OnShow", function()
-							local kills, pulls, bestRank, bestTime = mod.stats[statType .. "Kills"] or 0, mod.stats[statType .. "Pulls"] or 0, mod.stats[statType .. "BestRank"] or 0, mod.stats[statType .. "BestTime"]
-							section.value1:SetText(kills)
-							section.value2:SetText(pulls - kills)
-							if statType == "challenge" and bestRank > 0 then
-								section.value3:SetText(bestTime and ("%d:%02d (%d)"):format(mfloor(bestTime / 60), bestTime % 60) or "-", bestRank)
-							else
-								section.value3:SetText(bestTime and ("%d:%02d"):format(mfloor(bestTime / 60), bestTime % 60) or "-")
-							end
-						end)
+						local kills, pulls, bestRank, bestTime = mod.stats[statType .. "Kills"] or 0, mod.stats[statType .. "Pulls"] or 0, mod.stats[statType .. "BestRank"] or 0, mod.stats[statType .. "BestTime"]
+						section.value1:SetText(kills)
+						section.value2:SetText(pulls - kills)
+						if statType == "challenge" and bestRank > 0 then
+							section.value3:SetText(bestTime and ("%d:%02d (%d)"):format(mfloor(bestTime / 60), bestTime % 60) or "-", bestRank)
+						else
+							section.value3:SetText(bestTime and ("%d:%02d"):format(mfloor(bestTime / 60), bestTime % 60) or "-")
+						end
 					end
 				end
 				Title:SetPoint("TOPLEFT", area.frame, "TOPLEFT", 10, -10 - (L.FontHeight * 5 * noHeaderLine) - (L.FontHeight * 6 * singleLine) - (L.FontHeight * 10 * doubleLine))

@@ -2,22 +2,8 @@ local L = DBM_GUI_L
 
 local spamPanel = DBM_GUI.Cat_Filters:CreateNewPanel(L.Panel_SpamFilter, "option")
 
-local spamAnnounces = spamPanel:CreateArea(L.Area_SpamFilter_Anounces)
-spamAnnounces:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
-spamAnnounces:CreateCheckButton(L.SpamBlockNoShowTgtAnnounce, true, nil, "DontShowTargetAnnouncements")
-spamAnnounces:CreateCheckButton(L.SpamBlockNoTrivialSpecWarnSound, true, nil, "DontPlayTrivialSpecialWarningSound")
-
-local spamSpecAnnouncesFilters = spamPanel:CreateArea(L.Area_SpamFilter_SpecRoleFilters)
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleDispel, true, nil, "SpamSpecRoledispel")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleInterrupt, true, nil, "SpamSpecRoleinterrupt")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleDefensive, true, nil, "SpamSpecRoledefensive")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleTaunt, true, nil, "SpamSpecRoletaunt")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleSoak, true, nil, "SpamSpecRolesoak")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleStack, true, nil, "SpamSpecRolestack")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleSwitch, true, nil, "SpamSpecRoleswitch")
-spamSpecAnnouncesFilters:CreateCheckButton(L.SpamSpecRoleGTFO, true, nil, "SpamSpecRolegtfo")
-
 local spamSpecAnnounceFeat = spamPanel:CreateArea(L.Area_SpamFilter_SpecFeatures)
+spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoShowAnnounce, true, nil, "DontShowBossAnnounces")
 spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnText, true, nil, "DontShowSpecialWarningText")
 spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnFlash, true, nil, "DontShowSpecialWarningFlash")
 -- spamSpecAnnounceFeat:CreateCheckButton(L.SpamBlockNoSpecWarnVibrate, true, nil, "DontDoSpecialWarningVibrate")
@@ -28,41 +14,28 @@ spamTimers:CreateCheckButton(L.SpamBlockNoShowTimers, true, nil, "DontShowBossTi
 spamTimers:CreateCheckButton(L.SpamBlockNoShowUTimers, true, nil, "DontShowUserTimers")
 spamTimers:CreateCheckButton(L.SpamBlockNoCountdowns, true, nil, "DontPlayCountdowns")
 
+local spamNameplates = spamPanel:CreateArea(L.Area_SpamFilter_Nameplates)
+spamNameplates:CreateCheckButton(L.SpamBlockNoNameplate, true, nil, "DontShowNameplateIcons")
+if _G["Plater"] then
+	spamNameplates:CreateCheckButton(L.SpamBlockNoBossGUIDs, true, nil, "DontSendBossGUIDs")
+	spamNameplates:CreateCheckButton(L.SpamBlockTimersWithNameplates, true, nil, "DontShowTimersWithNameplates")
+else
+	local infotext = spamNameplates:CreateText(L.NameplateFooter, nil, false, GameFontNormalSmall, "LEFT", 25)
+	infotext:SetPoint("BOTTOMLEFT", spamNameplates.frame, "BOTTOMLEFT", 10, 10)
+end
+
 local spamMisc = spamPanel:CreateArea(L.Area_SpamFilter_Misc)
 spamMisc:CreateCheckButton(L.SpamBlockNoSetIcon, true, nil, "DontSetIcons")
 spamMisc:CreateCheckButton(L.SpamBlockNoRangeFrame, true, nil, "DontShowRangeFrame")
 spamMisc:CreateCheckButton(L.SpamBlockNoInfoFrame, true, nil, "DontShowInfoFrame")
 spamMisc:CreateCheckButton(L.SpamBlockNoHudMap, true, nil, "DontShowHudMap2")
-spamMisc:CreateCheckButton(L.SpamBlockNoNameplate, true, nil, "DontShowNameplateIcons")
+
 spamMisc:CreateCheckButton(L.SpamBlockNoYells, true, nil, "DontSendYells")
 spamMisc:CreateCheckButton(L.SpamBlockNoNoteSync, true, nil, "BlockNoteShare")
 
 local spamRestoreArea = spamPanel:CreateArea(L.Area_Restore)
 spamRestoreArea:CreateCheckButton(L.SpamBlockNoIconRestore, true, nil, "DontRestoreIcons")
 spamRestoreArea:CreateCheckButton(L.SpamBlockNoRangeRestore, true, nil, "DontRestoreRange")
-
-local spamArea = spamPanel:CreateArea(L.Area_SpamFilter)
-spamArea:CreateCheckButton(L.DontShowFarWarnings, true, nil, "DontShowFarWarnings")
-spamArea:CreateCheckButton(L.StripServerName, true, nil, "StripServerName")
-spamArea:CreateCheckButton(L.FilterVoidFormSay, true, nil, "FilterVoidFormSay")
-
-local spamSpecArea = spamPanel:CreateArea(L.Area_SpecFilter)
-spamSpecArea:CreateCheckButton(L.FilterTankSpec, true, nil, "FilterTankSpec")
-spamSpecArea:CreateCheckButton(L.FilterDispels, true, nil, "FilterDispel")
-spamSpecArea:CreateCheckButton(L.FilterTrashWarnings, true, nil, "FilterTrashWarnings2")
-local FilterInterruptNote = spamSpecArea:CreateCheckButton(L.FilterInterruptNoteName, true, nil, "FilterInterruptNoteName")
-
-local interruptOptions = {
-	{	text	= L.SWFNever,			value	= "None"},
-	{	text	= L.FilterInterrupts,	value	= "onlyTandF"},
-	{	text	= L.FilterInterrupts2,	value	= "TandFandBossCooldown"},
-	{	text	= L.FilterInterrupts3,	value	= "TandFandAllCooldown"},
-}
-local interruptDropDown		= spamSpecArea:CreateDropdown(L.FilterInterruptsHeader, interruptOptions, "DBM", "FilterInterrupt2", function(value)
-	DBM.Options.FilterInterrupt2 = value
-end, 410)
-interruptDropDown:SetPoint("TOPLEFT", FilterInterruptNote, "BOTTOMLEFT", -15, -25)
-interruptDropDown.myheight = 50
 
 local spamPTArea = spamPanel:CreateArea(L.Area_PullTimer)
 spamPTArea:CreateCheckButton(L.DontShowPTNoID, true, nil, "DontShowPTNoID")

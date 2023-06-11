@@ -108,6 +108,7 @@ L.NOTESHAREERRORALREADYOPEN	= "메모 편집기가 이미 열려 있는 동안�
 L.ALLMOD_DEFAULT_LOADED		= "이 인스턴스에 속한 모든 모드의 기본 설정이 로딩됐습니다."
 L.ALLMOD_STATS_RESETED		= "모든 모드 통계가 초기화 되었습니다."
 L.MOD_DEFAULT_LOADED			= "이 전투의 기본 설정이 로딩됐습니다."
+--L.SOUNDKIT_MIGRATION			= "한개 이상의 알림/특수 알림 효과음이 호환되지 않는 미디어 형식이거나 파일 경로가 잘못되는 등의 문제로 인해 기본값으로 초기화 되었습니다. " .. L.DBM .. "은 현재 애드온 폴더 내에 있는 효과음 파일이나 미디어 재생에 쓰이는 SoundKit ID만 지원하고 있습니다."
 
 L.WORLDBOSS_ENGAGED			= "당신이 속한 서버에서 %s 전투가 %s 퍼센트의 체력으로 시작된 것 같습니다. (%s|1이;가; 전송)"
 L.WORLDBOSS_DEFEATED			= "당신이 속한 서버에서 %s|1이;가; 잡힌 것 같습니다. (%s|1이;가; 전송)"
@@ -174,10 +175,11 @@ L.VOICE_COUNT_MISSING		= "초읽기 음성중 %d초로 설정된 음성/초읽�
 L.UPDATEREMINDER_HEADER			= "사용중인 " .. L.DEADLY_BOSS_MODS .. " 버전의 사용 기한이 지났습니다.\n 버전 %s (%s) 는 여기에서 다운로드할 수 있습니다: " .. L.UPDATEREMINDER_URL
 L.UPDATEREMINDER_FOOTER			= (IsMacClient() and "Cmd-C" or "Ctrl-C").. "를 누르면 주소를 복사할 수 있습니다."
 L.UPDATEREMINDER_FOOTER_GENERIC	= (IsMacClient() and "Cmd-C" or "Ctrl-C").. "를 누르면 주소를 복사할 수 있습니다."
-L.UPDATEREMINDER_DISABLE			= "경고: 지금 사용중인 " .. L.DEADLY_BOSS_MODS .. "가 지나치게 오래되어 강제로 비활성화되며 업데이트 전까진 사용할 수 없습니다. 이는 오래되고 호환되지 않는 모드가 당신과 파티/공대원의 플레이에 악영향을 미치지 않게 하기 위함입니다."
+L.UPDATEREMINDER_DISABLE			= "경고: " .. L.DEADLY_BOSS_MODS .. "의 버전이 오래되어 새로운 "..L.DBM.." 버전과 호환되지 않아 강제로 비활성화되며 업데이트 전까진 사용할 수 없습니다. 이는 구버전 모드가 당신과 파티/공대원의 플레이에 악영향을 미치지 않게 하기 위함입니다."
+L.UPDATEREMINDER_DISABLETEST			= "경고: " .. L.DEADLY_BOSS_MODS.. "의 버전이 오래되었고 테스트/베타 서버이기 때문에 강제로 비활성화되며 업데이트 전까진 사용할 수 없습니다. 이는 구버전 모드가 테스트 피드백에 사용되지 않게 하기 위함입니다."
 L.UPDATEREMINDER_HOTFIX			= "지금 사용하는 " .. L.DBM .. " 버전은 이 보스 전투에서 알려진 오류를 가지고 있습니다. 이 오류는 최신 버전으로 업데이트하면 수정됩니다."
 L.UPDATEREMINDER_HOTFIX_ALPHA	= "지금 사용하는 " .. L.DBM .. " 버전은 이 보스 전투에서 알려진 오류를 가지고 있습니다. 이 오류는 향후 출시될 버전 (또는 최신 ALPHA 버전)에서 수정되어있을 것입니다."
-L.UPDATEREMINDER_MAJORPATCH		= "경고: 대규모 패치로 인해 " .. L.DEADLY_BOSS_MODS .. " 버전이 사용 기한이 지나 업데이트하기 전까진 " .. L.DBM .. "이 비활성화됩니다. 이는 오래되고 호환되지 않는 코드로 인해 당신과 공대원이 조악한 플레이 경험을 겪지 않게 하기 위함입니다. 지금 바로 Curse, WoWI, GitHub 릴리즈 페이지 등에서 최신 버전을 다운로드 하시기 바랍니다."
+L.UPDATEREMINDER_MAJORPATCH		= "경고: 대규모 패치로 인해 " .. L.DEADLY_BOSS_MODS .. " 버전이 사용 기한이 지나 업데이트하기 전까진 " .. L.DBM .. "이 비활성화됩니다. 이는 오래되고 호환되지 않는 코드로 인해 당신과 공대원이 조악한 플레이 경험을 겪지 않게 하기 위함입니다. 지금 바로 Curse, Wago, WoWI, GitHub 릴리즈 페이지 등에서 최신 버전을 다운로드 하시기 바랍니다."
 L.VEM							= "경고: " .. L.DEADLY_BOSS_MODS .. "와 Voice Encounter Mods를 함께 사용중입니다. 현재 설정으로는 DBM이 작동하지 않으며 로딩도 되지 않을 것입니다."
 L.OUTDATEDPROFILES				= "경고: DBM-Profiles가 이 버전의 " .. L.DBM .. "과 호환되지 않습니다. " .. L.DBM .. "이 읽기 전에 삭제해야 충돌을 방지할 수 있습니다."
 L.OUTDATEDSPELLTIMERS				= "경고: DBM-SpellTimers로 인해 " .. L.DBM .. "이 작동하지 않습니다. 반드시 비활성화 해야 " .. L.DBM .. "이 정상 작동합니다."
@@ -188,7 +190,6 @@ L.DBMLDB							= "경고: DBM-LDB는 이제 DBM-Core에 편입되었습니다. �
 L.DBMLOOTREMINDER				= "경고: 써드파티 모드인 DBM-LootReminder가 설치되었습니다. 이 애드온은 최신 WoW 클라이언트에 더이상 호환되지 않으며 " .. L.DBM .. "이 오작동하여 풀링 타이머를 전송하지 못하게 될 수 있습니다. 애드온 삭제를 권장합니다"
 L.UPDATE_REQUIRES_RELAUNCH		= "경고: 지금 업데이트한 " .. L.DBM .. "은 게임 클라이언트를 완전히 재시작하기 전까진 정상 작동하지 않습니다. 이 업데이트엔 새 파일이 포함되어 있거나 UI 재시작으로는 로딩할 수 없는 .toc 파일의 변경 사항이 있습니다. 클라이언트 재시작 없이 사용할 경우 오류가 발생하거나 작동하지 않을 수 있습니다."
 L.OUT_OF_DATE_NAG				= "현재 사용중인 " .. L.DBM .. " 버전이 오래되었습니다. 이 전투에 대응하는 모듈은 새로운 기능을 탑재했거나 버그가 수정된 상태입니다. 향상된 레이드 경험을 누리고 싶다면 업데이트를 권장합니다."
-L.RETAIL_ONLY					= "경고: 이 " .. L.DBM .. " 버전은 월드 오브 워크래프트 최신 버전용입니다. 삭제하시고 클래식 WoW 전용 DBM을 설치하세요."
 
 L.MOVABLE_BAR				= "드래그 하세요!"
 
@@ -199,7 +200,7 @@ L.PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <텍스트>
 
 L.MINIMAP_TOOLTIP_FOOTER		= "쉬프트 누르고 드래그로 이동"
 
-L.RANGECHECK_HEADER			= "탐지 거리 (%d m)"
+L.RANGECHECK_HEADER			= "탐지 거리 (%dm)"
 L.RANGECHECK_HEADERT			= "탐지 거리 (%dm-%d명)"
 L.RANGECHECK_RHEADER			= "반전-탐지 거리 (%dm)"
 L.RANGECHECK_RHEADERT		= "반전-탐지 거리 (%dm-%d명)"
@@ -216,12 +217,12 @@ L.RANGECHECK_OPTION_FRAMES	= "창 종류"
 L.RANGECHECK_OPTION_RADAR	= "레이더 창 표시"
 L.RANGECHECK_OPTION_TEXT		= "텍스트 창 표시"
 L.RANGECHECK_OPTION_BOTH		= "모두 표시"
-L.RANGERADAR_HEADER			= "범위 레이더 (%d m)"
-L.RANGERADAR_BOSS_HEADER		= "보스 범위 (%d m)"
+L.RANGERADAR_HEADER			= "거리:%d, 플레이어:%d"
+L.RANGERADAR_BOSS_HEADER		= "보스 범위 (%dm)"
 L.RANGERADAR_RHEADER			= "반전-거리:%d 플레이어:%d"
-L.RANGERADAR_IN_RANGE_TEXT	= "거리 내 %d명 (%0.1f m)"
+L.RANGERADAR_IN_RANGE_TEXT	= "거리 내 %d명 (%0.1fm)"
 L.RANGECHECK_IN_RANGE_TEXT	= "거리 내 %d명"--Text based doesn't need (%dyd), especially since it's not very accurate to the specific yard anyways
-L.RANGERADAR_IN_RANGE_TEXTONE	= "%s (%0.1f m)"--One target
+L.RANGERADAR_IN_RANGE_TEXTONE	= "%s (%0.1fm)"--One target
 
 L.INFOFRAME_SHOW_SELF		= "내 자원 항상 보기"		-- Always show your own power value even if you are below the threshold
 L.INFOFRAME_SETLINES			= "최대 줄 갯수 지정"
@@ -262,8 +263,8 @@ L.TIMER_USAGE	= {
 	"--------------",
 	"/dbm timer <초> <텍스트>: <초> 만큼 지속되는 <텍스트> 타이머가 시작됩니다.",
 	"/dbm ltimer <초> <텍스트>: 취소하기 전까진 자동 반복되는 타이머가 시작됩니다.",
-	"(공대장이나 승급자일 경우 타이머 텍스트 앞에 'Broadcast'를 입력하면 공격대에 공유)",
-	"/dbm timer endloop: ltimer와 반복 작동을 멈춥니다."
+	"(공대장이나 승급자일 경우 'timer'와 'ltimer' 앞에 'Broadcast'를 입력하면 공격대에 공유)",
+	"/dbm timer endloop: 반복 작동중인 모든 ltimer를 멈춥니다."
 }
 
 L.ERROR_NO_PERMISSION				= "이 명령어를 실행하기 위한 권한을 가지고 있지 않습니다."
@@ -295,10 +296,12 @@ L.AUTO_ANNOUNCE_TEXTS.targetdistance	= "%s: >%%s< (%%d yd)"
 L.AUTO_ANNOUNCE_TEXTS.targetsource	= ">%%s<의 %s 시전: >%%s<"
 L.AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%s): >%%s<"
 L.AUTO_ANNOUNCE_TEXTS.targetcountdistance	= "%s (%%s): >%%s< (%%d yd)"
+L.AUTO_ANNOUNCE_TEXTS.incoming		= "%s 디버프 걸림"
+L.AUTO_ANNOUNCE_TEXTS.incomingcount	= "%s 디버프 걸림 (%%s)"
 L.AUTO_ANNOUNCE_TEXTS.ends			= "%s 종료"
 L.AUTO_ANNOUNCE_TEXTS.endtarget		= "%s 종료: >%%s<"
 L.AUTO_ANNOUNCE_TEXTS.fades			= "%s 사라짐"
-L.AUTO_ANNOUNCE_TEXTS.addsleft			= "%s 남은 수: %%d"
+L.AUTO_ANNOUNCE_TEXTS.addsleft		= "%s 남은 수: %%d"
 L.AUTO_ANNOUNCE_TEXTS.cast			= "%s 시전: %.1f초"
 L.AUTO_ANNOUNCE_TEXTS.soon			= "곧 %s"
 L.AUTO_ANNOUNCE_TEXTS.sooncount		= "곧 %s (%%s)"
@@ -319,6 +322,8 @@ L.AUTO_ANNOUNCE_OPTIONS.targetsource	= "$spell:%s 대상 알림 (시전자 포�
 L.AUTO_ANNOUNCE_OPTIONS.targetcount	= "$spell:%s 대상 알림 (횟수 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.targetcountdistance	= "$spell:%s 대상 알림 (수와 거리 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.spell		= "$spell:%s 시전 완료 알림 보기"
+L.AUTO_ANNOUNCE_OPTIONS.incoming	= "$spell:%s 주문이 디버프를 걸 때 알림"
+L.AUTO_ANNOUNCE_OPTIONS.incomingcount	= "$spell:%s 주문이 디버프를 걸 때 알림 (횟수 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.ends			= "$spell:%s 지속 시간 종료시 알림 보기"
 L.AUTO_ANNOUNCE_OPTIONS.endtarget	= "$spell:%s 지속 시간 종료시 알림 보기 (대상 포함)"
 L.AUTO_ANNOUNCE_OPTIONS.fades		= "$spell:%s|1이;가; 사라졌을 때 알림 보기"
@@ -360,7 +365,7 @@ L.AUTO_SPEC_WARN_TEXTS.keepmove		= "%s - 계속 이동"
 L.AUTO_SPEC_WARN_TEXTS.stopmove		= "%s - 이동 금지"
 L.AUTO_SPEC_WARN_TEXTS.dodge		= "%s - 피하세요"
 L.AUTO_SPEC_WARN_TEXTS.dodgecount	= "%s (%%s) - 피하세요"
-L.AUTO_SPEC_WARN_TEXTS.dodgeloc		= "%s - %%s|1으로;로; 피하세요"
+L.AUTO_SPEC_WARN_TEXTS.dodgeloc		= "%s - %%s 자리 피하세요"
 L.AUTO_SPEC_WARN_TEXTS.moveaway		= "%s - 거리 이격"
 L.AUTO_SPEC_WARN_TEXTS.moveawaycount	= "%s (%%s) - 밖으로 나오세요"
 L.AUTO_SPEC_WARN_TEXTS.moveto		= "%s - >%%s<|1으로;로; 이동"
@@ -368,6 +373,7 @@ L.AUTO_SPEC_WARN_TEXTS.soak		= "%s - 맞으세요"
 L.AUTO_SPEC_WARN_TEXTS.soakcount	= "%s - 맞으세요 %%s"
 L.AUTO_SPEC_WARN_TEXTS.jump		= "%s - 점프"
 L.AUTO_SPEC_WARN_TEXTS.run		= "%s - 도망치세요"
+L.AUTO_SPEC_WARN_TEXTS.runcount		= "%s - 도망치세요 (%%s)"
 L.AUTO_SPEC_WARN_TEXTS.cast		= "%s - 주문 시전 중지"
 L.AUTO_SPEC_WARN_TEXTS.lookaway		= "%%2$s에게 %1$s - 고개 돌리세요"
 L.AUTO_SPEC_WARN_TEXTS.reflect		= "%s: >%%s< - 공격 중지"
@@ -406,7 +412,7 @@ L.AUTO_SPEC_WARN_OPTIONS.keepmove		= "$spell:%s에 계속 이동 특수 알림 �
 L.AUTO_SPEC_WARN_OPTIONS.stopmove		= "$spell:%s에 이동 금지 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.dodge			= "$spell:%s 피하기 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.dodgecount		= "$spell:%s 피하기 특수 알림 보기 (횟수 포함)"
-L.AUTO_SPEC_WARN_OPTIONS.dodgeloc		= "$spell:%s 피하기 특수 알림 보기 (회피 장소 포함)"
+L.AUTO_SPEC_WARN_OPTIONS.dodgeloc		= "$spell:%s 피하기 특수 알림 보기 (피해야하는 장소 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.moveaway		= "$spell:%s에 거리 이격 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.moveawaycount		= "$spell:%s에 밖으로 나오기 특수 알림 보기 (횟수 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.moveto			= "$spell:%s에 특정인 또는 특정 위치로 이동 특수 알림 보기"
@@ -414,6 +420,7 @@ L.AUTO_SPEC_WARN_OPTIONS.soak			= "$spell:%s 맞기 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.soakcount		= "$spell:%s 맞기 특수 알림 보기 (횟수 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.jump			= "$spell:%s에 점프 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.run			= "$spell:%s|1으로;로;부터 도망 특수 알림 보기"
+L.AUTO_SPEC_WARN_OPTIONS.runcount		= "$spell:%s|1으로;로;부터 도망 특수 알림 보기 (횟수 포함)"
 L.AUTO_SPEC_WARN_OPTIONS.cast			= "$spell:%s에 주문 시전 중지 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.lookaway		= "$spell:%s에 고개 돌리기 특수 알림 보기"
 L.AUTO_SPEC_WARN_OPTIONS.reflect		= "$spell:%s에 공격 중지 특수 알림 보기"
@@ -496,24 +503,26 @@ L.AUTO_YELL_OPTION_TEXT.shortposition	= "$spell:%s 대상일 때 말풍선으로
 L.AUTO_YELL_OPTION_TEXT.combo		= "$spell:%s|1과;와; 다른 디버프가 같이 걸렸을 때 말풍선으로 알리기 (사용자 지정 문자 포함)"
 L.AUTO_YELL_OPTION_TEXT.repeatplayer	= "$spell:%s에 걸렸을 때 말풍선 알림 반복 (플레이어 이름 포함)"
 L.AUTO_YELL_OPTION_TEXT.repeaticon	= "$spell:%s에 걸렸을 때 말풍선 알림 반복 (공격대 징표 포함)"
-L.AUTO_YELL_ANNOUNCE_TEXT.yell	= UnitName("player") .. "에게 %s"
-L.AUTO_YELL_ANNOUNCE_TEXT.count	= UnitName("player") .. "에게 %s (%%d)"
-L.AUTO_YELL_ANNOUNCE_TEXT.fade	= "%s %%d초 후 사라짐"
+L.AUTO_YELL_ANNOUNCE_TEXT.yell		= UnitName("player") .. "에게 %s"
+L.AUTO_YELL_ANNOUNCE_TEXT.count		= UnitName("player") .. "에게 %s (%%d)"
+L.AUTO_YELL_ANNOUNCE_TEXT.fade		= "%s %%d초 후 사라짐"
 L.AUTO_YELL_ANNOUNCE_TEXT.position	= "{rt%%3$d}" .. UnitName("player") .. "{rt%%3$d}에게 %1$s %%2$s"
 L.AUTO_YELL_ANNOUNCE_TEXT.combo		= "%s랑 %%s 걸림"
-L.AUTO_YELL_CUSTOM_FADE			= "%s 사라짐"
-L.AUTO_HUD_OPTION_TEXT			= "$spell:%s에 HUD 표시 (중단됨)"
+L.AUTO_YELL_CUSTOM_FADE				= "%s 사라짐"
+L.AUTO_HUD_OPTION_TEXT				= "$spell:%s에 HUD 표시 (중단됨)"
 L.AUTO_HUD_OPTION_TEXT_MULTI		= "여러 보스 기술에 HUD 표시 (중단됨)"
-L.AUTO_NAMEPLATE_OPTION_TEXT		= "$spell:%s 오라를 이름표에 표시"
-L.AUTO_RANGE_OPTION_TEXT			= "$spell:%2$s 범위에 대한 거리 창 보기 (%1$sm)"
-L.AUTO_RANGE_OPTION_TEXT_SHORT	= "거리 창 보기 (%sm)"
+L.AUTO_NAMEPLATE_OPTION_TEXT		= "호환되는 이름표 애드온이나 "..L.DBM.."을 사용하여 $spell:%s 오라를 이름표에 표시"
+L.AUTO_NAMEPLATE_OPTION_TEXT_FORCED	= ""..L.DBM.."만을 사용하여 $spell:%s 오라를 이름표에 표시"
+L.AUTO_RANGE_OPTION_TEXT		= "$spell:%2$s 범위에 대한 거리 창 보기 (%1$sm)"
+L.AUTO_RANGE_OPTION_TEXT_SHORT		= "거리 창 보기 (%sm)"
 L.AUTO_RRANGE_OPTION_TEXT		= "$spell:%2$s 범위에 대한 반전 거리 창 보기 (%1$sm)"
-L.AUTO_RRANGE_OPTION_TEXT_SHORT	= "반전 거리 창 보기 (%sm)"
-L.AUTO_INFO_FRAME_OPTION_TEXT	= "$spell:%s|1을;를; 정보 창에 표시"
-L.AUTO_INFO_FRAME_OPTION_TEXT2	= "전투 전반에 관한 사항을 정보 창에 표시"
+L.AUTO_RRANGE_OPTION_TEXT_SHORT		= "반전 거리 창 보기 (%sm)"
+L.AUTO_INFO_FRAME_OPTION_TEXT		= "$spell:%s|1을;를; 정보 창에 표시"
+L.AUTO_INFO_FRAME_OPTION_TEXT2		= "전투 전반에 관한 사항을 정보 창에 표시"
 L.AUTO_INFO_FRAME_OPTION_TEXT3		= "$spell:%s|1을;를; 정보 창에 표시 (%%s의 제한 수치 이상인 경우)"
-L.AUTO_READY_CHECK_OPTION_TEXT	= "보스가 풀링되면 전투 준비 효과음 듣기 (보스를 대상으로 잡지 않아도 재생)"
-L.AUTO_SPEEDCLEAR_OPTION_TEXT	= "%s의 완료 신기록 타이머 표시"
+L.AUTO_READY_CHECK_OPTION_TEXT		= "보스가 풀링되면 전투 준비 효과음 듣기 (보스를 대상으로 잡지 않아도 재생)"
+L.AUTO_SPEEDCLEAR_OPTION_TEXT		= "%s의 완료 신기록 타이머 표시"
+L.AUTO_PRIVATEAURA_OPTION_TEXT		= "이 전투에서 설정한 $spell:%s 개인 오라에 DBM 효과음 경고를 재생합니다. 효과음 우선 순위: 음성팩을 설치했다면 음성팩을 우선 사용하며 없으면 Air Horn 효과음으로 대체됩니다"
 
 --Sounds
 L.AUTO_SOUND_OPTION_TEXT			= "$spell:%d에서 소리를 재생합니다"
@@ -572,6 +581,8 @@ L.DUR_HEADER					= L.DEADLY_BOSS_MODS .. " - 내구도 검사 결과"
 L.DUR_ENTRY					= "%s: 내구도 [%d 퍼센트] / 깨진 장비 [%s]"
 L.LAG_FOOTER					= "응답 없음: %s"
 
+L.OVERRIDE_ACTIVATED					= "이 전투에서 공대장에 의해 설정 강제 적용이 활성화되었습니다"
+
 --LDB
 L.LDB_TOOLTIP_HELP1			= "왼쪽 클릭으로 " .. L.DBM .. " 열기"
 L.SILENTMODE_IS					= "조용함 모드 "
@@ -588,5 +599,6 @@ L.WORLD_BUFFS.rendHead		= "가짜 대족장 렌드 블랙핸드가 쓰러졌도�
 --Retail Globals
 L.RAID_INFO_WORLD_BOSS		= "야외 우두머리"
 L.SCENARIO_STAGE			= "%d단계"
+L.SPECIALIZATION			= "전문화" -- ID: 22433
 -- EJ
 L.HARD_MODE					= "어려움 모드" -- 17220
