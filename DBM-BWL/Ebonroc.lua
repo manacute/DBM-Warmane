@@ -62,14 +62,3 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerShadow:Stop(args.destName)
 	end
 end
-
-function mod:UNIT_DIED(args)
-	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 14601 then--Only trigger kill for unit_died if he dies in phase 2 with everyone alive, otherwise it's an auto wipe.
-		if DBM:NumRealAlivePlayers() > 0 then
-			DBM:EndCombat(self)
-		else
-			DBM:EndCombat(self, true)--Pass wipe arg end combat
-		end
-	end
-end
