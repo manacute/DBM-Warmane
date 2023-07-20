@@ -8,4 +8,14 @@ mod:SetModelID(19372)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 30916"
 )
+local timerPoisonCloudCD		= mod:NewCDTimer(20, 30916, nil, nil, nil, 4, nil)
+local warningPoisonCloud		= mod:NewSpellAnnounce(30916, 3)
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 30916 then
+		warningPoisonCloud:Show()
+		timerPoisonCloudCD:Start()
+	end
+end
