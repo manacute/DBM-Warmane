@@ -29,20 +29,20 @@ local specWarnCaveIn	= mod:NewSpecialWarningGTFO(36240, nil, nil, nil, 1, 6)
 local specWarnShatter	= mod:NewSpecialWarningMoveAway(33654, nil, nil, nil, 1, 6)
 
 local timerGrowthCD		= mod:NewNextTimer(30, 36300, nil, nil, nil, 6)
-local timerGroundSlamCD	= mod:NewCDTimer(74, 33525, nil, nil, nil, 2)--74-80 second variation,and this is just from 2 pulls.
-local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)--10 seconds after ground slam
---local timerSilenceCD	= mod:NewCDTimer(32, 36297, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON)--Also showing a HUGE variation of 32-130 seconds.
+local timerGroundSlamCD	= mod:NewCDTimer(60, 33525, nil, nil, nil, 2)
+local timerShatterCD	= mod:NewNextTimer(10, 33654, nil, nil, nil, 2, nil, DBM_COMMON_L.DEADLY_ICON, nil, 1, 4)
+--local timerSilenceCD	= mod:NewCDTimer(39.9, 36297, nil, nil, nil, 5, nil, DBM_COMMON_L.HEALER_ICON) -- ChromieCraft varies from 39.9 to 55.7 seconds
 
 mod:AddRangeFrameOption(mod.Options.RangeDistance == "Smaller" and 11 or 18, 33654)
 mod:AddDropdownOption("RangeDistance", {"Smaller", "Safe"}, "Safe", "misc")
 
 function mod:OnCombatStart(delay)
 	timerGrowthCD:Start(-delay)
-	timerGroundSlamCD:Start(40-delay)
+	-- timerSilenceCD:Start(-delay)
+	timerGroundSlamCD:Start(35-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(self.Options.RangeDistance == "Smaller" and 11 or 18)
 	end
-	DBM:AddMsg("Ground Slam timer is not broken. This is an ability that has a 74 second minimum cooldown window, but after coming off CD can be delayed up to 21 seconds on when it's cast. Basically it's a 74-95sec window. DBM shows timer for the start of that window, but cannot control whether or not the boss casts it at 74, 85, or 95. Use this knowledge to inform you of when the ability can NOT be cast, not when it will be.")
 end
 
 function mod:OnCombatEnd()
@@ -64,21 +64,18 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 36297 then--Reverberation (Silence)
+	if args.spellId == 36297 then --Reverberation (Silence)
 		warnSilence:Show()
---		timerSilenceCD:Start()
+		-- timerSilenceCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 36300 then--Growth
+	if args.spellId == 36300 then --Growth
 		local amount = args.amount or 1
 		warnGrowth:Show(args.spellName, amount)
 		timerGrowthCD:Start()
---		if amount == 3 then--First silence is 15 (or 30?) seconds after 3rd growth.
---			timerSilenceCD:Start(30)
---		end
-	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial() then--Cave In
+	elseif args.spellId == 36240 and args:IsPlayer() and not self:IsTrivial() then --Cave In
 		specWarnCaveIn:Show(args.spellName)
 		specWarnCaveIn:Play("watchfeet")
 	end
