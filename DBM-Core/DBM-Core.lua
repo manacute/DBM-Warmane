@@ -82,7 +82,7 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20230614000156"),
+	Revision = parseCurseDate("20230627215931"),
 	DisplayVersion = "10.1.7 alpha", -- the string that is shown as version
 	ReleaseRevision = releaseDate(2023, 5, 25) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
@@ -4369,14 +4369,14 @@ do
 		twipe(targetList)
 	end
 
-	local function scanForCombat(mod, mob, delay)
+	local function scanForCombat(mod, mob, delay, force) -- custom "force" arg for 3.3.5a PLAYER_REGEN_DISABLED
 		if not checkEntry(inCombat, mob) then
 			buildTargetList()
 			if targetList[mob] then
 				if mod.noFriendlyEngagement and UnitIsFriend("player", targetList[mob]) then return end
-				if delay > 0 and UnitAffectingCombat(targetList[mob]) and not (UnitPlayerOrPetInRaid(targetList[mob]) or UnitPlayerOrPetInParty(targetList[mob])) then
+				if (force or delay > 0) and UnitAffectingCombat(targetList[mob]) and not (UnitPlayerOrPetInRaid(targetList[mob]) or UnitPlayerOrPetInParty(targetList[mob])) then
 					DBM:StartCombat(mod, delay, "PLAYER_REGEN_DISABLED")
-				elseif (delay == 0) then
+				elseif (delay == 0) and not force then
 					DBM:StartCombat(mod, 0, "PLAYER_REGEN_DISABLED_AND_MESSAGE")
 				end
 			end
@@ -4388,7 +4388,7 @@ do
 		healthCombatInitialized = false
 		--This just can't be avoided, trying to save cpu by using C_TimerAfter broke this
 		--This needs the redundancy and ability to pass args.
-		scanForCombat(combatInfo.mod, mob, 0)
+		scanForCombat(combatInfo.mod, mob, 0, true) -- Since 3.3.5a does not have ENCOUNTER_START, and IEEU is not implemented everywhere, a scan is fired instantly on PLAYER_REGEN_DISABLED, rather than waiting 0.5s. Uses custom arg to use the scanForCombat UnitAffectingCombat checks
 		DBM:Schedule(0.5, scanForCombat, combatInfo.mod, mob, 0.5)
 		-- DBM:Schedule(1.25, scanForCombat, combatInfo.mod, mob, 1.25)
 		DBM:Schedule(2, scanForCombat, combatInfo.mod, mob, 2)
@@ -5935,14 +5935,12 @@ do
 		for _, v in ipairs(sortMe) do
 			-- If selectedClient player's realm is not same with your's, timer recovery by selectedClient not works at all.
 			-- SendAddonMessage target channel is "WHISPER" and target player is other realm, no msg sends at all. At same realm, message sending works fine. (Maybe bliz bug or SendAddonMessage function restriction?)
-			if v.revision then
-				if v.name ~= playerName and tonumber(v.revision) >= 6010 and UnitIsConnected(v.id) and (not UnitIsGhost(v.id)) and (GetTime() - (clientUsed[v.name] or 0)) > 10 then
-					listNum = listNum + 1
-					if listNum == requestNum then
-						selectedClient = v
-						clientUsed[v.name] = GetTime()
-						break
-					end
+			if v.name ~= playerName and UnitIsConnected(v.id) and UnitIsPlayer(v.id) and (not UnitIsGhost(v.id)) and (GetTime() - (clientUsed[v.name] or 0)) > 10 then
+				listNum = listNum + 1
+				if listNum == requestNum then
+					selectedClient = v
+					clientUsed[v.name] = GetTime()
+					break
 				end
 			end
 		end
@@ -5954,7 +5952,7 @@ do
 	end
 
 	function DBM:ReceiveCombatInfo(sender, mod, time)
-		if DBM.Options.Enabled and requestedFrom[sender] and (GetTime() - requestTime) < 5 and #inCombat == 0 then
+		if dbmIsEnabled and requestedFrom[sender] and (GetTime() - requestTime) < 5 and #inCombat == 0 then
 			self:StartCombat(mod, time, "TIMER_RECOVERY")
 			--Recovery successful, someone sent info, abort other recovery requests
 			self:Unschedule(self.RequestTimers)
@@ -6428,6 +6426,19 @@ DBT:SetAnnounceHook(function(bar)
 		return ("%s: %s  %d:%02d"):format(prefix, _G[bar.frame:GetName().."BarName"]:GetText(), floor(bar.timer / 60), bar.timer % 60)
 	end
 end)
+
+function DBM:Capitalize(str)
+	local firstByte = str:byte(1, 1)
+	local numBytes = 1
+	if firstByte >= 0xF0 then -- firstByte & 0b11110000
+		numBytes = 4
+	elseif firstByte >= 0xE0 then -- firstByte & 0b11100000
+		numBytes = 3
+	elseif firstByte >= 0xC0 then  -- firstByte & 0b11000000
+		numBytes = 2
+	end
+	return str:sub(1, numBytes):upper()..str:sub(numBytes + 1):lower()
+end
 
 -- An anti spam function to throttle spammy events (e.g. SPELL_AURA_APPLIED on all group members)
 -- @param time the time to wait between two events (optional, default 2.5 seconds)
