@@ -4,9 +4,10 @@ local L		= mod:GetLocalizedStrings()
 local GetTime = GetTime
 local format = string.format
 
-mod:SetRevision("20230502225216")
+mod:SetRevision("20230823103810")
 mod:SetCreatureID(36678)
 mod:SetUsedIcons(1, 2, 3, 4)
+mod:SetHotfixNoticeRev(20230823000000)
 mod:SetMinSyncRevision(20220908000000)
 
 mod:RegisterCombat("combat")
@@ -106,7 +107,6 @@ local timerNextPhase				= mod:NewPhaseTimer(30)
 
 local redOozeGUIDsCasts = {}
 local PuddleTime = 0
-local GooTime = 0
 local ChokingTime = 0
 local UnboundTime = 0
 mod.vb.warned_preP2 = false
@@ -117,9 +117,11 @@ local function NextPhase(self)
 	if self.vb.phase == 2 then
 		warnPhase2:Show()
 		warnPhase2:Play("ptwo")
+		self:UnregisterShortTermEvents() -- UnregisterShortTermEvents moved here to ensure UNIT_TARGET is unregistered (previously was running on sync, which is not always used)
 	elseif self.vb.phase == 3 then
 		warnPhase3:Show()
 		warnPhase3:Play("pthree")
+		self:UnregisterShortTermEvents() -- UnregisterShortTermEvents moved here to ensure UNIT_TARGET is unregistered (previously was running on sync, which is not always used)
 	end
 end
 
@@ -163,7 +165,6 @@ function mod:OnCombatStart(delay)
 	warnUnstableExperimentSoon:Schedule(25-delay)
 	table.wipe(redOozeGUIDsCasts)
 	PuddleTime = 0
-	GooTime = 0
 	ChokingTime = 0
 	UnboundTime = 0
 	self.vb.warned_preP2 = false
@@ -173,6 +174,10 @@ function mod:OnCombatStart(delay)
 	end
 end
 
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
+end
+
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if args:IsSpellID(70351, 71966, 71967, 71968) then	-- Unstable Experiment
@@ -180,20 +185,29 @@ function mod:SPELL_CAST_START(args)
 		warnUnstableExperiment:Show()
 		timerUnstableExperimentCD:Start()
 		warnUnstableExperimentSoon:Schedule(30)
-	elseif spellId == 71617 then				--Tear Gas (stun all on Normal phase)
+	elseif spellId == 71617 then				--Tear Gas (stun all on Normal phase) (Normal intermission)
 		self:SetStage(self.vb.phase + 0.5) -- ACTION_CHANGE_PHASE
 		warnTearGas:Show()
-	elseif args:IsSpellID(72842, 72843) then		--Volatile Experiment (heroic phase change begin)
+		if self.vb.phase == 2.5 then -- Usual timer delta is not reliable for Malleable Goo, it's a different logic, commented below
+			local gooElapsed = timerMalleableGooCD:GetTime() -- On second intermission, the next Malleable Goo will always be 50s after the previous Malleable Goo cast, so calculate elapsed time and update timer
+			timerMalleableGooCD:Update(gooElapsed, 50)
+			soundMalleableGooSoon:Schedule(50-gooElapsed-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
+		end
+	elseif args:IsSpellID(72842, 72843) then		--Volatile Experiment (Heroic intermission)
 		-- TO DO: check whether delaying all running timers by 30s is accurate, according to TC. According to AC is 24+25s
 		self:SetStage(self.vb.phase + 0.5) -- ACTION_CHANGE_PHASE
 		warnVolatileExperiment:Show()
 		warnUnstableExperimentSoon:Cancel()
 		warnChokingGasBombSoon:Cancel()
 		timerUnstableExperimentCD:Cancel()
-		timerMalleableGooCD:Cancel()
 		timerSlimePuddleCD:Cancel()
 		timerChokingGasBombCD:Cancel()
 		timerUnboundPlagueCD:Cancel()
+		if self.vb.phase == 2.5 then -- Usual timer delta is not reliable for Malleable Goo, it's a different logic, commented below (25H Icecrown [2023-05-28]@[17:19:33] || [2023-05-28]@[16:42:29] || [2023-05-28]@[16:59:21] || [2023-05-28]@[16:32:41]) - First intermission: 52.45 || 49.14 || 49.97 || 48.50 ; Second intermission: 30.41 || x || 38.82 || x.
+			local gooElapsed = timerMalleableGooCD:GetTime() -- On second intermission, the next Malleable Goo will always be 50s after the previous Malleable Goo cast, so calculate elapsed time and update timer
+			timerMalleableGooCD:Update(gooElapsed, 50)
+			soundMalleableGooSoon:Schedule(50-gooElapsed-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
+		end
 	elseif args:IsSpellID(72851, 72852, 71621, 72850) then		--Create Concoction (phase2 change)
 		local puddleTimeAdjust = GetTime() - PuddleTime
 		DBM:Debug("During Create Concoction, PuddleTime is: "..puddleTimeAdjust, 2)
@@ -208,17 +222,22 @@ function mod:SPELL_CAST_START(args)
 			timerUnstableExperimentCD:Start(53.8-puddleTimeAdjust) -- REVIEW! Variance? Lowest possible timer? (25H Lordaeron 2022/09/04) - 31
 		end
 		if self:IsHeroic() then
-			self:Schedule(35, NextPhase, self)	--after 5s PP sets target
-			timerNextPhase:Start(35)
-			timerMalleableGooCD:Start(45.1) -- timer after phase 2 (25H Lordaeron 2022/09/07) - 10.1 ; 10.1
-			soundMalleableGooSoon:Schedule(45.1-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
-			timerChokingGasBombCD:Start(56.3) -- timer after phase 2 (25H Lordaeron 2022/09/07 || 25H Lordaeron 2022/09/23 wipe1 || 25H Lordaeron 2022/09/23 kill) - 22.8 ; 22.1 || 21.9 || 21.3
-			soundChokingGasSoon:Schedule(56.3-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\choking_soon.mp3")
-			warnChokingGasBombSoon:Schedule(56.3-5)
+--			if self:IsDifficulty("heroic10") then -- Apply to both 10H and 25H (reason below)
+				self:Schedule(35.63, NextPhase, self) -- using longest timer found, since this is a schedule
+				self:RegisterShortTermEvents(
+					"UNIT_TARGET boss1"
+				)
+--			end
+			timerNextPhase:Start(35.59) -- Until Gas/Ooze Variable SAR. no variance [35.59-35.63] (25H Lordaeron [2022-07-07]@[21:47:34] || 25H Lordaeron [2023-06-28]@[20:50:27] || 10H Lordaeron [2023-08-12]@[20:34:20]) - 35.60 || 35.63 || 35.59
+			timerMalleableGooCD:Start(45.14) --  On first intermission, timer delta is fixed [45.1] (25H Icecrown [2023-05-28]@[17:19:33] || [2023-05-28]@[16:42:29] || [2023-05-28]@[16:59:21] || [2023-05-28]@[16:32:41]) - 45.18 || 45.14 || 45.20 || 45.16
+			soundMalleableGooSoon:Schedule(45.14-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
+			timerChokingGasBombCD:Start(55) -- timer after phase 2. 5s variance [20-25s] (25H Lordaeron 2022/09/07 || 25H Lordaeron 2022/09/23 wipe1 || 25H Lordaeron 2022/09/23 kill || 25H Lordaeron [2023-06-28]@[20:42:59] || 10H Lordaeron [2023-08-12]@[20:28:10]) - 22.8 ; 22.1 || 21.9 || 21.3 || 20.3 || 24.8
+			soundChokingGasSoon:Schedule(55-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\choking_soon.mp3")
+			warnChokingGasBombSoon:Schedule(55-5)
 			timerUnboundPlagueCD:Start(120-(GetTime()-UnboundTime))
 		else
 			timerNextPhase:Start(9.5)
-			timerMalleableGooCD:Start(19)
+			timerMalleableGooCD:Start(19) -- On first intermission, timer delta is almost fixed [19-19.2]
 			soundMalleableGooSoon:Schedule(19-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
 			timerChokingGasBombCD:Start(30.5)
 			soundChokingGasSoon:Schedule(30.5-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\choking_soon.mp3")
@@ -238,29 +257,31 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(73121, 73122, 73120, 71893) then		--Guzzle Potions (phase3 change)
 		local currentTime = GetTime()
 		local puddleTimeAdjust = currentTime-PuddleTime
-		local gooTimeAdjust = currentTime-GooTime
 		local chokingTimeAdjust = currentTime-ChokingTime
 		local unboundTimeAdjust = currentTime-UnboundTime
-		DBM:Debug(format("During Guzzle Potions, PuddleTime is %d, GooTime is %d, ChokingTime is %d and UnboundTime is %d", puddleTimeAdjust, gooTimeAdjust, chokingTimeAdjust, unboundTimeAdjust), 2)
+		DBM:Debug(format("During Guzzle Potions, PuddleTime is %d, ChokingTime is %d and UnboundTime is %d", puddleTimeAdjust, chokingTimeAdjust, unboundTimeAdjust), 2)
 		timerUnstableExperimentCD:Cancel()
-		timerMalleableGooCD:Cancel()
 		timerSlimePuddleCD:Cancel()
 		timerChokingGasBombCD:Cancel()
 		timerUnboundPlagueCD:Cancel()
 		timerSlimePuddleCD:Start(65-puddleTimeAdjust)
-		timerMalleableGooCD:Start(50-gooTimeAdjust)
-		soundMalleableGooSoon:Schedule((50-gooTimeAdjust)-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
 		timerChokingGasBombCD:Start(65.8-chokingTimeAdjust) -- (25H Lordaeron 2022/11/16) - -0.2 excess
 		soundChokingGasSoon:Schedule((65.8-chokingTimeAdjust)-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\choking_soon.mp3")
 		warnChokingGasBombSoon:Schedule((65.8-chokingTimeAdjust)-5)
-		if self:IsDifficulty("heroic10") then
-			self:Schedule(38, NextPhase, self)	--after 8s PP sets target
-			timerNextPhase:Start(38)
+		if self:IsDifficulty("heroic10") then -- REVIEW! Refactor needed
+			self:Schedule(38.69, NextPhase, self) -- REVIEW! using longest timer found, since this is a schedule
+			timerNextPhase:Start(38.67) -- (10H Lordaeron [2023-08-12]@[20:34:20]) - 38.67
 			timerUnboundPlagueCD:Start(120-unboundTimeAdjust)		--this requires more analysis
-		elseif mod:IsDifficulty("heroic25") then
-			self:Schedule(28, NextPhase, self)
-			timerNextPhase:Start(28)
+			self:RegisterShortTermEvents(
+				"UNIT_TARGET boss1"
+			)
+		elseif self:IsDifficulty("heroic25") then
+			self:Schedule(28.62, NextPhase, self)
+			timerNextPhase:Start(28.62) -- (25H Lordaeron: [2023-05-28]@[17:19:33] || [2023-06-28]@[20:50:27]) - 28.62 || 28.62
 			timerUnboundPlagueCD:Start(120-unboundTimeAdjust)		--this requires more analysis
+			self:RegisterShortTermEvents(
+				"UNIT_TARGET boss1"
+			)
 		else
 			timerNextPhase:Start(12.5)
 		end
@@ -295,7 +316,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		soundSpecWarnMalleableGoo:Play("Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable.mp3")
 		soundMalleableGooSoon:Cancel()
 		soundMalleableGooSoon:Schedule(20-3, "Interface\\AddOns\\DBM-Core\\sounds\\RaidAbilities\\malleable_soon.mp3")
-		GooTime = GetTime()
 	end
 end
 
@@ -390,12 +410,15 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.UnboundPlagueIcon then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif spellId == 71615 and self:AntiSpam(5, 2) then	-- Tear Gas Removal
+	elseif spellId == 71615 and (self.vb.phase == 1.5 or self.vb.phase == 2.5) then	-- Tear Gas Removal. Requires phase check because sometimes Tear Gas is removed from Abomination much later than the rest of the raid, during phase 2, causing another phasing to 2.5 (Logs: 10N Frostmourne [2023-01-07]@[17:20:22] and [2023-01-07]@[17:42:33] || 10N Icecrown [2023-04-05]@[22:54:25])
 		NextPhase(self)
 	elseif args:IsSpellID(70539, 72457, 72875, 72876) then
 		timerRegurgitatedOoze:Cancel(args.destName)
 	elseif spellId == 70542 then
 		timerMutatedSlash:Cancel(args.destName)
+	elseif (args:IsSpellID(70352, 74118) or args:IsSpellID(70353, 74119)) and (self.vb.phase == 1.5 or self.vb.phase == 2.5) then	-- Ooze Variable / Gas Variable (Heroic 25 - Phase 2 and 3). Disabled for two main reasons: raid member dying will trigger this event, and I have found multiple logs with early SAR
+		DBM:Debug("Variable phasing time marker")
+--		NextPhase(self)
 	end
 end
 
@@ -414,5 +437,35 @@ function mod:UNIT_HEALTH(uId)
 		warnChokingGasBombSoon:Cancel()
 		soundMalleableGooSoon:Cancel()
 		soundChokingGasSoon:Cancel()
+	end
+end
+
+-- On 10 Heroic, there is no event we can use to accurately trigger phasing. On 25 Heroic, we could use SPELL_AURA_REMOVED, but not reliable without UnitBuff checks or table management which would add unnecessary overhead (see above)
+-- UNIT_TARGET only fires if boss is targeted or focused (sync'ed below)
+function mod:UNIT_TARGET(uId)
+	if self:GetUnitCreatureId(uId) ~= 36678 then return end
+	-- Attempt to catch when boss phases by checking for Putricide's target being a raid member
+	if UnitExists(uId.."target") then
+		if self.vb.phase == 1.5 then
+			self:SendSync("ProfessorPhase2") -- Sync phasing with raid since UNIT_TARGET event requires boss to be target/focus, which not all members do
+		elseif self.vb.phase == 2.5 then
+			self:SendSync("ProfessorPhase3") -- Sync phasing with raid since UNIT_TARGET event requires boss to be target/focus, which not all members do
+		else
+			self:UnregisterShortTermEvents()
+			DBM:Debug("UNIT_TARGET phasing did not work since phase was wrongly set: " .. self.vb.phase)
+		end
+	end
+end
+
+function mod:OnSync(msg)
+	if not self:IsInCombat() then return end
+	if msg == "ProfessorPhase2" and self.vb.phase == 1.5 then
+		self:Unschedule(NextPhase)
+		NextPhase(self)
+		DBM:Debug("Putricide phase 2 via UNIT_TARGET sync")
+	elseif msg == "ProfessorPhase3" and self.vb.phase == 2.5 then
+		self:Unschedule(NextPhase)
+		NextPhase(self)
+		DBM:Debug("Putricide phase 3 via UNIT_TARGET sync")
 	end
 end

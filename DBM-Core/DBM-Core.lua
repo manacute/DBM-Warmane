@@ -82,7 +82,7 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20230627215931"),
+	Revision = parseCurseDate("20230827230444"),
 	DisplayVersion = "10.1.7 alpha", -- the string that is shown as version
 	ReleaseRevision = releaseDate(2023, 5, 25) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
@@ -4769,10 +4769,15 @@ do
 			if mod.combatInfo.noCombatInVehicle and UnitInVehicle("player") then -- HACK
 				return
 			end
+			if self.Options.RecordOnlyBosses then
+				self:StartLogging(0)
+			end
+			savedDifficulty, difficultyText, difficultyIndex, LastGroupSize = self:GetCurrentInstanceDifficulty()
+			encounterDifficulty, encounterDifficultyText, encounterDifficultyIndex = savedDifficulty, difficultyText, difficultyIndex
 			if event then
-				self:Debug("StartCombat called by : "..event.." for mod : "..mod.id..". LastInstanceMapID is "..LastInstanceMapID)
+				self:Debug("StartCombat called by : "..event.." for mod : "..mod.id.." (revision: "..(mod.revision or 0)..") with difficulty : "..encounterDifficulty..". LastInstanceMapID is "..LastInstanceMapID)
 			else
-				self:Debug("StartCombat called by individual mod or unknown reason for mod : "..mod.id..". LastInstanceMapID is "..LastInstanceMapID)
+				self:Debug("StartCombat called by individual mod or unknown reason for mod : "..mod.id.." (revision: "..(mod.revision or 0)..") with difficulty : "..encounterDifficulty..". LastInstanceMapID is "..LastInstanceMapID)
 				event = ""
 			end
 			self.currentModId = mod.id
@@ -4791,8 +4796,9 @@ do
 			else
 				mod.ignoreBestkill = false
 			end
-			savedDifficulty, difficultyText, difficultyIndex, LastGroupSize = self:GetCurrentInstanceDifficulty()
-			encounterDifficulty, encounterDifficultyText, encounterDifficultyIndex = savedDifficulty, difficultyText, difficultyIndex
+--			Moving this up, to be logged with the StartCombat debug
+--			savedDifficulty, difficultyText, difficultyIndex, LastGroupSize = self:GetCurrentInstanceDifficulty()
+--			encounterDifficulty, encounterDifficultyText, encounterDifficultyIndex = savedDifficulty, difficultyText, difficultyIndex
 			local name = mod.combatInfo.name
 			local modId = mod.id
 			mod.inCombat = true
@@ -4847,9 +4853,10 @@ do
 			end
 			--process global options
 			self:HideBlizzardEvents(1)
-			if self.Options.RecordOnlyBosses then
-				self:StartLogging(0)
-			end
+--			I prefer starting the log at the beginning of the function, to catch the StartCombat debug
+--			if self.Options.RecordOnlyBosses then
+--				self:StartLogging(0)
+--			end
 			if self.Options.HideObjectivesFrame and GetNumTrackedAchievements() == 0 then -- doesn't need InCombatLockdown() check since it's not a protected function
 				if WatchFrame:IsVisible() then
 					WatchFrame:Hide()
@@ -4957,7 +4964,7 @@ do
 					if bar then
 						local remaining = ("%.2f"):format(bar.timer)
 						local ttext = bar.id
-						if bar.timer > 0.1 then
+						if bar.timer > 0 then -- Catch all early refreshes, since pull timers are generally fixed and can be precise
 							if DBM.Options.BadTimerAlert and bar.timer > 1 then--If greater than 1 seconds off, report this out of debug mode to all users
 								DBM:AddMsg("Timer "..ttext.." refreshed before expired. Remaining time is : "..remaining..". Please report this bug")
 								fireEvent("DBM_Debug", "Timer "..ttext.." refreshed before expired. Remaining time is : "..remaining..". Please report this bug", 2)
@@ -9834,15 +9841,17 @@ do
 --					if DBM.Options.BadTimerAlert or DBM.Options.DebugMode and DBM.Options.DebugLevel > 1 then
 						local bar = DBT:GetBar(self.startedTimers[i])
 						if bar then
-							local remaining = ("%.1f"):format(bar.timer)
+							local remaining = ("%.2f"):format(bar.timer)
 							local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 							ttext = ttext.."("..self.id..")"
-							if bar.timer > 0.2 then
+							if mabs(bar.timer) > 0.1 then -- Positive and Negative ("keep") timers. Also shortened time window
 								local phaseText = self.mod.vb.phase and " ("..L.SCENARIO_STAGE:format(self.mod.vb.phase)..")" or ""
 								if DBM.Options.BadTimerAlert and bar.timer > 1 then--If greater than 1 seconds off, report this out of debug mode to all users
 									DBM:AddMsg("Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining..". Please report this bug")
 									fireEvent("DBM_Debug", "Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining..". Please report this bug", 2)
-								else
+								elseif bar.timer < -5 then
+									DBM:Debug("Timer "..ttext..phaseText.. " refreshed after zero. Remaining time is : "..remaining, 2)
+								elseif bar.timer > 0.1 then
 									DBM:Debug("Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining, 2)
 								end
 							end
@@ -9893,7 +9902,7 @@ do
 						local bar = DBT:GetBar(id)
 						if bar then
 							local remaining = ("%.1f"):format(bar.timer)
-							if bar.timer > 0.2 then
+							if bar.timer > 0.1 then -- Shortened time window
 								self["phase"..timer.."CastTimer"] = self["phase"..timer.."CastTimer"] - remaining
 								DBM:Debug("AI timer learned a lower first timer for current phase of "..self["phase"..timer.."CastTimer"], 2)
 							end
@@ -9909,15 +9918,17 @@ do
 				if not self.type or (self.type ~= "target" and self.type ~= "active" and self.type ~= "fades" and self.type ~= "ai") and not self.allowdouble then
 					local bar = DBT:GetBar(id)
 					if bar then
-						local remaining = ("%.1f"):format(bar.timer)
+						local remaining = ("%.2f"):format(bar.timer)
 						local ttext = _G[bar.frame:GetName().."BarName"]:GetText() or ""
 						ttext = ttext.."("..self.id..")"
-						if bar.timer > 0.2 then
+						if mabs(bar.timer) > 0.1 then -- Positive and Negative ("keep") timers. Also shortened time window
 							local phaseText = self.mod.vb.phase and " ("..L.SCENARIO_STAGE:format(self.mod.vb.phase)..")" or ""
 							if DBM.Options.BadTimerAlert and bar.timer > 1 then--If greater than 1 seconds off, report this out of debug mode to all users
 								DBM:AddMsg("Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining..". Please report this bug")
 								fireEvent("DBM_Debug", "Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining..". Please report this bug", 2)
-							else
+							elseif bar.timer < -5 then
+								DBM:Debug("Timer "..ttext..phaseText.. " refreshed after zero. Remaining time is : "..remaining, 2)
+							elseif bar.timer > 0.1 then
 								DBM:Debug("Timer "..ttext..phaseText.. " refreshed before expired. Remaining time is : "..remaining, 2)
 							end
 						end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision("20230630112543")
+mod:SetRevision("20230827165223")
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetUsedIcons(1, 5, 6, 7, 8)
 mod:SetBossHPInfoToHighest()
@@ -21,8 +21,9 @@ mod:RegisterEvents(
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 72037 72039 73037 73038 73039 71718 72040",
-	"SPELL_AURA_APPLIED 70952 70981 70982 72999 71807 72796 72797 72798",
+	"SPELL_AURA_APPLIED 70952 70981 70982 72999 71807 72796 72797 72798 71822",
 	"SPELL_AURA_APPLIED_DOSE 72999",
+	"SPELL_AURA_REMOVED 71822",
 	"SPELL_SUMMON 71943",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
@@ -52,7 +53,7 @@ local warnKineticBomb			= mod:NewSpellAnnounce(72053, 3, nil, false)
 
 local specWarnKineticBomb		= mod:NewSpecialWarningCount(72053, "Ranged", nil, nil, 1)
 
-local timerKineticBombCD		= mod:NewCDCountTimer(18, 72053, nil, "Ranged", nil, 1, nil, nil, true) -- REVIEW! 5s variance? Added "keep" arg. (10N Icecrown 2022/08/25 || 25H Lordaeron 2022/12/07) - 19.2, 23.6, 22.2, 18.5, 19.2 || 18.5, 18.3, 22.1, 19.2, 20.8, 20.4, 19.7, 21.6, 20.9, 19.5, 20.5
+local timerKineticBombCD		= mod:NewCDCountTimer(18, 72053, nil, "Ranged", nil, 1, nil, nil, true) -- ~6s variance [18.0-23.9] Added "keep" arg. (10N Icecrown 2022/08/25 || 25H Lordaeron 2022/12/07 || 25H Lordaeron [2023-08-23]@[21:05:58]) - 19.2, 23.6, 22.2, 18.5, 19.2 || 18.5, 18.3, 22.1, 19.2, 20.8, 20.4, 19.7, 21.6, 20.9, 19.5, 20.5 || pull:19.8, 23.9, 21.9, 19.6, 21.4, 23.9, 18.5, 22.0, 18.5, 21.9, 21.6
 
 local soundKineticBomb			= mod:NewSound(72053, nil, "Ranged")
 
@@ -102,16 +103,18 @@ local timerDarkNucleusCD		= mod:NewCDTimer(10, 71943, nil, false, nil, 5, nil, n
 
 mod.vb.kineticIcon = 7
 mod.vb.kineticCount = 0
+local personalNucleusCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.kineticIcon = 7
 	self.vb.kineticCount = 0
+	personalNucleusCount = 0
 	berserkTimer:Start(-delay)
 	warnTargetSwitchSoon:Schedule(42-delay)
 	warnTargetSwitchSoon:ScheduleVoice(42-delay, "swapsoon")
 	timerTargetSwitch:Start(-delay)
 	timerEmpoweredShockVortex:Start(15-delay) -- REVIEW! 5s variance [15-20] (25H Lordaeron 2022/09/07 || 10N Frostmourne 2023-01-22) - 15.9 || 15.6
-	timerKineticBombCD:Start(21.6-delay, 1) -- REVIEW! Lowest possible timer? (25H Lordaeron 2022/07/09 || 25H Lordaeron 2022/07/30 || 10N Icecrown 2022/08/22 || 10N Icecrown 2022/08/25 || 25H Lordaeron 2022/09/07 || 25H Lordaeron 2022/12/07 || 10N Frostmourne 2023-01-22) - 24 || 24 || 27 || 24.9 || 23.1 || 22.1 || 21.6
+	timerKineticBombCD:Start(19.8-delay, 1) -- (25H Lordaeron 2022/07/09 || 25H Lordaeron 2022/07/30 || 10N Icecrown 2022/08/22 || 10N Icecrown 2022/08/25 || 25H Lordaeron 2022/09/07 || 25H Lordaeron 2022/12/07 || 10N Frostmourne 2023-01-22 || 25H Lordaeron [2023-08-23]@[21:05:58]) - 24 || 24 || 27 || 24.9 || 23.1 || 22.1 || 21.6 || 19.8
 	timerDarkNucleusCD:Start(12-delay) -- REVIEW! Lowest possible timer? (25H Lordaeron 2022/07/09 || 25H Lordaeron 2022/07/30 || 10N Icecrown 2022/08/22 || 10N Icecrown 2022/08/25 || 25H Lordaeron 2022/09/07 || 10N Frostmourne 2023-01-22) - 15 || 12 || 14 || 12 || 12.3 || 13.5
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(12)
@@ -241,7 +244,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 72999 then	--Shadow Prison (hard mode)
 		if args:IsPlayer() then
 			timerShadowPrison:Start()
-			if (args.amount or 1) >= 10 then	--Placeholder right now, might use a different value
+			if personalNucleusCount < 3 and (args.amount or 1) >= 10 then	--Placeholder right now, might use a different value. Ignore if player has more than 3 Dark Nucleus
 				specWarnShadowPrison:Show(args.amount)
 				specWarnShadowPrison:Play("stackhigh")
 			end
@@ -260,9 +263,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args:IsSpellID(71807, 72796, 72797, 72798) and args:IsDestTypePlayer() then	-- Glittering Sparks(Dot/slow, dangerous on heroic during valanaar)
 		warnGliteringSparks:CombinedShow(1, args.destName)
+	elseif spellId == 71822 and args:IsPlayer() then -- Shadow Resonance (from Dark Nucleus)
+		personalNucleusCount = personalNucleusCount + 1 -- 35% reduction for each nucleus
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 71822 and args:IsPlayer() then -- Shadow Resonance (from Dark Nucleus)
+		personalNucleusCount = personalNucleusCount - 1
+	end
+end
 
 function mod:SPELL_SUMMON(args)
 	if args.spellId == 71943 then
