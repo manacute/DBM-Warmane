@@ -20,11 +20,11 @@ local timerChargeCD			= mod:NewCDTimer(25, 32637, nil, nil, nil, 3)
 local timerQuakeCD			= mod:NewCDTimer(30, 32686, nil, nil, nil, 2)
 local timerQuake			= mod:NewBuffActiveTimer(8, 32686, nil, nil, nil, 2)
 
-mod:AddRangeFrameOption("11")
+mod:AddRangeFrameOption("12")
 
 function mod:OnCombatStart()
 	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(11)
+		DBM.RangeCheck:Show(12)
 	end
 end
 
