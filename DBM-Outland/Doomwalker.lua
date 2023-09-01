@@ -16,15 +16,15 @@ mod:RegisterEventsInCombat(
 local warnCharge			= mod:NewSpellAnnounce(32637, 3)
 local warnQuake				= mod:NewSpellAnnounce(32686, 3)
 
-local timerChargeCD			= mod:NewCDTimer(42, 32637, nil, nil, nil, 3)
-local timerQuakeCD			= mod:NewCDTimer(52, 32686, nil, nil, nil, 2)
+local timerChargeCD			= mod:NewCDTimer(25, 32637, nil, nil, nil, 3)
+local timerQuakeCD			= mod:NewCDTimer(30, 32686, nil, nil, nil, 2)
 local timerQuake			= mod:NewBuffActiveTimer(8, 32686, nil, nil, nil, 2)
 
-mod:AddRangeFrameOption("10")
+mod:AddRangeFrameOption("11")
 
 function mod:OnCombatStart()
 	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(10)
+		DBM.RangeCheck:Show(11)
 	end
 end
 
