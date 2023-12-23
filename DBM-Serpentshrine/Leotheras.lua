@@ -28,7 +28,7 @@ local warnPhase2				= mod:NewPhaseAnnounce(2, 2)
 local specWarnWhirl				= mod:NewSpecialWarningRun(37640, nil, nil, nil, 4, 2)
 local specWarnDemon				= mod:NewSpecialWarningYou(37676, nil, nil, nil, 1, 2)
 
-local timerWhirlCD				= mod:NewCDTimer(27, 37640, nil, nil, nil, 2) -- 25 man FM 2022/07/27 log - 27.0, 27.1, 27.0
+local timerWhirlCD				= mod:NewCDTimer(30, 37640, nil, nil, nil, 2)
 local timerWhirl				= mod:NewBuffActiveTimer(12, 37640, nil, nil, nil, 2)
 local timerPhase				= mod:NewTimer(60, "TimerPhase", 39088, nil, nil, 6)
 local timerInsidiousWhisperCD	= mod:NewCDTimer(26, 37676, nil, nil, nil, 6) -- REVIEW! variance? (25 man FM 2022/07/27 log) - 26
@@ -69,7 +69,7 @@ function mod:OnCombatStart()
 	self:SetStage(1)
 	table.wipe(warnMCTargets)
 	table.wipe(warnDemonTargets)
-	timerWhirlCD:Start(15.0) -- 25 man FM 2022/07/27 log - 15.0
+	timerWhirlCD:Start(25)
 	timerPhase:Start(60, L.Demon)
 	berserkTimer:Start()
 end
@@ -131,7 +131,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerWhirlCD:Cancel()
 		timerInsidiousWhisperCD:Cancel()
 		warnPhase2:Show()
-		timerWhirlCD:Start(11.5) -- REVIEW! variance? (25 man FM 2022/07/27 log) - 11.5
+		timerWhirlCD:Start(15)
 	end
 end
 

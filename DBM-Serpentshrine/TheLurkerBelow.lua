@@ -21,12 +21,12 @@ local warnWhirl			= mod:NewSpellAnnounce(37363, 2)
 
 local specWarnSpout		= mod:NewSpecialWarningSpell(37433, nil, nil, nil, 2, 2)
 
-local timerSubmerge		= mod:NewTimer(105, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6) -- REVIEW! no data to validate, but doesn't match wiki
+local timerSubmerge		= mod:NewTimer(90.75, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp", nil, nil, 6)
 local timerEmerge		= mod:NewTimer(60, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp", nil, nil, 6)
-local timerSpoutCD		= mod:NewCDTimer(118.5, 37433, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) -- REVIEW! variance? (25 man FM log 2022/08/11) - 118.5 (happened right after emerge)
+local timerSpoutCD		= mod:NewCDTimer(10.2, 37433, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerSpoutCast	= mod:NewCastTimer(3, 37433, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerSpout		= mod:NewBuffActiveTimer(22, 37433, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
-local timerWhirlCD		= mod:NewCDTimer(18, 37363, nil, nil, nil, 2) -- REVIEW! variance? (25 man FM log 2022/08/11) - 18.0, (after emerge) 100.5
+local timerSpout		= mod:NewBuffActiveTimer(15, 37433, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
+local timerWhirlCD		= mod:NewCDTimer(34.15, 37363, nil, nil, nil, 2)
 
 mod.vb.submerged = false
 mod.vb.guardianKill = 0
@@ -54,9 +54,9 @@ end
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	self.vb.submerged = false
-	timerWhirlCD:Start(62.5-delay) -- REVIEW! variance? (25 man FM log 2022/08/11) - 62.5
-	timerSpoutCD:Start(35.5-delay) -- REVIEW! variance? (25 man FM log 2022/08/11) - 35.5
-	timerSubmerge:Start(90-delay)
+	timerWhirlCD:Start(18.5-delay) -- REVIEW! variance? (25 man FM log 2022/08/11) - 62.5
+	timerSpoutCD:Start(38.8-delay) -- REVIEW! variance? (25 man FM log 2022/08/11) - 35.5
+	timerSubmerge:Start(91-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -75,7 +75,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(_, source)
 		specWarnSpout:Play("watchwave")
 		timerSpoutCast:Start()
 		timerSpout:Schedule(3) -- takes 3 seconds to start Spout (from EMOTE to UNIT_SPELLCAST_SUCCEEDED)
-		timerSpoutCD:Start()
+		timerSpoutCD:Start(60)
 	end
 end
 
