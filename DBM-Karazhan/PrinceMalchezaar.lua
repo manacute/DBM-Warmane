@@ -29,15 +29,15 @@ local warningSWP				= mod:NewTargetNoFilterAnnounce(30898, 2, nil, "RemoveMagic"
 local specWarnEnfeeble			= mod:NewSpecialWarningYou(30843, nil, nil, nil, 3, 2)
 local specWarnNova				= mod:NewSpecialWarningRun(30852, "Melee", nil, nil, 4, 2)
 
-local timerNovaCD				= mod:NewCDTimer(18.1, 30852, nil, nil, nil, 2)--18.1-30
+local timerNovaCD				= mod:NewCDTimer(30, 30852, nil, nil, nil, 2)--18.1-30
 local timerNextInfernal			= mod:NewCDTimer(45, 37277, nil, nil, nil, 1)--Spawning
-local timerHellfire				= mod:NewCDTimer(14.5, 30859, nil, nil, nil, 3)--Landing/activating Hellfire
+local timerHellfire				= mod:NewCDTimer(10, 30859, nil, nil, nil, 3)--Landing/activating Hellfire
 local timerEnfeebleCD			= mod:NewNextTimer(30, 30843, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerEnfeeble				= mod:NewBuffFadesTimer(9, 30843)
 
 function mod:OnCombatStart(delay)
 	self:SetStage(1)
-	timerNextInfernal:Start(14.5-delay)--14-21?
+	timerNextInfernal:Start(40-delay)--14-21?
 	timerEnfeebleCD:Start(30-delay)
 end
 
@@ -49,7 +49,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			warningNovaCast:Show()
 		end
-		timerNovaCD:Start(self.vb.phase == 3 and 18.1 or 30)
+		timerNovaCD:Start()
 	end
 end
 
