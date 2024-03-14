@@ -127,6 +127,8 @@ L.LogTrivialRaids			= "低等级团队"
 L.LogCurrentMPlus			= "当前等级的M+5人本"--Retail Only
 L.LogTWDungeons				= "时光5人本或通过克罗米进入的5人本"--Retail Only
 L.LogCurrentHeroic			= "当前等级的英雄5人本"
+L.LogCurrentNormal			= "当前等级的普通5人本"
+L.LogTrivialDungeons		= "低等级地下城"
 --
 L.Area_3rdParty				= "第三方插件选项"
 L.oRA3AnnounceConsumables	= "在战斗开始时通报oRA3消耗品检查"
@@ -269,6 +271,7 @@ L.ReplacesSA1				= "替换特殊警报提示声音 1 (个人的 'pvp拔旗') "
 L.ReplacesSA2				= "替换特殊警报提示声音 2 (每个人 '当心')"
 L.ReplacesSA3				= "替换特殊警报提示声音 3 (高优先级的 '汽笛')"
 L.ReplacesSA4				= "替换特殊警报提示声音 4 (高优先级的 '快跑')"
+L.ReplacesGTFO				= "替换特殊警告的行为提示声音"
 L.ReplacesCustom			= "替换特殊警报提示声音 自定义使用设置(每个警报) 声音 (不建议)"
 L.Area_VoicePackAdvOptions	= "语音包选项（第三方语音包）"
 L.SpecWarn_AlwaysVoice		= "总是播放所有语音警报(即使已禁用特殊警报，对团队领队是有用的，除此以外不建议使用)"
@@ -414,10 +417,12 @@ L.SpamBlockRaidWarning		= "过滤其他首领预警插件警报"
 L.SpamBlockBossWhispers		= "战斗中过滤DBM密语警报"
 
 
-L.Area_SpamFilter_Timers	= "计时器过滤选项"
-L.SpamBlockNoShowTimers		= "不显示 DBM 原装计时条"
-L.SpamBlockNoShowUTimers	= "不显示用户自定义生成的计时条(Custom/Pull/Break)"
-L.SpamBlockNoCountdowns		= "不要播放倒计时语音"
+L.Area_SpamFilter_Timers			= "计时器过滤选项"
+L.SpamBlockNoShowBossTimers			= "不为Boss显示计时条"
+L.SpamBlockNoShowTrashTimers		= "不为小怪显示计时条（同时关闭姓名版CD）"
+L.SpamBlockNoShowEventTimers		= "不显示事件计时条（角色扮演，Boss刷新）"
+L.SpamBlockNoShowUTimers			= "不显示用户自定义生成的计时条(Custom/Pull/Break)"
+L.SpamBlockNoCountdowns				= "不要播放倒计时语音"
 
 L.Area_SpamFilter_Misc		= "全局过滤设置"
 L.SpamBlockNoSetIcon		= "不在目标上设定标记"

@@ -121,6 +121,8 @@ L.LogCurrentMPlus			= "현재 확장팩 신화+ 던전"--Retail Only
 L.LogCurrentMythicZero		= "현재 확장팩 신화 0단 던전"--Retail Only
 L.LogTWDungeons				= "시간여행 또는 크로미의 시간 레이드"--Retail Only
 L.LogCurrentHeroic			= "현재 확장팩 영웅 던전 (알림: 던전 찾기를 통해 영던을 돌면서 로그를 기록하고 싶다면 던전 찾기 기록 안함 옵션을 끄세요)"
+L.LogCurrentNormal			= "현재 확장팩 일반 던전 (알림: 던전 찾기를 통해 영던을 돌면서 로그를 기록하고 싶다면 던전 찾기 기록 안함 옵션을 끄세요)"
+L.LogTrivialDungeons		= "구 던전 (이전 확장팩)"
 --
 L.Area_3rdParty				= "써드파티 애드온 설정"
 L.oRA3AnnounceConsumables	= "전투 시작시 oRA3 버프 검사 알림"
@@ -263,10 +265,11 @@ L.Area_VoicePackReplace		= "기본 효과음 음성팩 대체 설정 (음성팩�
 L.SWFNever					= "하지 않음"
 L.VPReplaceNote				= "알림: 음성팩은 절대 경고음을 변경하거나 삭제하지 않습니다.\n음성팩이 대체하는 효과음만 재생되지 않을 뿐입니다."
 L.ReplacesAnnounce			= "알림 효과음 대체 (알림: 페이즈 변경과 쫄 등장 이외에는 음성팩에서 사용되는 효과음이 극히 적습니다)"
-L.ReplacesSA1				= "특수 알림 1 효과음 대체 (나에 대한 알림 'pvpflag' 효과음)"
+L.ReplacesSA1				= "특수 알림 1 효과음 대체 (나에 대한 알림 'pvpflag' 효과음, 바닥 피하기는 제외)"
 L.ReplacesSA2				= "특수 알림 2 효과음 대체 (공대 전원 알림 'beware' 효과음)"
 L.ReplacesSA3				= "특수 알림 3 효과음 대체 (우선 순위 높은 알림 'airhorn' 효과음)"
 L.ReplacesSA4				= "특수 알림 4 효과음 대체 (도망 알림 최우선)"
+L.ReplacesGTFO				= "바닥 피하기 특수 알림 효과음 대체"
 L.ReplacesCustom			= "특수 알림 사용자 정의 (알림별로 설정된) 효과음 대체 (권장하지 않음)"
 L.Area_VoicePackAdvOptions	= "음성팩 고급 설정"
 L.SpecWarn_AlwaysVoice		= "모든 음성 경고 재생 (특수 알림을 꺼놔도 재생됩니다. 일부 특수한 상황에 처한 공대장에게 유용하며 그 외에는 권장하지 않습니다)"
@@ -410,8 +413,10 @@ L.SpamBlockNoSpecWarnSound	= "특수 알림 효과음 재생 안함 (음성 경�
 L.SpamBlockRaidWarning		= "다른 보스 모드가 알리는 경보 감추기"
 L.SpamBlockBossWhispers		= "전투 중 사용되는 DBM 경보 귓속말 감추기"
 
-L.Area_SpamFilter_Timers	= "타이머 관련 기능 끄기 및 필터 설정"
-L.SpamBlockNoShowTimers		= "모드 타이머 표시 안함 (보스 모드/도전모드/파티찾기/재생성)"
+L.Area_SpamFilter_Timers	= "타이머"
+L.SpamBlockNoShowBossTimers		= "던전/레이드 보스 타이머 표시 안함"
+L.SpamBlockNoShowTrashTimers		= "던전/레이드 일반몹 타이머 표시 안함 (알림: 이름표의 쿨타임도 표시되지 않습니다)"
+L.SpamBlockNoShowEventTimers		= "이벤트나 알림 타이머 표시 안함 (대기열, 보스 재생성 등)"
 L.SpamBlockNoShowUTimers	= "사용자 전송 타이머 표시 안함 (사용자 지정/풀링/휴식)"
 L.SpamBlockNoCountdowns		= "초읽기 음성 재생 안함"
 

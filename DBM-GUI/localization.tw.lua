@@ -125,6 +125,8 @@ L.LogCurrentMPlus			= "當前等級傳奇+地下城"--Retail Only
 L.LogCurrentMythicZero		= "當前等級傳奇0層地下城"--Retail Only
 L.LogTWDungeons				= "時光漫遊 或 克羅米時光地下城"--Retail Only
 L.LogCurrentHeroic			= "當前等級英雄地下城 (注意：如果您通過地城搜尋器佇列英雄並想要記錄，請關閉地城搜尋器過濾)"
+L.LogCurrentNormal			= "當前等級普通模式地下城 (注意：如果您通過地城搜尋器佇列英雄並想要記錄，請關閉地城搜尋器過濾)"
+L.LogTrivialDungeons		= "低等隊伍副本 (低於角色等級)"
 --
 L.Area_3rdParty				= "協力插件選項"
 L.oRA3AnnounceConsumables	= "在戰鬥開始時通告oRA3消耗品檢查"
@@ -262,10 +264,11 @@ L.Area_CountdownOptions		= "倒數選項"
 L.Area_VoicePackReplace		= "語音包替換選項 (選擇那些語音包要啟用、靜音以及替換)"
 L.VPReplaceNote				= "注意: 語音包永遠不會更改或刪除警告聲音。\n當替換語音包時，只是被簡單地靜音。"
 L.ReplacesAnnounce			= "替換提示聲音 (注意: 語音包除了階段轉換以及小怪外很少使用)"
-L.ReplacesSA1				= "替換特別提示 1 聲音 (個人的 'pvp拔旗')"
+L.ReplacesSA1				= "替換特別提示 1 聲音 (個人的 'pvp拔旗' 非地板技能警告)"
 L.ReplacesSA2				= "替換特別提示 2 聲音 (每個人 '當心')"
 L.ReplacesSA3				= "替換特別提示 3 聲音 (高優先級的 'airhorn')"
 L.ReplacesSA4				= "替換特別提示 4 聲音 (高優先級的 '快跑')"
+L.ReplacesGTFO				= "替換特別提示 地板技能警告 聲音"
 L.ReplacesCustom			= "替換特別提示 自定義使用者設置 (每個警告)(不建議)"
 L.Area_VoicePackAdvOptions	= "語音包進階選項"
 L.SpecWarn_AlwaysVoice		= "總是播放所有語音警告 (即使已禁用特別警告，對團隊領隊是有用的，除此之外不建議使用)"
@@ -411,8 +414,10 @@ L.SpamBlockNoSpecWarnSound			= "不播放特別提示音效 (如果在“語音�
 L.SpamBlockRaidWarning				= "過濾其他首領模組的警告"
 L.SpamBlockBossWhispers				= "當戰鬥時過濾 DBM 密語警告"
 
-L.Area_SpamFilter_Timers	= "全局計時禁用及過濾選項"
-L.SpamBlockNoShowTimers		= "不顯示計時器(首領模組/挑戰模式/尋求組隊/重生)"
+L.Area_SpamFilter_Timers			= "全局計時禁用及過濾選項"
+L.SpamBlockNoShowBossTimers			= "不顯示地城/團隊首領的計時器"
+L.SpamBlockNoShowTrashTimers		= "不顯示地城/團隊小怪的計時器(注意: 這也會停用名條的技能冷卻)"
+L.SpamBlockNoShowEventTimers		= "不顯示事件與提示計時器(佇列提示/首領重生..等)"
 L.SpamBlockNoShowUTimers	= "不顯示玩家送出的計時器(自訂/拉怪/休息)"
 L.SpamBlockNoCountdowns		= "不播放倒數音效"
 
