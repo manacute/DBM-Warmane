@@ -50,14 +50,19 @@ function mod:SPELL_CAST_START(args)
 		self.vb.blastNovaCounter = self.vb.blastNovaCounter + 1
 		specWarnBlastNova:Show(L.name)
 		specWarnBlastNova:Play("kickcast")
-		warnQuake:Schedule(33)
+		-- warnQuake:Schedule(33)
 		timerBlastNovaCD:Start(nil, self.vb.blastNovaCounter)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
+	local spellName = args.spellName
 	if args.spellId == 30511 and self:AntiSpam(3, 1) then
 		warningInfernal:Show()
+	elseif spellName == Quake and self:AntiSpam(15, 2) then
+		timerQuake:Start()
+		timerQuakeCD:Start()
+		-- timerBlastNovaCD:Start(7, self.vb.blastNovaCounter)
 	end
 end
 
@@ -65,20 +70,13 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.DBM_MAG_YELL_PHASE2 or msg:find(L.DBM_MAG_YELL_PHASE2) then
 		self:SetStage(2)
 		warnPhase2:Show()
-		warnQuake:Schedule(33)
+		-- warnQuake:Schedule(33)
 		timerBlastNovaCD:Start(nil, self.vb.blastNovaCounter)
 		timerPhase2:Cancel()
 	elseif msg == L.DBM_MAG_YELL_PHASE3 or msg:find(L.DBM_MAG_YELL_PHASE3) then
 		self:SetStage(3)
 		warnPhase3:Show()
-		--If time less than 20, extend existing timer to 20, else do nothing
-		if timerBlastNovaCD:GetRemaining(self.vb.blastNovaCounter) < 20 then
-			local elapsed, total = timerBlastNovaCD:GetTime(self.vb.blastNovaCounter)
-			local extend = 20 - (total-elapsed)
-			DBM:Debug("timerBlastNovaCD extended by: "..extend, 2)
-			timerBlastNovaCD:Stop()
-			timerBlastNovaCD:Update(elapsed, total+extend, self.vb.blastNovaCounter)
-		end
+		timerBlastNovaCD:AddTime(18, self.vb.blastNovaCounter)
 		timerDebris:Start()
 	end
 end
@@ -88,7 +86,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if msg == L.DBM_MAG_EMOTE_PHASE2 or msg:find(L.DBM_MAG_EMOTE_PHASE2) then
 		self:SetStage(2)
 		warnPhase2:Show()
-		warnQuake:Schedule(30)
+		-- warnQuake:Schedule(30)
 		timerBlastNovaCD:Start(50, self.vb.blastNovaCounter)
 		timerPhase2:Cancel()
 	end
