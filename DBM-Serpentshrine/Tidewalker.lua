@@ -25,7 +25,7 @@ local specWarnMurlocs	= mod:NewSpecialWarning("SpecWarnMurlocs", nil, nil, nil, 
 
 local timerGraveCD		= mod:NewCDTimer(25, 38049, nil, nil, nil, 3)
 local timerMurlocs		= mod:NewTimer(45, "TimerMurlocs", 39088, nil, nil, 1, nil, nil, nil, nil, nil, nil, nil, 37764)
-local timerBubble		= mod:NewBuffActiveTimer(20, 37854, nil, nil, nil, 1)
+local timerBubble		= mod:NewBuffActiveTimer(25, 37854, nil, nil, nil, 1)
 
 mod:AddSetIconOption("GraveIcon", 38049, true, false, {5, 6, 7, 8})
 
