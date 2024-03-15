@@ -82,9 +82,9 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20240103184719"),
-	DisplayVersion = "10.1.11 alpha", -- the string that is shown as version
-	ReleaseRevision = releaseDate(2023, 12, 28) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
+	Revision = parseCurseDate("2024025190711"),
+	DisplayVersion = "10.1.12 alpha", -- the string that is shown as version
+	ReleaseRevision = releaseDate(2024, 02, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
 
 local fakeBWVersion = 7558
@@ -7378,17 +7378,20 @@ function DBM:IsTanking(playerUnitID, enemyUnitID, isName, onlyRequested, enemyGU
 		enemyUnitID = DBM:GetUnitIdFromGUID(enemyGUID)
 	end
 
+	DBM:Debug(("IsTanking run with playerUnitID: %s (%s) and enemyUnitID: %s (%s). DBM arguments - onlyRequested: %s ; enemyGUID: %s ; includeTarget: %s ; onlyS3: %s"):format(playerUnitID or "nil", playerUnitID and UnitName(playerUnitID) or "nil", enemyUnitID or "nil", enemyUnitID and UnitName(enemyUnitID) or "nil", tostring(onlyRequested) or "nil", enemyGUID or "nil", tostring(includeTarget) or "nil", tostring(onlyS3) or "nil"), 3)
 	--Threat/Tanking Checks
 	--We have both units. No need to find unitID
 	if enemyUnitID then
 		--Check threat first
-		local tanking, status = UnitDetailedThreatSituation(playerUnitID, enemyUnitID)
+		local tanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(playerUnitID, enemyUnitID)
+		DBM:Debug(("Threat API arguments - tanking: %s ; status: %s ; scaledPercent: %s ; rawPercent: %s ; threatValue: %s"):format(tostring(tanking) or "nil", tostring(status) or "nil", tostring(scaledPercent) or "nil", tostring(rawPercent) or "nil", tostring(threatValue) or "nil"), 3)
 		if (not onlyS3 and tanking) or (status == 3) then
 			return true
 		end
 		--Non threat fallback
 		if includeTarget and UnitExists(enemyUnitID.."target") then
 			if UnitIsUnit(playerUnitID, enemyUnitID.."target") then
+				DBM:Debug("IsTanking found tank, using enemyUnitID target", 3)
 				return true
 			end
 		end
@@ -7397,16 +7400,19 @@ function DBM:IsTanking(playerUnitID, enemyUnitID, isName, onlyRequested, enemyGU
 	if not onlyRequested then
 		--Use these as fallback if threat target not found
 		if GetPartyAssignment("MAINTANK", playerUnitID, 1) then
+			DBM:Debug("IsTanking found MAINTANK, using GetPartyAssignment", 3)
 			return true
 		end
 		--no SpecID checks because SpecID is only availalbe with DBM/Bigwigs, but both DBM/Bigwigs auto set DAMAGER/HEALER/TANK roles anyways so it'd be redundant
 		if IsPartyLFG() then -- On WotLK, Role API only works on LFG
 			local isTank = UnitGroupRolesAssigned(playerUnitID)
 			if isTank then
+				DBM:Debug("IsTanking found TANK role, using UnitGroupRolesAssigned", 3)
 				return true
 			end
 		else
 			if DBM:GetUnitRole(playerUnitID) == "TANK" then
+				DBM:Debug("IsTanking found TANK role, using DBM:GetUnitRole", 3)
 				return true
 			end
 		end
@@ -7418,17 +7424,20 @@ function DBM:IsTanking(playerUnitID, enemyUnitID, isName, onlyRequested, enemyGU
 				--Check threat first
 				local tanking, status = UnitDetailedThreatSituation(playerUnitID, unitID)
 				if (not onlyS3 and tanking) or (status == 3) then
+					DBM:Debug("IsTanking found TANK, using Threat API on boss units", 3)
 					return true
 				end
 				--Non threat fallback
 				if includeTarget and UnitExists(unitID.."target") then
 					if UnitIsUnit(playerUnitID, unitID.."target") then
+						DBM:Debug("IsTanking found TANK, using bosstarget fallback", 3)
 						return true
 					end
 				end
 			end
 		end
 	end
+	DBM:Debug("IsTanking return false", 3)
 	return false
 end
 bossModPrototype.IsTanking = DBM.IsTanking
