@@ -52,7 +52,7 @@ function mod:OnCombatStart(delay)
 	self.vb.flying = false
 	self:SetStage(1)
 	self.vb.phase2Start = 0
-	timerNextPlatform:Start(35-delay)
+	timerNextPlatform:Start(31-delay)
 	self:RegisterOnUpdateHandler(function(self)
 		if self:IsInCombat() then
 			local foundIt

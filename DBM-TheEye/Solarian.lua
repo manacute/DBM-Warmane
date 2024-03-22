@@ -36,8 +36,8 @@ mod:AddSetIconOption("WrathIcon", 33045, true, false, {8})--42783 used later
 mod:AddInfoFrameOption(33044)
 
 function mod:OnCombatStart(delay)
-	timerSplit:Start(50-delay)
-	berserkTimer:Start(-delay)
+	timerSplit:Start(52.1-delay)
+	-- berserkTimer:Start(-delay)
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(DBM:GetSpellInfo(33044))
 		DBM.InfoFrame:Show(10, "playerdebuffremaining", 33044)
