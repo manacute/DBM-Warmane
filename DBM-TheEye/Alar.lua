@@ -79,6 +79,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 34342 then
 		timerNextPlatform:Cancel()
+		self:Unschedule(Platform)
 	
 		self:SetStage(2)
 		warnPhase2:Show()
