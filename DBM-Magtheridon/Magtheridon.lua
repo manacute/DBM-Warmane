@@ -11,7 +11,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 30528 30616",
 	"SPELL_CAST_SUCCESS 30511 30657",
 	"CHAT_MSG_MONSTER_YELL",
-	"CHAT_MSG_MONSTER_EMOTE"
+	"CHAT_MSG_MONSTER_EMOTE".
+	"UNIT_SPELLCAST_SUCCEEDED"
 )
 
 --Get custom voice pack sound for cubes
@@ -63,6 +64,12 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerQuake:Start()
 		timerQuakeCD:Start()
 		-- timerBlastNovaCD:Start(7, self.vb.blastNovaCounter)
+	end
+end
+
+function mod:UNIT_SPELLCAST_SUCCEEDED(args)
+	if args.spellId == 30657 then
+		timerBlastNovaCD:AddTime(7, self.vb.blastNovaCounter)
 	end
 end
 

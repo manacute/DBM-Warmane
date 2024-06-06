@@ -32,10 +32,7 @@ local berserkTimer		= mod:NewBerserkTimer(600)
 local buffetName = DBM:GetSpellInfo(34121)
 local UnitName = UnitName
 
---Loop doesn't work do to varying travel time between platforms. We just need to do target scanning and start next platform timer when Al'ar reaches a platform and starts targeting player again
---Still semi inaccurate. Sometimes Al'ar changes platforms 5-8 seconds early with no explanation. I have a feeling it's just tied to Al'ars behavior being buggy with one person.
---I don't remember code being faulty when you actually had 4 people up there.
-local function Platform(self)--An attempt to avoid ugly target scanning, but i get feeling this won't be accurate enough.
+local function Platform(self)
 	timerNextPlatform:Start()
 	self:Schedule(30, Platform, self)
 end
@@ -49,7 +46,7 @@ end
 function mod:OnCombatStart(delay)
 	self:AntiSpam(30, 1)--Prevent it thinking add spawn on pull and messing up first platform timer
 	self:SetStage(1)
-	
+	berserkTimer:Start()
 	timerNextPlatform:Start(30-delay)
 	self:Schedule(30-delay, Platform, self)
 end
@@ -62,7 +59,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		
 		timerNextPlatform:Cancel()
 		self:Unschedule(Platform)
-		self:Schedule(30, Platform, self)
+		self:Schedule(10, Platform, self)
 	elseif args.spellId == 35383 and args:IsPlayer() and self:AntiSpam(3, 1) then
 		specWarnFire:Show()
 		specWarnFire:Play("runaway")

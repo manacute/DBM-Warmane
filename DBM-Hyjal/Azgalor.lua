@@ -18,17 +18,24 @@ local warnDoom			= mod:NewTargetNoFilterAnnounce(31347, 4)
 
 local specWarnFire		= mod:NewSpecialWarningMove(31340)
 local specWarnDoom		= mod:NewSpecialWarningYou(31347)
-local yellDoom			= mod:NewShortFadesYell(31347)
+local yellDoom				= mod:NewShortFadesYell(31347)
 
-local timerDoom			= mod:NewTargetTimer(20, 31347, nil, nil, nil, 3)
+local timerDoom				= mod:NewTargetTimer(20, 31347, nil, nil, nil, 3)
 local timerSilence		= mod:NewBuffFadesTimer(5, 31344, nil, nil, nil, 2, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
+
+local timerDoomCD			= mod:NewCDTimer(45, 31347, nil, nil, nil, 3)
 local timerSilenceCD	= mod:NewCDTimer(18, 31344, nil, nil, nil, 2, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
+local timerFireCD 		= mod:NewCDTimer(15, 31340, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
 mod:AddSetIconOption("DoomIcon", 31347, true, false, {8})
+mod:AddRangeFrameOption(10, 31340)
 
 function mod:OnCombatStart(delay)
+	timerSilenceCD:Start(30-delay)
+	timerFireCD:Start(25-delay)
+	timerDoomCD:Start(-delay)
 	berserkTimer:Start(-delay)
 end
 

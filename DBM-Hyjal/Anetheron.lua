@@ -19,12 +19,22 @@ local warnSwarm			= mod:NewSpellAnnounce(31306, 3)
 local warnInferno		= mod:NewTargetNoFilterAnnounce(31299, 4)
 
 local specWarnInferno	= mod:NewSpecialWarningYou(31299, nil, nil, nil, 1, 2)
-local yellInferno		= mod:NewYell(31299)
+local yellInferno		  = mod:NewYell(31299)
 
-local timerSwarm		= mod:NewBuffFadesTimer(20, 31306, nil, nil, nil, 3)
-local timerSleep		= mod:NewBuffFadesTimer(10, 31298, nil, nil, nil, 3)
-local timerSleepCD		= mod:NewCDTimer(19, 31298, nil, nil, nil, 3)
-local timerInferno		= mod:NewCDTimer(51, 31299, nil, nil, nil, 3)
+local timerSwarm		  = mod:NewBuffFadesTimer(20, 31306, nil, nil, nil, 3)
+local timerSwarmCD		= mod:NewCDTimer(10, 31298, nil, nil, nil, 3)
+local timerSleep		  = mod:NewBuffFadesTimer(10, 31298, nil, nil, nil, 3)
+local timerSleepCD		= mod:NewCDTimer(35, 31298, nil, nil, nil, 3)
+local timerInferno		= mod:NewCDTimer(50, 31299, nil, nil, nil, 3)
+
+local berserkTimer		= mod:NewBerserkTimer(600)
+
+function mod:OnCombatStart(delay)
+	timerSwarmCD:Start(20-delay)
+	timerSleepCD:Start(25-delay)
+	timerInferno:Start(30-delay)
+	berserkTimer:Start(-delay)
+end
 
 function mod:InfernoTarget(targetname)
 	if not targetname then return end
