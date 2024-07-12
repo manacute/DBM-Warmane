@@ -45,6 +45,11 @@ L:SetGeneralLocalization({
 	name = "Archimonde"
 })
 
+L:SetMiscLocalization({
+	ArchimondeDoomfire1 = "This world will burn!",
+	ArchimondeDoomfire2 = "Manach sheek-thrish!",
+})
+
 ----------------
 -- WaveTimers --
 ----------------
@@ -74,10 +79,15 @@ L:SetMiscLocalization({
 	Jaina			= "Lady Jaina Proudmoore",
 	GeneralBoss		= "Boss incoming",
 	RageWinterchill	= "Rage Winterchill incoming",
+	RageWinterchillYell = "The Legion's final conquest has begun! Once again the subjugation of this world is within our grasp. Let none survive!",
 	Anetheron		= "Anetheron incoming",
+	AnetheronYell = "You are defenders of a doomed world! Flee here, and perhaps you will prolong your pathetic lives!",
 	Kazrogal		= "Kazrogal incoming",
+	KazrogalYell = "Cry for mercy! Your meaningless lives will soon be forfeit!",
 	Azgalor			= "Azgalor incoming",
+	AzgalorYell = "Abandon all hope! The Legion has returned to finish what was begun so many years ago. This time, there will be no escape!",
 	WaveCheck		= "Current Wave = (%d+) of 8",
+	EnemyCheck	= "Invading Enemies = (%d+)",
 	WarnWave_0		= "Wave %s/8",
 	WarnWave_1		= "Wave %s/8 - %s %s",
 	WarnWave_2		= "Wave %s/8 - %s %s and %s %s",
