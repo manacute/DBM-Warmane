@@ -97,6 +97,9 @@ local waveTimes = {
 }
 
 local function getTimePerBossAndWave(boss, currentWave) 
+  if (boss == 0) or (currentWave == 0) or (boss > 8) or (currentWave > 8) then
+    return 0
+  end
 	return waveTimes[boss][currentWave]
 end
 
