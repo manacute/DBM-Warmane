@@ -1,4 +1,4 @@
-local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
+local mod	= DBM:NewMod("Noth-Vanilla", "DBM-VanillaNaxx", 3)
 local L		= mod:GetLocalizedStrings()
 
 local GetSpellInfo = GetSpellInfo
