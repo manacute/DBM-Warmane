@@ -157,7 +157,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 			["RaidCooldown"] = true,--Tranquility
 			["RemoveCurse"] = true,
 			["RemovePoison"] = true,
-			["RemoveMagic"] = true,
+			-- ["RemoveMagic"] = true,
 		},
 		[1447] = {	-- Initial Druid (used in exiles reach tutorial mode). Treated as hybrid. Utility disabled because that'd require checking tutorial progress
 			["Tank"] = true,
@@ -323,7 +323,7 @@ function DBMExtraGlobal:rebuildSpecTable()
 			["RangedDps"] = true,
 			["ManaUser"] = true,
 			["SpellCaster"] = true,
-	--		["RemoveMagic"] = true,--Singe Magic (Imp)
+			["RemoveMagic"] = true,
 			["CasterDps"] = true,
 		},
 		--[266] = {	--Demonology Warlock
