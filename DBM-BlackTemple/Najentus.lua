@@ -10,6 +10,7 @@ mod:SetUsedIcons(8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS 39837",
 	"SPELL_AURA_APPLIED 39872 39837",
 	"SPELL_AURA_REMOVED 39837"
 )
@@ -21,9 +22,10 @@ local warnSpine			= mod:NewTargetNoFilterAnnounce(39837, 3)
 local specWarnSpineTank	= mod:NewSpecialWarningTaunt(39837, nil, nil, nil, 1, 2)
 local yellSpine			= mod:NewYell(39837)
 
-local timerShield		= mod:NewCDTimer(56, 39872, nil, nil, nil, 5)
+local timerSpine    = mod:NewCDTimer(20, 39837, nil, nil, nil, 5)
+local timerShield		= mod:NewCDTimer(60, 39872, nil, nil, nil, 5)
 
-local berserkTimer		= mod:NewBerserkTimer(300)
+local berserkTimer		= mod:NewBerserkTimer(480)
 
 mod:AddSetIconOption("SpineIcon", 39837)
 mod:AddInfoFrameOption(39878, true)
@@ -31,8 +33,9 @@ mod:AddRangeFrameOption("8")
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
-	timerShield:Start(55.5-delay)
-	warnShieldSoon:Schedule(50-delay)
+	timerShield:Start(-delay)
+	timerSpine:Start(21-delay)
+	warnShieldSoon:Schedule(55-delay)
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Show(8)
 	end
@@ -54,10 +57,11 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 39872 then
 		warnShield:Show()
-		warnShieldSoon:Schedule(50)
+		warnShieldSoon:Schedule(65)
 		timerShield:Start()
 	elseif args.spellId == 39837 then
 		warnSpine:Show(args.destName)
+		timerSpine:Start()
 		if self.Options.SpineIcon then
 			self:SetIcon(args.destName, 8)
 		end
