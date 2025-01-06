@@ -82,7 +82,7 @@ local function currentFullDate()
 end
 
 DBM = {
-	Revision = parseCurseDate("20240623231148"),
+	Revision = parseCurseDate("20240716165208"),
 	DisplayVersion = "10.1.12 alpha", -- the string that is shown as version
 	ReleaseRevision = releaseDate(2024, 02, 21) -- the date of the latest stable version that is available, optionally pass hours, minutes, and seconds for multiple releases in one day
 }
@@ -10567,7 +10567,7 @@ do
 		-- todo: move the string creation to the GUI with SetFormattedString...
 		if timerType == "achievement" then
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(GetAchievementLink(spellId):gsub("%[(.+)%]", "%1"), timer)
-		elseif timerType == "cdspecial" or timerType == "nextspecial" or timerType == "stage" or timerType == "roleplay" then--Timers without spellid, generic
+		elseif timerType == "cdspecial" or timerType == "cdcombo" or timerType == "nextspecial" or timerType == "nextcombo" or timerType == "stage" or timerType == "stagecount" or timerType == "stagecountcycle" or timerType == "intermission" or timerType == "intermissioncount" or timerType == "adds" or timerType == "addscustom" or timerType == "roleplay" or timerType == "combat" then--Timers without spellid, generic (do not add stagecontext here, it has spellname parsing)
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(timer)--Using more than 1 stage timer or more than 1 special timer will break this, fortunately you should NEVER use more than 1 of either in a mod
 		else
 			self.localization.options[id] = L.AUTO_TIMER_OPTIONS[timerType]:format(unparsedId, timer)
@@ -11281,6 +11281,9 @@ function bossModPrototype:RegisterCombat(cType, ...)
 	if self.WBEsync then
 		info.WBEsync = self.WBEsync
 	end
+	if self.noBossDeathKill then
+		info.noBossDeathKill = self.noBossDeathKill
+	end
 	-- use pull-mobs as kill mobs by default, can be overriden by RegisterKill
 	if self.multiMobPullDetection then
 		for _, v in ipairs(self.multiMobPullDetection) do
@@ -11384,6 +11387,19 @@ function bossModPrototype:EnableWBEngageSync()
 	if self.combatInfo then
 		self.combatInfo.WBEsync = true
 	end
+end
+
+---Used when a bosses death condition should be ignored (maybe they die repeatedly for example)
+function bossModPrototype:DisableBossDeathKill()
+	self.noBossDeathKill = true
+	if self.combatInfo then
+		self.combatInfo.noBossDeathKill = true
+	end
+end
+
+---Used when a boss is scripted in a hacky way that their creature Id changes mid fight, and we want to treat multiple IDs as a single boss
+function bossModPrototype:SetMultiIDSingleBoss()
+	self.multiIDSingleBoss = true
 end
 
 --used for knowing if a specific mod is engaged
