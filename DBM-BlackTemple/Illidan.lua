@@ -30,21 +30,19 @@ local berserkTimer			= mod:NewBerserkTimer(1500)
 
 -- Stage One: You Are Not Prepared
 mod:AddTimerLine(L.S1YouAreNotPrepared)
-local warnShearSoon			= mod:NewSoonAnnounce(41032, 2, nil, "Tank")
 local warnDrawSoul			= mod:NewSpellAnnounce(40904, 3, nil, "Tank", 2)--Needed?
 local warnParasite			= mod:NewTargetAnnounce(41917, 3)
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2, 3)
 
-local specWarnShearBlock	= mod:NewSpecialWarningDefensive(41032, "Tank", nil, nil, 1, 2)
-local specWarnShearTaunt	= mod:NewSpecialWarningTaunt(41032, "Tank", nil, nil, 1, 2)
 local specWarnGTFO			= mod:NewSpecialWarningGTFO(40832, nil, nil, nil, 1, 2) -- Phase 1: Flame Crash // Phase 2: Blaze
 local specWarnParasite		= mod:NewSpecialWarningYou(41917, nil, nil, nil, 1, 2)
 local yellParasiteFades		= mod:NewShortFadesYell(41917)
 
-local timerShearCD			= mod:NewCDTimer(10, 41032, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - "Shear-41032-npc:22917-337 = pull:10.0/Stage 1/10.0, 10.1, 11.3, 10.6, 10.1, 10.6, 10.8, 10.5, 11.9, 11.9, 10.5, 10.0, 10.5, Stage 2/13.0, Stage 3/76.5, 27.6/104.1/117.1, 10.0, 11.3, 10.1, 10.7, 88.9, 11.8, 11.3, 10.6, 10.0, Stage 4/81.4, 39.1/120.5, 10.1, 11.7, 10.2, 102.9"
-local timerDrawSoul			= mod:NewCDTimer(35, 40904, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - "Draw Soul-40904-npc:22917-337 = pull:35.0/Stage 1/35.0, 35.0, 35.0, 35.6, Stage 2/11.4, Stage 3/76.5, 52.6/129.1/140.5, 131.0, Stage 4/100.1, 64.1/164.2", -- [3]
-local timerFlameCrash		= mod:NewNextTimer(30, 40832, nil, nil ,nil, 3) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - "Flame Crash-40832-npc:22917-337 = pull:30.0/Stage 1/30.0, 30.0, 30.0, 30.0, Stage 2/31.9, Stage 3/76.5, 47.5/124.0/156.0, 131.0, Stage 4/105.1, 59.1/164.2"
+
+local timerDrawSoul			= mod:NewCDTimer(32, 40904, nil, "Tank", nil, 5, nil, DBM_COMMON_L.TANK_ICON)
+local timerFlameCrash		= mod:NewNextTimer(26, 40832, nil, nil ,nil, 3)
 local timerParasite			= mod:NewTargetTimer(10, 41917, nil, false, nil, 1, nil, DBM_COMMON_L.IMPORTANT_ICON)
+local timerParasiteCD   = mod:NewCDTimer(25, 41917, nil, false, nil, 3)
 
 mod:AddSetIconOption("ParasiteIcon", 41917)
 
@@ -60,7 +58,7 @@ local specWarnUncagedWrath	= mod:NewSpecialWarningDefensive(39869, nil, nil, nil
 
 local timerBarrage			= mod:NewTargetTimer(10, 40585, nil, false, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON)
 local timerNextBarrage		= mod:NewCDTimer(44, 40585, nil, nil, nil, 3, nil, DBM_COMMON_L.DEADLY_ICON) -- REVIEW! broken?? Fired on P3...
-local timerEyebeam			= mod:NewCDTimer(30, 40018, nil, nil, nil, 2) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - "?-Stare into the eyes of the Betrayer!-npc:Illidan Stormrage = pull:182.7/Stage 2/31.2, 30.3, Stage 3/15.0, Stage 4/283.7", -- [16]
+local timerEyebeam			= mod:NewCDTimer(25, 40018, nil, nil, nil, 2) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - "?-Stare into the eyes of the Betrayer!-npc:Illidan Stormrage = pull:182.7/Stage 2/31.2, 30.3, Stage 3/15.0, Stage 4/283.7", -- [16]
 -- Flame of Azzinoth
 --local specWarnGTFO			= mod:NewSpecialWarningGTFO(40611, nil, nil, nil, 1, 2) -- Phase 2: Blaze
 
@@ -82,7 +80,7 @@ local warnHuman				= mod:NewAnnounce("WarnHuman", 3, 62844, nil, nil, nil, 40506
 local specWarnShadowDemon	= mod:NewSpecialWarningSwitch(41117, "Dps", nil, nil, 3, 2)
 local timerNextFlameBurst	= mod:NewCDTimer(20, 41131, nil, nil, nil, 3)
 
-local timerNextDemon		= mod:NewCDTimer(60, 40506, nil, nil, nil, 6, nil, DBM_COMMON_L.IMPORTANT_ICON) -- REVIEW! phase 3 and 5 variance? (Timewalking Frostmourne [2023-02-18]@[21:51:02] || Timewalking Frostmourne [2023-02-18]@[22:07:38]) - ?-Behold the power... of the demon within!-npc:Illidan Stormrage = pull:296.2/Stage 3/77.8, 131.0, Stage 4/90.6, 89.1/179.7, 114.8 || pull:305.6/Stage 3/77.6, 131.0, Stage 4/75.1, 93.0/168.1"
+local timerNextDemon		= mod:NewCDTimer(60, 40506, nil, nil, nil, 6, nil, DBM_COMMON_L.IMPORTANT_ICON)
 local timerShadowDemon		= mod:NewCDTimer(34, 41117, nil, nil, nil, 1, nil, DBM_COMMON_L.DAMAGE_ICON)
 local timerNextHuman		= mod:NewTimer(60, "TimerNextHuman", 62844, nil, nil, 6, nil, nil, nil, nil, nil, nil, nil, 40506)
 
@@ -121,10 +119,11 @@ local function humanForms(self) -- corrected on the fly using UNIT_AURA, and che
 	self:Unschedule(humanForms)
 	self.vb.demonForm = false
 	warnHuman:Show()
+
 	timerNextFlameBurst:Cancel()
 	timerNextDemon:Start()
-	timerShearCD:Start()
-	timerFlameCrash:Start()
+	timerFlameCrash:Start(25)
+
 	if self.vb.phase == 4 then
 		timerEnrage:Start()
 	end
@@ -137,7 +136,6 @@ function mod:OnCombatStart(delay)
 	self.vb.warned_preP2 = false
 	self.vb.warned_preP4 = false
 	self.vb.demonForm = false
-	timerShearCD:Start()
 	timerFlameCrash:Start()
 	berserkTimer:Start(-delay)
 	if not self:IsTrivial() then
@@ -168,16 +166,10 @@ function mod:SPELL_CAST_START(args)
 		self:SetStage(2)
 		self.vb.flamesDown = 0
 		self.vb.warned_preP2 = true
-		timerShearCD:Cancel()
 		timerFlameCrash:Cancel()
 		warnPhase2:Show()
 		timerNextBarrage:Start(85)
 		timerEyebeam:Start()
-	elseif spellId == 41032 then -- Shear
-		warnShearSoon:Schedule(7) -- 3s (+1.5s from cast time) is good enough to plan ahead
-		timerShearCD:Start()
-		specWarnShearBlock:Show()
-		specWarnShearBlock:Play("defensive")
 	elseif spellId == 40832 then -- Flame Crash
 		timerFlameCrash:Start()
 	end
@@ -236,11 +228,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 40695 then
 		warnCaged:Show()
 		timerCaged:Start()
-	elseif spellId == 41032 then -- Shear
-		if not args:IsPlayer() then
-			specWarnShearTaunt:Show(args.destName)
-			specWarnShearTaunt:Play("tauntboss")
-		end
 	elseif spellId == 39869 then -- Uncaged Wrath
 		specWarnUncagedWrath:Show()
 		specWarnUncagedWrath:Play("defensive")
@@ -280,8 +267,7 @@ function mod:UNIT_DIED(args)
 			timerNextBarrage:Cancel()
 			timerEyebeam:Cancel()
 			warnPhase3:Show()
-			timerNextDemon:Start(77.6) -- (Timewalking Frostmourne [2023-02-18]@[22:07:38]) - 77.6
-			timerShearCD:Start(27.6)
+			timerNextDemon:Start(77.6)
 			timerFlameCrash:Start(47.5)
 			self:RegisterShortTermEvents(
 				"UNIT_AURA focus target mouseover"
