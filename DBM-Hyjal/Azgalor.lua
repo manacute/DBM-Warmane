@@ -25,7 +25,7 @@ local timerSilence		= mod:NewBuffFadesTimer(5, 31344, nil, nil, nil, 2, nil, DBM
 
 local timerDoomCD			= mod:NewCDTimer(45, 31347, nil, nil, nil, 3)
 local timerSilenceCD	= mod:NewCDTimer(18, 31344, nil, nil, nil, 2, nil, DBM_COMMON_L.TANK_ICON..DBM_COMMON_L.HEALER_ICON)
-local timerFireCD 		= mod:NewCDTimer(15, 31340, nil, nil, nil, 3)
+local timerFireCD 		= mod:NewCDTimer(12, 31340, nil, nil, nil, 3)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
@@ -34,7 +34,7 @@ mod:AddRangeFrameOption(10, 31340)
 
 function mod:OnCombatStart(delay)
 	timerSilenceCD:Start(30-delay)
-	timerFireCD:Start(25-delay)
+	timerFireCD:Start(20-delay)
 	timerDoomCD:Start(-delay)
 	berserkTimer:Start(-delay)
 end
