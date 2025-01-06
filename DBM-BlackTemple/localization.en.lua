@@ -102,7 +102,7 @@ L:SetGeneralLocalization({
 L = DBM:GetModLocalization("Souls")
 
 L:SetGeneralLocalization({
-	name = "Essence of Souls"
+	name = "Reliquary of Souls"
 })
 
 L:SetWarningLocalization({
@@ -123,7 +123,8 @@ L:SetMiscLocalization({
 	Desire			= "Essence of Desire",
 	Anger			= "Essence of Anger",
 	Phase1End		= "I don't want to go back!",
-	Phase2End		= "I won't be far!"
+	Phase2End		= "I won't be far!",
+  Pull        = "Pain and suffering are all that await you!",
 })
 
 -----------------------

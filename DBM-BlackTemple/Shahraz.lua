@@ -20,14 +20,14 @@ mod:RegisterEventsInCombat(
 --TODO, announce auras?
 local warnFA			= mod:NewTargetNoFilterAnnounce(41001, 4)
 local warnShriek		= mod:NewSpellAnnounce(40823)
-local warnEnrageSoon	= mod:NewSoonAnnounce(21340)--not actual spell id
+local warnEnrageSoon	= mod:NewSoonAnnounce(21340) --not actual spell id
 local warnEnrage		= mod:NewSpellAnnounce(21340)
 
 local specWarnFA		= mod:NewSpecialWarningMoveAway(41001, nil, nil, nil, 1, 2)
 
-local timerFACD			= mod:NewCDTimer(20.7, 41001, nil, nil, nil, 3)--20-28
+local timerFatalAttractionCD = mod:NewCDTimer(60, 41001, nil, nil, nil, 3)
 local timerAura			= mod:NewTimer(15, "timerAura", 22599)
-local timerShriekCD		= mod:NewCDTimer(15.8, 40823, nil, nil, nil, 2)
+local timerShriekCD		= mod:NewCDTimer(30, 40823, nil, nil, nil, 2)
 
 mod:AddSetIconOption("FAIcons", 41001, true)
 
@@ -47,8 +47,8 @@ local aura = {
 function mod:OnCombatStart(delay)
 	self.vb.prewarn_enrage = false
 	self.vb.enrage = false
-	timerShriekCD:Start(15.8-delay)
-	timerFACD:Start(24.4-delay)
+	timerShriekCD:Start(-delay)
+	timerFatalAttractionCD:Start(50-delay)
 	if not self:IsTrivial() then
 		self:RegisterShortTermEvents(
 			"UNIT_HEALTH boss1"
@@ -101,13 +101,18 @@ function mod:UNIT_HEALTH(uId)
 	end
 end
 
---["40869-Fatal Attraction"] = "pull:24.4, 26.8, 28.0, 20.7, 21.9, 26.6, 22.0, 23.2, 23.0, 25.7, 26.6, 26.8, 25.6, 23.1, 26.8, 25.4",
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, spellName)
 	if self:AntiSpam(3, spellName) then
 		if aura[spellName] then
 			timerAura:Start(spellName)
-		elseif spellName == GetSpellInfo(40869) then--Cast event not in combat log, only applied and that can be resisted (especially on non timewalker). this ensures timer always exists
-			timerFACD:Start()
+		elseif spellName == GetSpellInfo(40869) then
+			timerFatalAttractionCD:Start()
 		end
+	end
+end
+
+function mod:OnSync(msg)
+	if msg == "fatalAttraction" then
+		timerFatalAttractionCD:Start()
 	end
 end
