@@ -125,6 +125,9 @@ L:SetMiscLocalization({
 	Phase1End		= "I don't want to go back!",
 	Phase2End		= "I won't be far!",
   Pull        = "Pain and suffering are all that await you!",
+  Phase2      = "You can have anything you desire... for a price.",
+  Phase3      = "So... foolish.",
+  Phase3Alt   = "Beware: I live!"
 })
 
 -----------------------

@@ -11,17 +11,17 @@ mod:RegisterCombat("combat")
 mod:RegisterCombat("yell", L.Pull)
 
 mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
+  "CHAT_MSG_MONSTER_YELL"
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 41305 41431 41376 41303 41294 41410 41350 41337",
-	"SPELL_AURA_REMOVED 41305",
-	"SPELL_CAST_START 41410 41426",
-	"SPELL_DAMAGE 41545",
-	"SPELL_MISSED 41545",
-	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_SPELLCAST_SUCCEEDED"
+  "SPELL_AURA_APPLIED 41305 41431 41376 41303 41294 41410 41350 41337",
+  "SPELL_AURA_REMOVED 41305",
+  "SPELL_CAST_START 41410 41426",
+  "SPELL_DAMAGE 41545",
+  "SPELL_MISSED 41545",
+  "CHAT_MSG_MONSTER_YELL",
+  "UNIT_SPELLCAST_SUCCEEDED"
 )
 
 -- General
@@ -72,106 +72,106 @@ mod:AddSetIconOption("SpiteIcon", 41376, false)
 mod.vb.lastFixate = "None"
 
 function mod:OnCombatStart(delay)
-	self.vb.lastFixate = "None"
-	timerNextFrenzy:Start(-delay)
-	warnFrenzySoon:Schedule(40-delay)
+  self.vb.lastFixate = "None"
+  timerNextFrenzy:Start(-delay)
+  warnFrenzySoon:Schedule(40-delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 41305 then
-		warnFrenzy:Show()
-		warnFrenzySoon:Schedule(40)
-		timerFrenzy:Start()
-		timerNextFrenzy:Start()
-	elseif args.spellId == 41431 and not args:IsDestTypePlayer() then
-		timerNextShield:Start()
-		specWarnShield:Show(args.destName)
-		specWarnShield:Play("dispelboss")
-	elseif args.spellId == 41376 then
-		warnSpite:CombinedShow(0.3, args.destName)
-		if args:IsPlayer() then
-			specWarnSpite:Show()
-			specWarnSpite:Play("defensive")
-		end
-		if self.Options.SpiteIcon then
-			self:SetAlphaIcon(0.5, args.destName)
-		end
-	elseif args.spellId == 41303 then
-		warnDrain:CombinedShow(1, args.destName)
-		if self.Options.DrainIcon then
-			self:SetAlphaIcon(1, args.destName)
-		end
-	elseif args.spellId == 41294 then
-		if self.vb.lastFixate ~= args.destName then
-			warnFixate:Show(args.destName)
-			self.vb.lastFixate = args.destName
-		end
-	elseif args.spellId == 41410 and not args:IsDestTypePlayer() then
-		warnDeaden:Show(args.destName)
-		timerDeaden:Start(args.destName)
-	elseif args.spellId == 41350 then -- Aura of Desire
-		warnPhase2:Show()
-		warnMana:Schedule(130)
-		timerMana:Start()
-		timerNextShield:Start(13)
-		timerNextDeaden:Start(28)
-	elseif args.spellId == 41337 then -- Aura of Anger
-		warnPhase3:Show()
-		timerNextSoul:Start()
-	end
+  if args.spellId == 41305 then
+    warnFrenzy:Show()
+    warnFrenzySoon:Schedule(40)
+    timerFrenzy:Start()
+    timerNextFrenzy:Start()
+  elseif args.spellId == 41431 and not args:IsDestTypePlayer() then
+    timerNextShield:Start()
+    specWarnShield:Show(args.destName)
+    specWarnShield:Play("dispelboss")
+  elseif args.spellId == 41376 then
+    warnSpite:CombinedShow(0.3, args.destName)
+    if args:IsPlayer() then
+      specWarnSpite:Show()
+      specWarnSpite:Play("defensive")
+    end
+    if self.Options.SpiteIcon then
+      self:SetAlphaIcon(0.5, args.destName)
+    end
+  elseif args.spellId == 41303 then
+    warnDrain:CombinedShow(1, args.destName)
+    if self.Options.DrainIcon then
+      self:SetAlphaIcon(1, args.destName)
+    end
+  elseif args.spellId == 41294 then
+    if self.vb.lastFixate ~= args.destName then
+      warnFixate:Show(args.destName)
+      self.vb.lastFixate = args.destName
+    end
+  elseif args.spellId == 41410 and not args:IsDestTypePlayer() then
+    warnDeaden:Show(args.destName)
+    timerDeaden:Start(args.destName)
+  end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 41305 then
-		warnFrenzyEnd:Show()
-	end
+  if args.spellId == 41305 then
+    warnFrenzyEnd:Show()
+  end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 41410 then
-		timerNextDeaden:Start()
-	elseif args.spellId == 41426 then
-		timerNextShock:Start()
-		specWarnShock:Show(args.sourceName)
-	end
+  if args.spellId == 41410 then
+    timerNextDeaden:Start()
+  elseif args.spellId == 41426 then
+    timerNextShock:Start()
+    specWarnShock:Show(args.sourceName)
+  end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, _, _, spellId)
-	if spellId == 41545 and self:AntiSpam(3, 1) then
-		warnSoul:Show()
-		timerNextSoul:Start()
-	end
+  if spellId == 41545 and self:AntiSpam(3, 1) then
+    warnSoul:Show()
+    timerNextSoul:Start()
+  end
 end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 --Boss Unit IDs still not present in 7.2.5 so mouseover/target and antispam required
 function mod:UNIT_SPELLCAST_SUCCEEDED(_, spellName)
-	if spellName == GetSpellInfo(28819) and self:AntiSpam(2, 2) then --Submerge Visual
-		self:SendSync("PhaseEnd")
-	end
+  if spellName == GetSpellInfo(28819) and self:AntiSpam(2, 2) then --Submerge Visual
+    self:SendSync("PhaseEnd")
+  end
 end
 
 --Backup to no one targetting boss
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.Phase1End or msg:find(L.Phase1End) or msg == L.Phase2End or msg:find(L.Phase2End) then
-		self:SendSync("PhaseEnd")
-	end
+  if msg == L.Phase1End or msg:find(L.Phase1End) or msg == L.Phase2End or msg:find(L.Phase2End) then
+    self:SendSync("PhaseEnd")
+  elseif message == L.Phase2 or msg:find(L.Phase2) then
+    warnPhase2:Show()
+    warnMana:Schedule(130)
+    timerMana:Start()
+    timerNextShield:Start(13)
+    timerNextDeaden:Start(28)
+  elseif message == L.Phase3 or msg:find(L.Phase3) or message == L.Phase3Alt or msg:find(L.Phase3Alt) then
+    warnPhase3:Show()
+    timerNextSoul:Start()
+  end
 end
 
 function mod:OnSync(msg)
-	if not self:IsInCombat() then return end
-	if msg == "PhaseEnd" then
-		warnFrenzyEnd:Cancel()
-		warnFrenzySoon:Cancel()
-		timerNextFrenzy:Stop()
-		timerFrenzy:Stop()
+  if not self:IsInCombat() then return end
+  if msg == "PhaseEnd" then
+    warnFrenzyEnd:Cancel()
+    warnFrenzySoon:Cancel()
+    timerNextFrenzy:Stop()
+    timerFrenzy:Stop()
 
-		warnMana:Cancel()
-		timerMana:Stop()
-		timerNextShield:Stop()
-		timerNextDeaden:Stop()
-		timerNextShock:Stop()
+    warnMana:Cancel()
+    timerMana:Stop()
+    timerNextShield:Stop()
+    timerNextDeaden:Stop()
+    timerNextShock:Stop()
 
-		timerPhaseChange:Start()
-	end
+    timerPhaseChange:Start()
+  end
 end
